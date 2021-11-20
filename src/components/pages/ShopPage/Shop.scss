@@ -1,0 +1,21 @@
+.products {
+    display:grid;
+    row-gap: 15px;
+    column-gap: 15px;
+    grid-auto-columns: fit-content(200px);
+    grid-auto-flow: column;
+
+    .product {
+        border: 2px solid rgb(138, 136, 136);
+        border-radius: 2px;
+        padding: 10px;
+
+        .category {
+            color:white;
+            background-color: rgb(43, 226, 58);
+            border-radius: 3px;
+            display:inline;
+            padding: 3px;
+        }
+    }
+}
