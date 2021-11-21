@@ -1,0 +1,22 @@
+.shopsPage {
+    .title {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        
+        h2 {
+            font-size: 35px;
+        }
+    }
+
+    .shopGrid {
+        display:grid;
+        row-gap: 20px;
+
+        .card {
+            border: 1px solid gray;
+            border-radius: 4px;
+            padding: 15px 20px;
+        }
+    }
+}

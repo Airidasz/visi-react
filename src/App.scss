@@ -1,4 +1,9 @@
-.App {
+
+.container {
+  padding: 0 20px;
+  max-width: 1000px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .App-logo {
@@ -39,6 +44,12 @@
 .btn-dark {
   background: black !important;
   color: white  !important;
-  padding: 10px 0  !important;
+  padding: 8px 0  !important;
   border-radius: 3px  !important;
+  border: 2px solid transparent !important;
+}
+.btn-dark:hover {
+  background: transparent !important;
+  color: black  !important;
+  border: 2px solid black !important;
 }

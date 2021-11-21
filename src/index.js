@@ -5,7 +5,7 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { CookiesProvider } from 'react-cookie';
-import Register from './components/pages/Register';
+import Register from './components/pages/AuthPages/Register';
 
 import { Provider } from 'react-redux'
 import { createStore } from 'redux'

@@ -1,6 +1,6 @@
-const saveUserData = (Session) => ({
-    type: 'SIGN_IN',
-    payload: Session,
+const showError = (ErrorsArray) => ({
+    type: 'ERROR',
+    payload: ErrorsArray,
 })
 
 export default saveUserData

@@ -48,24 +48,33 @@ const Shop = () => {
 
     if(typeof shop !== 'object')
         return (
-            <div><h1>Loading...</h1></div>
+            <div className='pageView'><h1>Loading...</h1></div>
         )
     return (
-        <div>
-            {localStorage.getItem('userID') == shop.userID && <input type="button" className="btn-dark" value="Edit" />}
+        <div className="pageView">
+        <div className='container'>
+        <div className="title">
+                <h1>{shop.name}</h1>
+                {localStorage.getItem('userID') == shop.userID && <input type="button" className="btn-dark" value="Koreguoti" style={{width: '10rem'}}/>}
+                </div>
+            <div className="shop">
+               
             
-            <h1>{shop.name}</h1>
+            
+            
             <p>{shop.description}</p>
-            <h2>Locations:</h2>
+            {/* <h2>Locations:</h2>
             {typeof locations === 'object' && locations.map((data) => {
                 return (
                     <div key={data.id}>
                         <h3>{data.coordinates}</h3>
                     </div>
                 )    
-            })}
-            <h2>Products:</h2>
+            })} */}
+            <h2>Ūkio siūlomi produktai</h2>
             <Products shopID={id}/>
+        </div>
+        </div>
         </div>
     )
 }

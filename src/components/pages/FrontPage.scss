@@ -1,11 +1,16 @@
-.front-page {
-    margin-top: 30px;
-    width: 100vw;
-    display:flex;
-    justify-content: center;
+.intro {
+    background-image: url('../../assets/farm.jpg');
+    width:100%;
+    height:35vw;
+    background-size:     cover;                 
+    background-repeat:   no-repeat;
+    background-position: center center;   
 
-    .container {
-        max-width: 1000px;
-        width:1000px;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color:white;
+
+    margin-top: -82px;
 }

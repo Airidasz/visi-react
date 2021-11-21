@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from "react-router-dom";
+import './Auth.scss';
 
 const Register = () => {
     const [email, setEmail] = useState("");
@@ -36,9 +37,10 @@ const Register = () => {
           
     }
     return (
-        <form className="loginForm" onSubmit={handleSubmit}>
+        <div className="pageView" style={{marginTop: '59px'}}>
+        <form onSubmit={handleSubmit}>
             <div className="formControl">
-            <label>Email</label>
+            <label>Elektroninio paštas</label>
             <input
                 type="text"
                 value={email}
@@ -46,7 +48,7 @@ const Register = () => {
                 />
                 </div>
             <div className="formControl">
-            <label>Password</label>
+            <label>Slaptažodis</label>
 
             <input
                 type="password"
@@ -56,7 +58,7 @@ const Register = () => {
             </div>
 
             <div className="formControl">
-            <label>Repeat password</label>
+            <label>Pakartokite slaptažodį</label>
 
             <input
                 type="password"
@@ -66,8 +68,10 @@ const Register = () => {
             </div>
 
 
-        <input type="submit" className="btn-dark" value="Submit" />
+        <input type="submit" className="btn-dark" value="Registruotis" />
         </form>
+
+        </div>
     );
 }
 

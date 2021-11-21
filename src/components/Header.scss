@@ -3,21 +3,30 @@ header {
     justify-content: center;
     height: 80px;
     width: 100vw;
-    background-color: aquamarine;
+    max-width: 100%;
+    position: sticky;
+    top:0;
+    color:White;
+    transition: all 0.1s ease-out;
 
     .container {
-        padding: 0 20px;
-        max-width: 1000px;
-        width:1000px;
+        width: 1000px;
         display:flex;
+        padding: 0;
         align-items: center;
         justify-content: space-between;
+    }
+    .hamurger{
+        display: none;
+    }
+
+    .logo {
+        margin-left:20px;
     }
 
     .menu {
         height: 100%;
-        
-
+        margin-right:20px;
         ul{
             list-style: none;
             padding: 0;
@@ -29,15 +38,66 @@ header {
                 display: inline-flex;
                 align-items: center;
                 padding: 0 30px;
-                
+                border-bottom: 2px solid transparent;
             }
 
             a:hover {
-                color:white;
-                background-color: blue;
-                opacity: 0.3;
+                color: rgba(255, 255, 255, 0.836);
+                border-bottom: 2px solid black;
             }
         }
         
+    }
+
+    @media (max-width: 768px) {
+            .menu{
+                display: none;
+                position: absolute;
+                top:80px;
+                background-color: black;
+                width: 100%;     
+                height:auto;     
+                ul{
+                    a{
+                        color: white;
+                        padding: 20px 30px;
+                        display: block;
+                        border:1px solid transparent;
+                        border-left: none !important;
+                        border-right: none !important;
+                    }
+
+                    a:hover {
+                        background: white !important;
+                        color:black !important;
+                        border:1px solid black !important;
+                        border-left: none !important;
+                        border-right: none !important;
+                    }
+                }
+            }
+
+            .hamburger {
+                display:inline;
+                width:32px;
+                height:32px;
+                margin-right:20px;
+                background: url('../assets/hamburger.svg');
+                cursor: pointer;
+            }
+
+    }
+
+}
+
+.solid {
+    background-color: white;
+    color:black;
+    .menu{
+        a:hover {
+            color:white;
+            background-color: black;
+            border-bottom: 2px solid black;
+        }
     }
 }

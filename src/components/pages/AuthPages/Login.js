@@ -1,9 +1,14 @@
 import { useState } from 'react';
-import './Login.scss';
+import './Auth.scss';
+import { useNavigate } from "react-router-dom";
+import { useCookies } from 'react-cookie';
 
 const Login = ({setShowLoginMenu}) => {
+    const navigate = useNavigate()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
+    const [cookies, ,] = useCookies(['Access-Token', 'Refresh-Token']);
   
     const handleSubmit = (evt) => {
         evt.preventDefault();
@@ -26,11 +31,16 @@ const Login = ({setShowLoginMenu}) => {
                 return Promise.reject(error);
             }
             const userData = await data.json();
-            
+
             localStorage.setItem('userID', userData['ID'])
             localStorage.setItem('userEmail', userData['Email'])
+            
+            console.log("bbz login")
+            console.log(cookies['Access-Token'])
 
             setShowLoginMenu(false)
+
+            navigate('/');
           })
           .catch(error => {
               console.error('There was an error!', error);
@@ -39,9 +49,10 @@ const Login = ({setShowLoginMenu}) => {
           
     }
     return (
-        <form className="loginForm" onSubmit={handleSubmit}>
+        
+        <form onSubmit={handleSubmit} style={{position: 'absolute', top: '75px'}}>
             <div className="formControl">
-            <label>Email</label>
+            <label>Elektroninis paštas</label>
             <input
                 type="text"
                 value={email}
@@ -49,7 +60,7 @@ const Login = ({setShowLoginMenu}) => {
                 />
                 </div>
             <div className="formControl">
-            <label>Password</label>
+            <label>Slaptažodis</label>
 
             <input
                 type="password"
@@ -59,7 +70,7 @@ const Login = ({setShowLoginMenu}) => {
             </div>
 
 
-        <input type="submit" className="btn-dark" value="Submit" />
+        <input type="submit" className="btn-dark" value="Prisijungti" />
         </form>
     );
 }

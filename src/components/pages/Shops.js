@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
+import './Shops.scss';
 
 const Shops = () => {
     const [shopData, setShopData] = useState(false);
@@ -30,17 +31,23 @@ const Shops = () => {
         )
 
     return (
-        <div style={{display:'grid', rowGap:'20px'}}>
+        <div className="shopsPage">
+            <div className="title">
+                <h2>Parduotuvės</h2>
+                </div>
+        
+        <div className="shopGrid">
             {shopData.map((data) => {
                 return (
                     <Link to={'/shop/' + data.id}  key={data.id} >
-                    <div style={{border: '1px solid gray', borderRadius: '4px', padding: '15px 20px'}}>
+                    <div className="card">
                         <h1>{data.name}</h1>
                         <p>{data.description}</p>
                     </div>
                     </Link>
                 )    
             })}
+        </div>
         </div>
     )
 }
