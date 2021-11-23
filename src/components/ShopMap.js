@@ -8,10 +8,11 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
+import RemoveItemFromArray from "./RemoveFromArray";
+
 const ShopMap = ({ id, editable = true, createLocations = false }) => {
-  const [farms, setFarms] = useState([]);
-  const [sellingLocations, setSellingLocations] = useState([]);
-  const [loaded, setLoaded] = useState(false);
+  const [locations, setLocations] = useState([]);
+  const removeItem = RemoveItemFromArray();
 
   useEffect(() => {
     if (!createLocations) return;
@@ -19,78 +20,40 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
     AddLocationsToShop();
   }, [createLocations]);
 
-  if (!loaded && typeof id !== "undefined") {
-    fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
-      method: "GET",
-    })
-      .then(async (response) => {
-        const data = await response.json();
-
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
-        let arr = [];
-        data.map((d) => {
-          var d = latLng(d.lat, d.lng);
-          arr.push(d);
-        });
-
-        setSellingLocations(arr);
-
-        setLoaded(true);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  }
-
-  const removeFarm = (e) => {
-    var array = [...farms]; // make a separate copy of the array
-    var index = array.indexOf(e);
-    if (index !== -1) {
-      array.splice(index, 1);
-      setFarms(array);
-    }
-  };
-
-  const removeSellingLocation = (e) => {
-    var array = [...sellingLocations]; // make a separate copy of the array
-    var index = array.indexOf(e);
-    if (index !== -1) {
-      array.splice(index, 1);
-      setSellingLocations(array);
-    }
-  };
-
-  async function AddLocationsToShop() {
-    farms.map((farm) => {
+  useEffect(() => {
+    if (typeof id !== "undefined") {
       fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          lat: farm.lat,
-          lng: farm.lng,
-        }),
+        method: "GET",
       })
         .then(async (response) => {
+          const data = await response.json();
+
           if (!response.ok) {
-            const error = response.statusText;
+            const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
           }
+          let arr = [];
+          data.map((d) => {
+            var position = latLng(d.lat, d.lng);
+            arr.push({ type: "farm", latlng: position });
+          });
+
+          setLocations(arr);
         })
         .catch((error) => {
           console.error("There was an error!", error);
         });
-    });
+    }
+  }, []);
 
-    sellingLocations.map((sellingLocation) => {
+  async function AddLocationsToShop() {
+    locations.map((location) => {
       fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
-          lat: sellingLocation.lat,
-          lng: sellingLocation.lng,
+          lat: location.lat,
+          lng: location.lng,
         }),
       })
         .then(async (response) => {
@@ -114,17 +77,12 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
       },
     });
 
-    const AddSellingLocation = () => {
+    const AddLocation = (type) => {
       map.closePopup();
-      setSellingLocations((sellingLocations) => [
-        ...sellingLocations,
-        position,
+      setLocations((locations) => [
+        ...locations,
+        { type: type, latlng: position },
       ]);
-    };
-
-    const AddFarm = () => {
-      map.closePopup();
-      setFarms((farms) => [...farms, position]);
     };
 
     return position === null ? null : (
@@ -134,17 +92,21 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
             type="button"
             className="btn-dark"
             value="Ūkis"
-            onClick={AddFarm}
+            onClick={() => AddLocation("farm")}
           />
           <input
             type="button"
             className="btn-dark"
             value="Pardavimo vieta"
-            onClick={AddSellingLocation}
+            onClick={() => AddLocation("sellingLocation")}
           />
         </div>
       </Popup>
     );
+  };
+
+  const removeLocation = (e) => {
+    setLocations(removeItem(locations, e));
   };
 
   return (
@@ -153,27 +115,14 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
       />
-      {farms.map((farm) => {
+      {locations.map((location, i) => {
         return (
           <Marker
-            key={farm.toString()}
-            position={farm}
+            key={i}
+            position={location.latlng}
             eventHandlers={{
               click: (e) => {
-                if (editable) removeFarm(e.latlng);
-              },
-            }}
-          />
-        );
-      })}
-      {sellingLocations.map((sellingLocation) => {
-        return (
-          <Marker
-            key={sellingLocation.toString()}
-            position={sellingLocation}
-            eventHandlers={{
-              click: (e) => {
-                if (editable) removeSellingLocation(e.latlng);
+                if (editable) removeLocation(location);
               },
             }}
           />
