@@ -37,3 +37,25 @@
         }
     }
 }
+
+.createShopGrid {
+    display:grid;
+    column-gap: 20px;
+    row-gap: 20px;
+    grid-template-columns: auto 1fr;
+}
+
+@media (max-width: 768px) {
+    .createShopGrid {
+        grid-template-columns: 1fr;
+
+        form {
+            width: 100%;
+            box-sizing: border-box;
+
+            textarea {
+                min-height:80px;
+            }
+        }
+    }
+}

@@ -1,0 +1,13 @@
+.loginForm {
+  position: absolute;
+  top: 75px;
+}
+
+@media (max-width: 768px) {
+  .loginForm {
+    top: 120px;
+    width: 100vw;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}

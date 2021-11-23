@@ -42,7 +42,7 @@ const Register = () => {
             <div className="formControl">
             <label>Elektroninio paštas</label>
             <input
-                type="text"
+                type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 />
@@ -67,8 +67,9 @@ const Register = () => {
                 />
             </div>
 
-
+            <div className="formControl">
         <input type="submit" className="btn-dark" value="Registruotis" />
+        </div>
         </form>
 
         </div>

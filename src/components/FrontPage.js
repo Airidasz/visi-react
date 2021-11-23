@@ -1,4 +1,4 @@
-import Shops from "./Shops";
+import Shops from "./Shop/Shops";
 import './FrontPage.scss'
 
 const FrontPage = () => {
