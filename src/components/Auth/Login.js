@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./Auth.scss";
 import { useNavigate } from "react-router-dom";
+import SetUserInfo from "../SetUserInfo";
 
 const Login = ({ setShowLoginMenu }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const setUserInfo = SetUserInfo();
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
@@ -28,11 +30,8 @@ const Login = ({ setShowLoginMenu }) => {
           const error = (data && data.message) || response.statusText;
           return Promise.reject(error);
         }
-        const userData = await data.json();
 
-        localStorage.setItem("userID", userData["ID"]);
-        localStorage.setItem("userEmail", userData["Email"]);
-
+        setUserInfo();
         setShowLoginMenu(false);
 
         navigate("/");

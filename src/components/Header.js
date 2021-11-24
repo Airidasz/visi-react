@@ -1,10 +1,8 @@
 import "./Header.scss";
-import { Link } from "react-router-dom";
 import Login from "./Auth/Login";
 import { useState, useEffect } from "react";
-import { useCookies } from "react-cookie";
-import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -16,6 +14,7 @@ const Header = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     setShowMenu(false);
     setShowLoginMenu(false);
   }, [location]);
@@ -32,9 +31,7 @@ const Header = () => {
     };
   }, [isMobile]);
 
-  const [, , removeCookie] = useCookies(["Access-Token", "Refresh-Token"]);
-
-  const userID = localStorage.getItem("userID");
+  const userEmail = localStorage.getItem("userEmail");
 
   const toggleLoginMenu = () => {
     setShowLoginMenu(!showLoginMenu);
@@ -46,8 +43,8 @@ const Header = () => {
 
   const logOut = () => {
     localStorage.clear();
-    removeCookie("Access-Token");
-    removeCookie("Refresh-Token");
+    Cookies.remove("Access-Token");
+    Cookies.remove("Refresh-Token");
     setShowLoginMenu(false);
     navigate("/");
   };
@@ -63,9 +60,15 @@ const Header = () => {
           </h1>
         </div>
 
-        <div className="hamburger" onClick={toggleMenu}></div>
+        <div
+          className="hamburger"
+          onClick={() => {
+            setShowLoginMenu(false);
+            toggleMenu();
+          }}
+        ></div>
 
-        {userID == null ? (
+        {userEmail == null ? (
           <div className="menu" style={showMenu ? { display: "block" } : {}}>
             <ul>
               <Link to="/register/">

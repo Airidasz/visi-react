@@ -1,18 +1,19 @@
-import { useCookies } from "react-cookie";
+import Cookies from "js-cookie";
+import SetUserInfo from "./SetUserInfo";
 
 const RefreshTokens = (nextHandler) => {
-  const [cookies, ,] = useCookies(["Access-Token"]);
+  const setUserInfo = SetUserInfo();
 
   async function refreshToken() {
-    console.log(cookies["Access-Token"]);
-    if (typeof cookies["Access-Token"] === "undefined") {
+    if (typeof Cookies.get("Access-Token") === "undefined") {
       const response = await fetch(process.env.REACT_APP_API_URL + "/refresh", {
         method: "POST",
         credentials: "include",
       });
+
+      setUserInfo();
     }
 
-    console.log("going to next handler");
     nextHandler();
   }
   return refreshToken;
