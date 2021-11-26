@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { latLng } from "leaflet";
+import { latLng, icon } from "leaflet";
 import {
   MapContainer,
   TileLayer,
@@ -8,11 +8,20 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
+import farmLocation from "../assets/farmLocation.svg";
+import sellingLocation from "../assets/sellingLocation.svg";
+
 import RemoveItemFromArray from "./RemoveFromArray";
 
 const ShopMap = ({ id, editable = true, createLocations = false }) => {
   const [locations, setLocations] = useState([]);
   const removeItem = RemoveItemFromArray();
+
+  const farmIcon = icon({ iconUrl: farmLocation, iconSize: (42, 42) });
+  const sellingLocationIcon = icon({
+    iconUrl: sellingLocation,
+    iconSize: (42, 42),
+  });
 
   useEffect(() => {
     if (!createLocations) return;
@@ -35,7 +44,7 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
           let arr = [];
           data.map((d) => {
             var position = latLng(d.lat, d.lng);
-            arr.push({ type: "farm", latlng: position });
+            arr.push({ type: d.type, latlng: position });
           });
 
           setLocations(arr);
@@ -46,14 +55,15 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
     }
   }, []);
 
-  async function AddLocationsToShop() {
+  function AddLocationsToShop() {
     locations.map((location) => {
       fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
         method: "POST",
         credentials: "include",
         body: JSON.stringify({
-          lat: location.lat,
-          lng: location.lng,
+          type: location.type,
+          lat: location.latlng.lat,
+          lng: location.latlng.lng,
         }),
       })
         .then(async (response) => {
@@ -119,6 +129,7 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
         return (
           <Marker
             key={i}
+            icon={location.type === "farm" ? farmIcon : sellingLocationIcon}
             position={location.latlng}
             eventHandlers={{
               click: (e) => {

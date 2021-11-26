@@ -1,50 +1,31 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router";
-import "./Shop.scss";
-import ShopMap from "../ShopMap";
-import RefreshTokens from "../RefreshTokens";
+import RefreshTokens from "./RefreshTokens";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
 
-const CreateShop = () => {
-  const { id } = useParams();
+const CreateProduct = () => {
+  const { shopid } = useParams();
+  const { productid } = useParams();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [createLocations, setCreateLocations] = useState(false);
-  const [shopID, setShopID] = useState(id);
-  const navigate = useNavigate();
-  const createShop = RefreshTokens(() => {
-    fetch(process.env.REACT_APP_API_URL + "/shops", {
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const animatedComponents = makeAnimated();
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const createProduct = RefreshTokens(() => {
+    const selectedCategoriesIDs = selectedCategories.map((cc) => {
+      return cc.value;
+    });
+    fetch(process.env.REACT_APP_API_URL + "/shop/" + shopid + "/products", {
       method: "POST",
       credentials: "include",
       body: JSON.stringify({
         name: name,
         description: description,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response.json();
-
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
-
-        setShopID(data.id);
-        setCreateLocations(true);
-        navigate("/shop/" + data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  });
-
-  const editShop = RefreshTokens(() => {
-    fetch(process.env.REACT_APP_API_URL + "/shop/" + id, {
-      method: "PUT",
-      credentials: "include",
-      body: JSON.stringify({
-        name: name,
-        description: description,
+        categories: selectedCategoriesIDs,
       }),
     })
       .then(async (response) => {
@@ -55,8 +36,7 @@ const CreateShop = () => {
           return Promise.reject(error);
         }
 
-        //setCreateLocations(true);
-        navigate("/");
+        navigate(-1);
       })
       .catch((error) => {
         console.error("There was an error!", error);
@@ -64,28 +44,36 @@ const CreateShop = () => {
   });
 
   useEffect(() => {
-    if (typeof id !== "undefined") {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + id, { method: "GET" })
-        .then(async (response) => {
-          const data = await response.json();
+    fetch(process.env.REACT_APP_API_URL + "/categories", {
+      method: "GET",
+    })
+      .then(async (response) => {
+        const data = await response.json();
 
-          if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-          }
-          setName(data.name);
-          setDescription(data.description);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
+        if (!response.ok) {
+          const error = (data && data.message) || response.statusText;
+          return Promise.reject(error);
+        }
+        let arr = [];
+        data.map((category) => {
+          arr.push({ value: category.id, label: category.name });
         });
-    }
+
+        setCategoryOptions(arr);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
   }, []);
 
+  const navigate = useNavigate();
+  const selectCategories = (categories) => {
+    setSelectedCategories(categories);
+  };
   const handleSubmit = (evt) => {
     evt.preventDefault();
-    if (typeof id === "undefined") createShop();
-    else editShop();
+
+    createProduct();
   };
 
   return (
@@ -117,16 +105,22 @@ const CreateShop = () => {
                   type="submit"
                   className="btn-dark"
                   value={
-                    typeof id === "undefined"
-                      ? "Kurti parduotuvę"
-                      : "Koreguoti parduotuvę"
+                    typeof productid === "undefined"
+                      ? "Kurti prekę"
+                      : "Koreguoti prekę"
                   }
                 />
               </div>
             </form>
           </div>
           <div>
-            <ShopMap id={shopID} createLocations={createLocations} />
+            <Select
+              options={categoryOptions}
+              closeMenuOnSelect={false}
+              components={animatedComponents}
+              onChange={selectCategories}
+              isMulti
+            />
           </div>
         </div>
       </div>
@@ -134,4 +128,4 @@ const CreateShop = () => {
   );
 };
 
-export default CreateShop;
+export default CreateProduct;

@@ -12,6 +12,8 @@ import FrontPage from "./components/FrontPage";
 import Shop from "./components/Shop/Shop";
 import Register from "./components/Auth/Register";
 import CreateShop from "./components/Shop/CreateShop";
+import Categories from "./components/Categories/Categories";
+import CreateProduct from "./components/CreateProduct";
 
 const store = createStore(
   rootReducer,
@@ -28,7 +30,9 @@ render(
           <Route path="/shop/:id" element={<Shop />} />
           <Route path="/shop/:id/edit" element={<CreateShop />} />
           <Route path="/shop/new" element={<CreateShop />} />
-          <Route path="register" element={<Register />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/shop/:shopid/product/new" element={<CreateProduct />} />
         </Route>
       </Routes>
     </Provider>

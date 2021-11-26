@@ -32,6 +32,7 @@ const Header = () => {
   }, [isMobile]);
 
   const userEmail = localStorage.getItem("userEmail");
+  const isAdmin = localStorage.getItem("isAdmin");
 
   const toggleLoginMenu = () => {
     setShowLoginMenu(!showLoginMenu);
@@ -74,6 +75,7 @@ const Header = () => {
               <Link to="/register/">
                 <li>Registruotis</li>
               </Link>
+
               <a onClick={toggleLoginMenu}>
                 <li>Prisijungti</li>
               </a>
@@ -83,6 +85,11 @@ const Header = () => {
         ) : (
           <div className="menu" style={showMenu ? { display: "block" } : {}}>
             <ul>
+              {isAdmin === "true" && (
+                <Link to="/categories">
+                  <li>Kategorijos</li>
+                </Link>
+              )}
               <Link to="/shop/new/">
                 <li>Sukurti naują parduotuvę</li>
               </Link>

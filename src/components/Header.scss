@@ -85,6 +85,8 @@ header {
       margin-right: 20px;
       background: url("../assets/hamburger.svg");
       cursor: pointer;
+      filter: invert(100%) sepia(0%) saturate(3403%) hue-rotate(127deg)
+        brightness(115%) contrast(100%);
     }
   }
 }
@@ -98,6 +100,11 @@ header {
       background-color: black;
       border-bottom: 2px solid black;
     }
+  }
+
+  .hamburger {
+    filter: invert(0%) sepia(100%) saturate(23%) hue-rotate(212deg)
+      brightness(94%) contrast(101%);
   }
 }
 

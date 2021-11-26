@@ -66,28 +66,11 @@ const Shop = () => {
         <div className="title">
           <h1>{shop.name}</h1>
           {localStorage.getItem("userID") == shop.userID && (
-            <div style={{ display: "flex" }}>
-              <a
-                onClick={tryDeleteShop}
-                className="btn-dark"
-                style={{
-                  width: "10rem",
-                  textAlign: "center",
-                  display: "block",
-                }}
-              >
+            <div className="shop-buttons">
+              <a onClick={tryDeleteShop} className="btn-dark">
                 Ištrinti
               </a>
-              <Link
-                to="edit"
-                className="btn-dark"
-                style={{
-                  width: "10rem",
-                  textAlign: "center",
-                  display: "block",
-                  marginLeft: "0.7rem",
-                }}
-              >
+              <Link to="edit" className="btn-dark">
                 Koreguoti
               </Link>
             </div>
@@ -95,8 +78,17 @@ const Shop = () => {
         </div>
         <div className="shop">
           <p style={{ marginBottom: "15px" }}>{shop.description}</p>
+
           <ShopMap id={id} editable={false} />
-          <h2>Ūkio siūlomi produktai</h2>
+          <div className="products-title">
+            <h2>Ūkio siūlomi produktai</h2>
+            {localStorage.getItem("userID") == shop.userID && (
+              <Link to="product/new" className="btn-dark">
+                Kurti naują prekę
+              </Link>
+            )}
+          </div>
+
           <Products shopID={id} />
         </div>
       </div>
