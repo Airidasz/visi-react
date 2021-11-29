@@ -12,8 +12,12 @@ const Header = () => {
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const [showMenu, setShowMenu] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail"));
+  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
 
   useEffect(() => {
+    setUserEmail(localStorage.getItem("userEmail"));
+    setIsAdmin(localStorage.getItem("isAdmin"));
     window.scrollTo(0, 0);
     setShowMenu(false);
     setShowLoginMenu(false);
@@ -30,9 +34,6 @@ const Header = () => {
       setOffset(window.pageYOffset);
     };
   }, [isMobile]);
-
-  const userEmail = localStorage.getItem("userEmail");
-  const isAdmin = localStorage.getItem("isAdmin");
 
   const toggleLoginMenu = () => {
     setShowLoginMenu(!showLoginMenu);

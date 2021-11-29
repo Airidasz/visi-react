@@ -6,14 +6,53 @@ import Select from "react-select";
 import makeAnimated from "react-select/animated";
 
 const CreateProduct = () => {
-  const { shopid } = useParams();
-  const { productid } = useParams();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [categoryOptions, setCategoryOptions] = useState([]);
   const animatedComponents = makeAnimated();
 
-  const [selectedCategories, setSelectedCategories] = useState([]);
+  const navigate = useNavigate();
+  const { shopid } = useParams();
+  const { productid } = useParams();
+
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+
+  const [categoryOptions, setCategoryOptions] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState(false);
+
+  const getSelectedCategories = () => {
+    let selectedCategoriesArr = [];
+    if (typeof productid !== "undefined" && typeof shopid !== "undefined") {
+      fetch(
+        process.env.REACT_APP_API_URL +
+          "/shop/" +
+          shopid +
+          "/product/" +
+          productid,
+        { method: "GET" }
+      )
+        .then(async (response) => {
+          const data = await response.json();
+
+          if (!response.ok) {
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+          }
+          setName(data.name);
+          setDescription(data.description);
+
+          data.categories.map((category) => {
+            selectedCategoriesArr.push({
+              value: category.id,
+              label: category.name,
+            });
+          });
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+        });
+    }
+    setSelectedCategories(selectedCategoriesArr);
+    return selectedCategoriesArr;
+  };
 
   const createProduct = RefreshTokens(() => {
     const selectedCategoriesIDs = selectedCategories.map((cc) => {
@@ -28,6 +67,41 @@ const CreateProduct = () => {
         categories: selectedCategoriesIDs,
       }),
     })
+      .then(async (response) => {
+        const data = await response;
+
+        if (!response.ok) {
+          const error = (data && data.message) || response.statusText;
+          return Promise.reject(error);
+        }
+
+        navigate(-1);
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
+  });
+
+  const editProduct = RefreshTokens(() => {
+    const selectedCategoriesIDs = selectedCategories.map((cc) => {
+      return cc.value;
+    });
+    fetch(
+      process.env.REACT_APP_API_URL +
+        "/shop/" +
+        shopid +
+        "/product/" +
+        productid,
+      {
+        method: "PUT",
+        credentials: "include",
+        body: JSON.stringify({
+          name: name,
+          description: description,
+          categories: selectedCategoriesIDs,
+        }),
+      }
+    )
       .then(async (response) => {
         const data = await response;
 
@@ -66,14 +140,11 @@ const CreateProduct = () => {
       });
   }, []);
 
-  const navigate = useNavigate();
-  const selectCategories = (categories) => {
-    setSelectedCategories(categories);
-  };
   const handleSubmit = (evt) => {
     evt.preventDefault();
 
-    createProduct();
+    if (typeof productid === "undefined") createProduct();
+    else editProduct();
   };
 
   return (
@@ -115,11 +186,14 @@ const CreateProduct = () => {
           </div>
           <div>
             <Select
+              components={animatedComponents}
+              defaultValue={getSelectedCategories}
+              isMulti
               options={categoryOptions}
               closeMenuOnSelect={false}
-              components={animatedComponents}
-              onChange={selectCategories}
-              isMulti
+              onChange={(categories) => {
+                setSelectedCategories(categories);
+              }}
             />
           </div>
         </div>

@@ -5,13 +5,13 @@ import Footer from "./components/Footer";
 import RefreshTokens from "./components/RefreshTokens";
 import { useEffect } from "react";
 import SetUserInfo from "./components/SetUserInfo";
+import Cookies from "js-cookie";
 
 function App() {
   useEffect(() => {
     localStorage.clear();
-    const setUserInfo = SetUserInfo();
     const refreshTokens = RefreshTokens(() => {
-      setUserInfo();
+      Cookies.remove("Access-Token");
     });
 
     refreshTokens();
