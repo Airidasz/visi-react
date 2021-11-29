@@ -1,70 +1,70 @@
-# Getting Started with Create React App
+<div align="center">
+ <h3>Shop frontend made with React</h3><br>
+</div>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Table of Contents
 
-## Available Scripts
+* [About the Project](#about-the-project)
+* [Installation](#installation)
+* [Screenshots](#screenshots)
 
-In the project directory, you can run:
+## About The Project
 
-### `npm start`
+This project is an assignment for Kaunas University of Technology module "Web Application Design". <br/>
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Installation
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+To run this you are going to need to run the API first, which you can get [https://github.com/Airidasz/ApiGolangUni](here)
+To setup run:
+```npm install```
+To start run:
+```npm start```
 
-### `npm test`
+### Screenshots
+<table>
+  <tr>
+  <th><center>Doctor list from the point of view of the Administrator</center></th>
+  </tr>
+  <tr>
+  <td><img src="https://raw.githubusercontent.com/Airidasz/doctor-appointment-registration-website/main/screenshots/admin-doctor_list.png"/></td>
+  </tr>
+</table>
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+<table>
+  <tr>
+  <th><center>Administrator panel for creating new doctor profiles</center></th>
+  </tr>
+  <tr>
+  <td><img src="https://raw.githubusercontent.com/Airidasz/doctor-appointment-registration-website/main/screenshots/admin-register_doctor.png"/></td>
+  </tr>
+</table>
 
-### `npm run build`
+Patient home panel includes the patients profile, his visits and his account information.
+<table>
+  <tr>
+  <th><center>Patient home panel</center></th>
+  </tr>
+  <tr>
+  <td><img src="https://raw.githubusercontent.com/Airidasz/doctor-appointment-registration-website/main/screenshots/patient-home.png"/></td>
+  </tr>
+</table>
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Patients can select from the available appointment times for this week and any other in the future.
+<table>
+  <tr>
+  <th><center>Patients view of a doctors profile</center></th>
+  </tr>
+  <tr>
+  <td><img src="https://raw.githubusercontent.com/Airidasz/doctor-appointment-registration-website/main/screenshots/patient-doctor_profile.png"/></td>
+  </tr>
+</table>
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Doctor sees his information as well as patients registered for an appointment with them.
+<table>
+  <tr>
+  <th><center>Doctor home panel</center></th>
+  </tr>
+  <tr>
+  <td><img src="https://raw.githubusercontent.com/Airidasz/doctor-appointment-registration-website/main/screenshots/doctor-home.png"/></td>
+  </tr>
+</table>
