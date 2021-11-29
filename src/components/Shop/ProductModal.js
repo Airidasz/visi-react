@@ -5,7 +5,7 @@ import RefreshTokens from "../RefreshTokens";
 
 import { Link } from "react-router-dom";
 
-const ProductModal = ({ product, setShow, setProducts }) => {
+const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
   const tryDeleteProduct = () => {
     const shouldDeleteProduct = window.confirm(
       "Ar tikrai norite ištrinti šią prekę?"
@@ -48,28 +48,30 @@ const ProductModal = ({ product, setShow, setProducts }) => {
         <div className="top-bar">
           <h3>{product.name}</h3>
           <div className="actions">
-            <Link
-              to={"product/" + product.id + "/edit"}
-              className="btn-circle"
-              style={{
-                background: "rgb(229, 139, 21)",
-                marginRight: "0.3rem",
-              }}
-            >
-              <img src={pencil} className="actionButton" />
-            </Link>
-
-            <div
-              className="btn-circle"
-              style={{
-                background: "rgb(175, 19, 19)",
-                marginRight: "0.3rem",
-              }}
-              onClick={tryDeleteProduct}
-            >
-              <img src={trash} className="actionButton" />
-            </div>
-
+            {isOwner && (
+              <Link
+                to={"product/" + product.id + "/edit"}
+                className="btn-circle"
+                style={{
+                  background: "rgb(229, 139, 21)",
+                  marginRight: "0.3rem",
+                }}
+              >
+                <img src={pencil} className="actionButton" />
+              </Link>
+            )}
+            {isOwner && (
+              <div
+                className="btn-circle"
+                style={{
+                  background: "rgb(175, 19, 19)",
+                  marginRight: "0.3rem",
+                }}
+                onClick={tryDeleteProduct}
+              >
+                <img src={trash} className="actionButton" />
+              </div>
+            )}
             <div
               className="btn-circle"
               style={{

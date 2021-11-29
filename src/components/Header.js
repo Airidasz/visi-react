@@ -16,8 +16,6 @@ const Header = () => {
   const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
 
   useEffect(() => {
-    setUserEmail(localStorage.getItem("userEmail"));
-    setIsAdmin(localStorage.getItem("isAdmin"));
     window.scrollTo(0, 0);
     setShowMenu(false);
     setShowLoginMenu(false);

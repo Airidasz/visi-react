@@ -11,6 +11,7 @@ import Register from "./components/Auth/Register";
 import CreateShop from "./components/Shop/CreateShop";
 import Categories from "./components/Categories/Categories";
 import CreateProduct from "./components/CreateProduct";
+import notFound from "./components/404";
 
 render(
   <BrowserRouter>

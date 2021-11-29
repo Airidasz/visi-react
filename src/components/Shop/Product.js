@@ -1,12 +1,13 @@
 import { useState } from "react";
 import ProductModal from "./ProductModal";
 
-const Product = ({ product, setProducts }) => {
+const Product = ({ product, setProducts, shop }) => {
   const [showProductPopup, setShowProductPopup] = useState(false);
   return (
     <div>
       {showProductPopup && (
         <ProductModal
+          isOwner={localStorage.getItem("userID") == shop.userID}
           product={product}
           setShow={setShowProductPopup}
           setProducts={setProducts}

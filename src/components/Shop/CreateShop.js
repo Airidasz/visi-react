@@ -56,7 +56,7 @@ const CreateShop = () => {
         }
 
         //setCreateLocations(true);
-        navigate("/");
+        navigate("/shop/" + data.id);
       })
       .catch((error) => {
         console.error("There was an error!", error);

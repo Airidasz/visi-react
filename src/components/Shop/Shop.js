@@ -16,7 +16,7 @@ const Shop = () => {
     })
       .then(async (response) => {
         const data = await response;
-
+        console.log(response);
         if (!response.ok) {
           const error = (data && data.message) || response.statusText;
           return Promise.reject(error);
@@ -60,6 +60,7 @@ const Shop = () => {
         <h1>Loading...</h1>
       </div>
     );
+
   return (
     <div className="pageView">
       <div className="container">
@@ -89,7 +90,7 @@ const Shop = () => {
             )}
           </div>
 
-          <Products shopID={id} />
+          <Products shop={shop} />
         </div>
       </div>
     </div>

@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import "./Shop.scss";
 import Product from "./Product";
 
-const Products = ({ shopID }) => {
+const Products = ({ shop }) => {
   const [products, setProducts] = useState(false);
 
   useEffect(() => {
     if (typeof products !== "object") {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + shopID + "/products", {
+      fetch(process.env.REACT_APP_API_URL + "/shop/" + shop.id + "/products", {
         method: "GET",
       })
         .then(async (response) => {
@@ -35,7 +35,9 @@ const Products = ({ shopID }) => {
     <div className="products">
       {typeof products === "object" &&
         products.map((product) => {
-          return <Product product={product} setProducts={setProducts} />;
+          return (
+            <Product shop={shop} product={product} setProducts={setProducts} />
+          );
         })}
     </div>
   );
