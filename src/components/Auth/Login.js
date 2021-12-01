@@ -41,7 +41,7 @@ const Login = ({ setShowLoginMenu }) => {
       });
   };
   return (
-    <form className="loginForm form" onSubmit={handleSubmit}>
+    <form className="form loginForm" onSubmit={handleSubmit}>
       <div className="formControl">
         <label>Elektroninis paštas</label>
         <input

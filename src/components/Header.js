@@ -12,8 +12,6 @@ const Header = () => {
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const [showMenu, setShowMenu] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail"));
-  const [isAdmin, setIsAdmin] = useState(localStorage.getItem("isAdmin"));
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -43,10 +41,24 @@ const Header = () => {
 
   const logOut = () => {
     localStorage.clear();
-    Cookies.remove("Access-Token");
-    Cookies.remove("Refresh-Token");
-    setShowLoginMenu(false);
-    navigate("/");
+
+    fetch(process.env.REACT_APP_API_URL + "/logout", {
+      method: "POST",
+      credentials: "include",
+    })
+      .then(async (response) => {
+        const data = await response;
+        if (!response.ok) {
+          const error = (data && data.message) || response.statusText;
+          return Promise.reject(error);
+        }
+
+        setShowLoginMenu(false);
+        navigate("/");
+      })
+      .catch((error) => {
+        console.error("There was an error!", error);
+      });
   };
 
   return (
@@ -68,7 +80,7 @@ const Header = () => {
           }}
         ></div>
 
-        {userEmail == null ? (
+        {localStorage.getItem("userEmail") == null ? (
           <div className="menu" style={showMenu ? { display: "block" } : {}}>
             <ul>
               <Link to="/register/">
@@ -84,7 +96,7 @@ const Header = () => {
         ) : (
           <div className="menu" style={showMenu ? { display: "block" } : {}}>
             <ul>
-              {isAdmin === "true" && (
+              {localStorage.getItem("isAdmin") === "true" && (
                 <Link to="/categories">
                   <li>Kategorijos</li>
                 </Link>

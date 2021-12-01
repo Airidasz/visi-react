@@ -6,7 +6,7 @@
 @media (max-width: 768px) {
   .loginForm {
     top: 120px;
-    width: 100vw;
+    width: 100vw !important;
     max-width: 100%;
     box-sizing: border-box;
   }

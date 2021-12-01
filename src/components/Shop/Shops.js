@@ -23,12 +23,7 @@ const Shops = () => {
     }
   }, [shopData]);
 
-  if (typeof shopData !== "object")
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
+  if (typeof shopData !== "object") return <div></div>;
 
   return (
     <div className="shopsPage">

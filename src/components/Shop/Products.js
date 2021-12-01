@@ -25,12 +25,8 @@ const Products = ({ shop }) => {
     }
   }, [products]);
 
-  if (typeof products !== "object")
-    return (
-      <div>
-        <h1>Loading...</h1>
-      </div>
-    );
+  if (typeof products !== "object") return <div></div>;
+
   return (
     <div className="products">
       {typeof products === "object" &&

@@ -8,6 +8,10 @@ import mark from "../../assets/mark.svg";
 import EditCategory from "./EditCategory";
 
 const Categories = () => {
+  useEffect(() => {
+    document.title = "Kategorijos";
+  }, []);
+
   const [categories, setCategories] = useState(false);
   const [showCreate, setShowCreate] = useState(false);
   const [showEdit, setShowEdit] = useState({});

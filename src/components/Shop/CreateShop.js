@@ -82,6 +82,11 @@ const CreateShop = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (typeof id === "undefined") document.title = "Kurti parduotuvę";
+    else document.title = "Redaguoti parduotuvę";
+  }, []);
+
   const handleSubmit = (evt) => {
     evt.preventDefault();
     if (typeof id === "undefined") createShop();

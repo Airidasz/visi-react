@@ -6,6 +6,10 @@ import Products from "./Products";
 import RefreshTokens from "../RefreshTokens";
 
 const Shop = () => {
+  useEffect(() => {
+    document.title = "Parduotuvė";
+  }, []);
+
   let { id } = useParams();
   const [shop, setShop] = useState(false);
   const navigate = useNavigate();
@@ -54,12 +58,7 @@ const Shop = () => {
     if (shouldDeleteShop) deleteShop();
   };
 
-  if (typeof shop !== "object")
-    return (
-      <div className="pageView">
-        <h1>Loading...</h1>
-      </div>
-    );
+  if (typeof shop !== "object") return <div className="pageView"></div>;
 
   return (
     <div className="pageView">
