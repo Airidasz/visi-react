@@ -2,13 +2,13 @@ import "./Header.scss";
 import Login from "./Auth/Login";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import Cookies from "js-cookie";
+import { useAlert } from "react-alert";
 
 const Header = () => {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
   const location = useLocation();
-
+  const alert = useAlert();
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const [showMenu, setShowMenu] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -57,7 +57,7 @@ const Header = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   };
 

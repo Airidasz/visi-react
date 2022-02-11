@@ -4,10 +4,11 @@ import { useParams } from "react-router";
 import RefreshTokens from "./RefreshTokens";
 import Select from "react-select";
 import makeAnimated from "react-select/animated";
+import { useAlert } from "react-alert";
 
 const CreateProduct = () => {
   const animatedComponents = makeAnimated();
-
+  const alert = useAlert();
   const navigate = useNavigate();
   const { shopid } = useParams();
   const { productid } = useParams();
@@ -21,6 +22,23 @@ const CreateProduct = () => {
   const getSelectedCategories = () => {
     let selectedCategoriesArr = [];
     if (typeof productid !== "undefined" && typeof shopid !== "undefined") {
+      fetch(process.env.REACT_APP_API_URL + "/shop/" + shopid, {
+        method: "GET",
+      })
+        .then(async (response) => {
+          const data = await response.json();
+
+          if (!response.ok) {
+            const error = (data && data.message) || response.statusText;
+            return Promise.reject(error);
+          }
+
+          if (data.userID != localStorage.getItem("userID")) navigate("/");
+        })
+        .catch((error) => {
+          alert.error(error);
+        });
+
       fetch(
         process.env.REACT_APP_API_URL +
           "/shop/" +
@@ -30,16 +48,19 @@ const CreateProduct = () => {
         { method: "GET" }
       )
         .then(async (response) => {
-          const data = await response.json();
+          const data = await response;
 
           if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
+            const jsonData = await data.json();
+            const error = (data && jsonData.message) || response.statusText;
             return Promise.reject(error);
           }
-          setName(data.name);
-          setDescription(data.description);
 
-          data.categories.map((category) => {
+          const jsonData = await data.json();
+          setName(jsonData.name);
+          setDescription(jsonData.description);
+
+          jsonData.categories.forEach((category) => {
             selectedCategoriesArr.push({
               value: category.id,
               label: category.name,
@@ -47,7 +68,7 @@ const CreateProduct = () => {
           });
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
     setSelectedCategories(selectedCategoriesArr);
@@ -71,14 +92,15 @@ const CreateProduct = () => {
         const data = await response;
 
         if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
+          const jsonData = await data.json();
+          const error = (data && jsonData.message) || response.statusText;
           return Promise.reject(error);
         }
 
         navigate(-1);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   });
 
@@ -106,14 +128,15 @@ const CreateProduct = () => {
         const data = await response;
 
         if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
+          const jsonData = await data.json();
+          const error = (data && jsonData.message) || response.statusText;
           return Promise.reject(error);
         }
 
         navigate(-1);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   });
 
@@ -129,14 +152,14 @@ const CreateProduct = () => {
           return Promise.reject(error);
         }
         let arr = [];
-        data.map((category) => {
+        data.forEach((category) => {
           arr.push({ value: category.id, label: category.name });
         });
 
         setCategoryOptions(arr);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   }, []);
 

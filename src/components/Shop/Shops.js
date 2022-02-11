@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Shops.scss";
+import { useAlert } from "react-alert";
 
 const Shops = () => {
   const [shopData, setShopData] = useState(false);
-
+  const alert = useAlert();
   useEffect(() => {
     if (typeof shopData !== "object") {
       fetch(process.env.REACT_APP_API_URL + "/shops", { method: "GET" })
         .then(async (response) => {
-          const data = await response.json();
+          const data = await response;
+
           if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
+            const jsonData = await data.json();
+            const error = (data && jsonData.message) || response.statusText;
             return Promise.reject(error);
           }
 
-          setShopData(data);
+          const jsonData = await data.json();
+          setShopData(jsonData);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
   }, [shopData]);

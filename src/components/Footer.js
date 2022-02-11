@@ -3,9 +3,14 @@ import "./Header.scss";
 const Footer = () => {
   return (
     <footer>
-      <h4>
-        Labai geras <i>Footeris</i>
-      </h4>
+      <div className="container">
+        <h4 style={{ display: "inline" }}>
+          Atliko <b>Airidas Zinkevičius</b>
+        </h4>
+        <h4 style={{ display: "inline", fontWeight: "400" }}>
+          Visos autorinės teisės saugomos
+        </h4>
+      </div>
     </footer>
   );
 };

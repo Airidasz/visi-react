@@ -4,6 +4,7 @@ import { useParams } from "react-router";
 import "./Shop.scss";
 import ShopMap from "../ShopMap";
 import RefreshTokens from "../RefreshTokens";
+import { useAlert } from "react-alert";
 
 const CreateShop = () => {
   const { id } = useParams();
@@ -12,6 +13,13 @@ const CreateShop = () => {
   const [createLocations, setCreateLocations] = useState(false);
   const [shopID, setShopID] = useState(id);
   const navigate = useNavigate();
+  const alert = useAlert();
+  const [done, setDone] = useState(false);
+
+  useEffect(() => {
+    if (done) navigate("/shop/" + shopID);
+  }, [done]);
+
   const createShop = RefreshTokens(() => {
     fetch(process.env.REACT_APP_API_URL + "/shops", {
       method: "POST",
@@ -22,19 +30,20 @@ const CreateShop = () => {
       }),
     })
       .then(async (response) => {
-        const data = await response.json();
+        const data = await response;
 
         if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
+          const jsonData = await data.json();
+          const error = (data && jsonData.message) || response.statusText;
           return Promise.reject(error);
         }
 
-        setShopID(data.id);
+        const jsonData = await data.json();
+        setShopID(jsonData.id);
         setCreateLocations(true);
-        navigate("/shop/" + data.id);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   });
 
@@ -51,19 +60,21 @@ const CreateShop = () => {
         const data = await response;
 
         if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
+          const jsonData = await data.json();
+          const error = (data && jsonData.message) || response.statusText;
           return Promise.reject(error);
         }
 
-        //setCreateLocations(true);
-        navigate("/shop/" + data.id);
+        setCreateLocations(true);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   });
 
   useEffect(() => {
+    if (localStorage.getItem("userID") === null) navigate("/");
+
     if (typeof id !== "undefined") {
       fetch(process.env.REACT_APP_API_URL + "/shop/" + id, { method: "GET" })
         .then(async (response) => {
@@ -73,11 +84,14 @@ const CreateShop = () => {
             const error = (data && data.message) || response.statusText;
             return Promise.reject(error);
           }
+
+          if (data.userID != localStorage.getItem("userID")) navigate("/");
+
           setName(data.name);
           setDescription(data.description);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
   }, []);
@@ -131,7 +145,11 @@ const CreateShop = () => {
             </form>
           </div>
           <div>
-            <ShopMap id={shopID} createLocations={createLocations} />
+            <ShopMap
+              id={shopID}
+              createLocations={createLocations}
+              setDone={setDone}
+            />
           </div>
         </div>
       </div>

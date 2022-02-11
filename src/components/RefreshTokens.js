@@ -1,20 +1,24 @@
-import Cookies from "js-cookie";
 import SetUserInfo from "./SetUserInfo";
 
 const RefreshTokens = (nextHandler) => {
   const setUserInfo = SetUserInfo();
 
-  async function refreshToken() {
-    if (typeof Cookies.get("Access-Token") === "undefined") {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/refresh", {
-        method: "POST",
-        credentials: "include",
-      });
+  function refreshToken() {
+    fetch(process.env.REACT_APP_API_URL + "/refresh", {
+      method: "POST",
+      mode: "cors",
+      credentials: "include",
+      path: "/",
+    }).then(async (response) => {
+      const data = await response;
 
-      setUserInfo();
-    }
+      if (response.ok) {
+        const jsonData = await data.json();
+        setUserInfo(jsonData.AccessToken);
+      }
 
-    nextHandler();
+      nextHandler();
+    });
   }
   return refreshToken;
 };

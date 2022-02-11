@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { Outlet, useParams } from "react-router";
 import { Link, useNavigate } from "react-router-dom";
 import ShopMap from "../ShopMap";
 import Products from "./Products";
 import RefreshTokens from "../RefreshTokens";
+import { useAlert } from "react-alert";
 
 const Shop = () => {
   useEffect(() => {
     document.title = "Parduotuvė";
   }, []);
-
-  let { id } = useParams();
+  const alert = useAlert();
+  let { shopid } = useParams();
+  const id = shopid;
   const [shop, setShop] = useState(false);
   const navigate = useNavigate();
   const deleteShop = RefreshTokens(() => {
@@ -20,7 +22,7 @@ const Shop = () => {
     })
       .then(async (response) => {
         const data = await response;
-        console.log(response);
+
         if (!response.ok) {
           const error = (data && data.message) || response.statusText;
           return Promise.reject(error);
@@ -28,7 +30,7 @@ const Shop = () => {
         navigate("/");
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   });
 
@@ -36,16 +38,17 @@ const Shop = () => {
     if (typeof shop !== "object") {
       fetch(process.env.REACT_APP_API_URL + "/shop/" + id, { method: "GET" })
         .then(async (response) => {
-          const data = await response.json();
+          const data = await response;
 
           if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
+            const error = response.statusText;
             return Promise.reject(error);
           }
-          setShop(data);
+
+          setShop(await data.json());
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
   }, [shop]);
@@ -88,7 +91,7 @@ const Shop = () => {
               </Link>
             )}
           </div>
-
+          <Outlet />
           <Products shop={shop} />
         </div>
       </div>

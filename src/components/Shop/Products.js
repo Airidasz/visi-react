@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import "./Shop.scss";
 import Product from "./Product";
+import { useAlert } from "react-alert";
 
 const Products = ({ shop }) => {
   const [products, setProducts] = useState(false);
+  const alert = useAlert();
 
   useEffect(() => {
     if (typeof products !== "object") {
@@ -11,16 +13,18 @@ const Products = ({ shop }) => {
         method: "GET",
       })
         .then(async (response) => {
-          const data = await response.json();
+          const data = await response;
 
           if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
+            const jsonData = await data.json();
+            const error = (data && jsonData.message) || response.statusText;
             return Promise.reject(error);
           }
-          setProducts(data);
+
+          setProducts(await data.json());
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
   }, [products]);

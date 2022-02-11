@@ -2,10 +2,12 @@ import pencil from "../../assets/pencil.svg";
 import trash from "../../assets/trash.svg";
 import mark from "../../assets/mark.svg";
 import RefreshTokens from "../RefreshTokens";
+import { useAlert } from "react-alert";
 
 import { Link } from "react-router-dom";
 
 const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
+  const alert = useAlert();
   const tryDeleteProduct = () => {
     const shouldDeleteProduct = window.confirm(
       "Ar tikrai norite ištrinti šią prekę?"
@@ -28,14 +30,15 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
             const data = await response;
 
             if (!response.ok) {
-              const error = (data && data.message) || response.statusText;
+              const jsonData = await data.json();
+              const error = (data && jsonData.message) || response.statusText;
               return Promise.reject(error);
             }
             setShow(false);
             setProducts(false);
           })
           .catch((error) => {
-            console.error("There was an error!", error);
+            alert.error(error);
           });
       });
 

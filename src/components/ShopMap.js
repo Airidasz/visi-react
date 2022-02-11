@@ -8,15 +8,15 @@ import {
   useMapEvents,
 } from "react-leaflet";
 
-import farmLocation from "../assets/farmLocation.svg";
-import sellingLocation from "../assets/sellingLocation.svg";
-
+import farmLocation from "../assets/farmLocation.png";
+import sellingLocation from "../assets/sellingLocation.png";
+import { useAlert } from "react-alert";
 import RemoveItemFromArray from "./RemoveFromArray";
 
-const ShopMap = ({ id, editable = true, createLocations = false }) => {
+const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
   const [locations, setLocations] = useState([]);
   const removeItem = RemoveItemFromArray();
-
+  const alert = useAlert();
   const farmIcon = icon({ iconUrl: farmLocation, iconSize: (42, 42) });
   const sellingLocationIcon = icon({
     iconUrl: sellingLocation,
@@ -42,7 +42,7 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
             return Promise.reject(error);
           }
           let arr = [];
-          data.map((d) => {
+          data.forEach((d) => {
             var position = latLng(d.lat, d.lng);
             arr.push({ type: d.type, latlng: position });
           });
@@ -50,31 +50,37 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
           setLocations(arr);
         })
         .catch((error) => {
-          console.error("There was an error!", error);
+          alert.error(error);
         });
     }
   }, []);
 
   function AddLocationsToShop() {
-    locations.map((location) => {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          type: location.type,
-          lat: location.latlng.lat,
-          lng: location.latlng.lng,
-        }),
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const error = response.statusText;
-            return Promise.reject(error);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
+    fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
+      method: "DELETE",
+      credentials: "include",
+    }).then(async (response) => {
+      const data = await response;
+      if (!response.ok) {
+        alert.error(response.statusText);
+        return;
+      }
+
+      locations.forEach((location) => {
+        fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
+          method: "POST",
+          credentials: "include",
+          body: JSON.stringify({
+            type: location.type,
+            lat: location.latlng.lat,
+            lng: location.latlng.lng,
+          }),
+        }).catch((error) => {
+          alert.error(error.statusText);
         });
+      });
+
+      setDone(true);
     });
   }
 

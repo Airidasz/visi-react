@@ -4,7 +4,7 @@ import ProductModal from "./ProductModal";
 const Product = ({ product, setProducts, shop }) => {
   const [showProductPopup, setShowProductPopup] = useState(false);
   return (
-    <div>
+    <div key={product.id}>
       {showProductPopup && (
         <ProductModal
           isOwner={localStorage.getItem("userID") == shop.userID}
@@ -14,7 +14,6 @@ const Product = ({ product, setProducts, shop }) => {
         />
       )}
       <div
-        key={product.id}
         className="product"
         onClick={() => {
           setShowProductPopup(!showProductPopup);

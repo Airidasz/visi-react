@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Auth.scss";
+import { useAlert } from "react-alert";
 
 const Register = () => {
   useEffect(() => {
@@ -9,7 +10,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-
+  const alert = useAlert();
   const navigate = useNavigate();
 
   const handleSubmit = (evt) => {
@@ -27,14 +28,15 @@ const Register = () => {
         const data = await response;
 
         if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
+          const jsonData = await data.json();
+          const error = (data && jsonData.message) || response.statusText;
           return Promise.reject(error);
         }
 
         navigate(-1);
       })
       .catch((error) => {
-        console.error("There was an error!", error);
+        alert.error(error);
       });
   };
   return (
