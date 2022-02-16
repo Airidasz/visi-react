@@ -1,21 +1,23 @@
-import Header from "./components/Header";
-import { Outlet } from "react-router-dom";
-import "./App.scss";
-import Footer from "./components/Footer";
-import RefreshTokens from "./components/RefreshTokens";
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import Header from './components/Header';
+import { Outlet } from 'react-router-dom';
+import './App.scss';
+import Footer from './components/Footer';
+import RefreshTokens from './components/RefreshTokens';
+import React, { useEffect, useState } from 'react';
 
 function App() {
   const [tokensRefreshed, setTokensRefreshed] = useState(false);
-  useEffect(() => {
-    localStorage.clear();
-    Cookies.remove("Access-Token");
+  
+  const refreshToken = RefreshTokens();
 
-    const refreshTokens = RefreshTokens(() => {
+  useEffect(() => {
+    const init = async () => {
+      localStorage.clear();
+      await refreshToken();
       setTokensRefreshed(true);
-    });
-    refreshTokens();
+    };
+
+    init();
   }, []);
 
   if (!tokensRefreshed) return <div></div>;

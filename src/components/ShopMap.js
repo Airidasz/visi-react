@@ -1,22 +1,22 @@
-import { useState, useEffect } from "react";
-import { latLng, icon } from "leaflet";
+import React, { useState, useEffect } from 'react';
+import { latLng, icon } from 'leaflet';
 import {
   MapContainer,
   TileLayer,
   Marker,
   Popup,
   useMapEvents,
-} from "react-leaflet";
+} from 'react-leaflet';
 
-import farmLocation from "../assets/farmLocation.svg";
-import sellingLocation from "../assets/sellingLocation.svg";
+import farmLocation from '../assets/farmLocation.png';
+import sellingLocation from '../assets/sellingLocation.png';
+import RemoveItemFromArray from './RemoveFromArray';
+import useApi from './useApi';
 
-import RemoveItemFromArray from "./RemoveFromArray";
-
-const ShopMap = ({ id, editable = true, createLocations = false }) => {
+const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
   const [locations, setLocations] = useState([]);
   const removeItem = RemoveItemFromArray();
-
+  const { GetRequest, DeleteRequest, PostRequest} = useApi();
   const farmIcon = icon({ iconUrl: farmLocation, iconSize: (42, 42) });
   const sellingLocationIcon = icon({
     iconUrl: sellingLocation,
@@ -24,59 +24,46 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
   });
 
   useEffect(() => {
+    const getLocations = async () => {
+      if(!id)
+        return;
+
+      const response = await GetRequest(`shop/${id}/locations`);
+      if(!response)
+        return;
+
+      const data = await response.json();
+
+      const locationData = data.map((d) => ({ type: d.type, latlng: latLng(d.lat, d.lng) }));
+      setLocations([...locationData]);
+    };
+
+    getLocations();
+  }, []);
+
+  useEffect(() => {
+    const AddLocationsToShop = async () => {
+      const deleteResponse = await DeleteRequest(`shop/${id}/locations`);
+      if(!deleteResponse)
+        return;
+  
+      locations.forEach(async (location) => {
+        const body = JSON.stringify({
+          type: location.type,
+          lat: location.latlng.lat,
+          lng: location.latlng.lng,
+        });
+  
+        await PostRequest(`shop/${id}/locations`, body);
+      });
+  
+      setDone(true);
+    };
+
     if (!createLocations) return;
 
     AddLocationsToShop();
   }, [createLocations]);
-
-  useEffect(() => {
-    if (typeof id !== "undefined") {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
-        method: "GET",
-      })
-        .then(async (response) => {
-          const data = await response.json();
-
-          if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-          }
-          let arr = [];
-          data.map((d) => {
-            var position = latLng(d.lat, d.lng);
-            arr.push({ type: d.type, latlng: position });
-          });
-
-          setLocations(arr);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-        });
-    }
-  }, []);
-
-  function AddLocationsToShop() {
-    locations.map((location) => {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + id + "/locations", {
-        method: "POST",
-        credentials: "include",
-        body: JSON.stringify({
-          type: location.type,
-          lat: location.latlng.lat,
-          lng: location.latlng.lng,
-        }),
-      })
-        .then(async (response) => {
-          if (!response.ok) {
-            const error = response.statusText;
-            return Promise.reject(error);
-          }
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-        });
-    });
-  }
 
   const LocationMarker = () => {
     const [position, setPosition] = useState(null);
@@ -95,28 +82,18 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
       ]);
     };
 
-    return position === null ? null : (
+    return position && (
       <Popup position={position} minWidth={180}>
-        <div style={{ display: "grid", rowGap: "5px" }}>
-          <input
-            type="button"
-            className="btn-dark"
-            value="Ūkis"
-            onClick={() => AddLocation("farm")}
-          />
-          <input
-            type="button"
-            className="btn-dark"
-            value="Pardavimo vieta"
-            onClick={() => AddLocation("sellingLocation")}
-          />
+        <div className="d-flex flex-column">
+          <button className="btn-dark mb-1" onClick={() => AddLocation('farm')}>Ūkis</button>
+          <button className="btn-dark" onClick={() => AddLocation('sellingLocation')}>Pardavimo vieta</button>
         </div>
       </Popup>
     );
   };
 
-  const removeLocation = (e) => {
-    setLocations(removeItem(locations, e));
+  const removeLocation = (location) => {
+    setLocations(removeItem(locations, location));
   };
 
   return (
@@ -129,12 +106,10 @@ const ShopMap = ({ id, editable = true, createLocations = false }) => {
         return (
           <Marker
             key={i}
-            icon={location.type === "farm" ? farmIcon : sellingLocationIcon}
+            icon={location.type === 'farm' ? farmIcon : sellingLocationIcon}
             position={location.latlng}
             eventHandlers={{
-              click: (e) => {
-                if (editable) removeLocation(location);
-              },
+              click: () => editable && removeLocation(location),
             }}
           />
         );

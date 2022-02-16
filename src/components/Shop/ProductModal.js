@@ -1,41 +1,48 @@
-import pencil from "../../assets/pencil.svg";
-import trash from "../../assets/trash.svg";
-import mark from "../../assets/mark.svg";
-import RefreshTokens from "../RefreshTokens";
+import React from 'react';
+import pencil from '../../assets/pencil.svg';
+import trash from '../../assets/trash.svg';
+import mark from '../../assets/mark.svg';
+import RefreshTokens from '../RefreshTokens';
+import { useAlert } from 'react-alert';
 
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
+  const alert = useAlert();
+  const refreshToken = RefreshTokens();
+
+  
   const tryDeleteProduct = () => {
     const shouldDeleteProduct = window.confirm(
-      "Ar tikrai norite ištrinti šią prekę?"
+      'Ar tikrai norite ištrinti šią prekę?'
     );
 
     if (shouldDeleteProduct) {
-      const deleteProduct = RefreshTokens(() => {
+      const deleteProduct = refreshToken(() => {
         fetch(
           process.env.REACT_APP_API_URL +
-            "/shop/" +
+            '/shop/' +
             product.shopID +
-            "/product/" +
+            '/product/' +
             product.id,
           {
-            method: "DELETE",
-            credentials: "include",
+            method: 'DELETE',
+            credentials: 'include',
           }
         )
           .then(async (response) => {
             const data = await response;
 
             if (!response.ok) {
-              const error = (data && data.message) || response.statusText;
+              const jsonData = await data.json();
+              const error = (data && jsonData.message) || response.statusText;
               return Promise.reject(error);
             }
             setShow(false);
             setProducts(false);
           })
           .catch((error) => {
-            console.error("There was an error!", error);
+            alert.error(error);
           });
       });
 
@@ -50,11 +57,11 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
           <div className="actions">
             {isOwner && (
               <Link
-                to={"product/" + product.id + "/edit"}
+                to={'product/' + product.id + '/edit'}
                 className="btn-circle"
                 style={{
-                  background: "rgb(229, 139, 21)",
-                  marginRight: "0.3rem",
+                  background: 'rgb(229, 139, 21)',
+                  marginRight: '0.3rem',
                 }}
               >
                 <img src={pencil} className="actionButton" />
@@ -64,8 +71,8 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
               <div
                 className="btn-circle"
                 style={{
-                  background: "rgb(175, 19, 19)",
-                  marginRight: "0.3rem",
+                  background: 'rgb(175, 19, 19)',
+                  marginRight: '0.3rem',
                 }}
                 onClick={tryDeleteProduct}
               >
@@ -75,7 +82,7 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
             <div
               className="btn-circle"
               style={{
-                background: "black",
+                background: 'black',
               }}
               onClick={() => {
                 setShow(false);
@@ -87,7 +94,7 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
         </div>
         <p>{product.description}</p>
         <div className="categories">
-          {typeof product.categories === "object" &&
+          {typeof product.categories === 'object' &&
             product.categories.map((category) => {
               return (
                 <div key={category.id} className="category">

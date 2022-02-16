@@ -1,20 +1,19 @@
-import { useState } from "react";
-import ProductModal from "./ProductModal";
+import React, { useState } from 'react';
+import ProductModal from './ProductModal';
 
 const Product = ({ product, setProducts, shop }) => {
   const [showProductPopup, setShowProductPopup] = useState(false);
   return (
-    <div>
+    <div key={product.id}>
       {showProductPopup && (
         <ProductModal
-          isOwner={localStorage.getItem("userID") == shop.userID}
+          isOwner={localStorage.getItem('userID') == shop.userID}
           product={product}
           setShow={setShowProductPopup}
           setProducts={setProducts}
         />
       )}
       <div
-        key={product.id}
         className="product"
         onClick={() => {
           setShowProductPopup(!showProductPopup);
@@ -22,7 +21,7 @@ const Product = ({ product, setProducts, shop }) => {
       >
         <h3 className="product-name">{product.name}</h3>
         <div className="categories">
-          {typeof product.categories === "object" &&
+          {typeof product.categories === 'object' &&
             product.categories.map((category) => {
               return (
                 <div key={category.id} className="category">

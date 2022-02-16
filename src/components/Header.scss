@@ -109,6 +109,7 @@ header {
 }
 
 footer {
+  text-align: center;
   z-index: 9999999999;
   display: flex;
   justify-content: center;
@@ -120,4 +121,17 @@ footer {
   margin-top: 40px;
   color: white;
   align-items: center;
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 768px) {
+  footer {
+    .container {
+      flex-direction: column;
+    }
+  }
 }

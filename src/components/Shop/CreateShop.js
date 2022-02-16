@@ -1,105 +1,94 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { useParams } from "react-router";
-import "./Shop.scss";
-import ShopMap from "../ShopMap";
-import RefreshTokens from "../RefreshTokens";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router';
+import './Shop.scss';
+import ShopMap from '../ShopMap';
+import useApi from '../useApi';
 
 const CreateShop = () => {
   const { id } = useParams();
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+  const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [createLocations, setCreateLocations] = useState(false);
   const [shopID, setShopID] = useState(id);
   const navigate = useNavigate();
-  const createShop = RefreshTokens(() => {
-    fetch(process.env.REACT_APP_API_URL + "/shops", {
-      method: "POST",
-      credentials: "include",
-      body: JSON.stringify({
-        name: name,
-        description: description,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response.json();
+  const [done, setDone] = useState(false);
 
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
-
-        setShopID(data.id);
-        setCreateLocations(true);
-        navigate("/shop/" + data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  });
-
-  const editShop = RefreshTokens(() => {
-    fetch(process.env.REACT_APP_API_URL + "/shop/" + id, {
-      method: "PUT",
-      credentials: "include",
-      body: JSON.stringify({
-        name: name,
-        description: description,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response;
-
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
-
-        //setCreateLocations(true);
-        navigate("/shop/" + data.id);
-      })
-      .catch((error) => {
-        console.error("There was an error!", error);
-      });
-  });
+  const { PostRequest, PutRequest, GetRequest} = useApi();
 
   useEffect(() => {
-    if (typeof id !== "undefined") {
-      fetch(process.env.REACT_APP_API_URL + "/shop/" + id, { method: "GET" })
-        .then(async (response) => {
-          const data = await response.json();
+    if (done) navigate('/shop/' + shopID);
+  }, [done]);
 
-          if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-          }
-          setName(data.name);
-          setDescription(data.description);
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-        });
-    }
+  const createShop = async () => {
+    const body = JSON.stringify({
+      name: name,
+      description: description,
+    });
+
+    const response = await PostRequest('shops', body);
+    if(!response)
+      return;
+
+    const data = await response.json();
+
+    setShopID(data.id);
+    setCreateLocations(true);
+  };
+
+  const editShop = async () => {
+    const body = JSON.stringify({
+      name: name,
+      description: description,
+    });
+
+    const response = await PutRequest(`shop/${id}`, body);
+    if(!response)
+      return;
+
+    setCreateLocations(true);
+  };
+
+  useEffect(() => {
+    const getShop = async () => {
+      if(!id)
+        return;
+
+      const response = await GetRequest(`shop/${id}`);
+
+      if(!response)
+        return;
+
+      const data = await response.json();
+
+      if (data.userID != localStorage.getItem('userID')) navigate('/');
+
+      setName(data.name);
+      setDescription(data.description);
+    };
+
+    if (localStorage.getItem('userID') === null) navigate('/');
+    getShop();
   }, []);
 
   useEffect(() => {
-    if (typeof id === "undefined") document.title = "Kurti parduotuvę";
-    else document.title = "Redaguoti parduotuvę";
+    if (!id) document.title = 'Kurti parduotuvę';
+    else document.title = 'Redaguoti parduotuvę';
   }, []);
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
-    if (typeof id === "undefined") createShop();
-    else editShop();
+    if (!id) await createShop();
+    else await editShop();
   };
 
   return (
     <div className="pageView">
-      <div className="container" style={{ marginTop: "59px" }}>
+      <div className="container" style={{ marginTop: '59px' }}>
         <div className="createShopGrid">
           <div>
             <form onSubmit={handleSubmit} className="form">
-              <div className="formControl" style={{ marginTop: "0" }}>
+              <div className="formControl" style={{ marginTop: '0' }}>
                 <label>Pavadinimas</label>
                 <input
                   type="text"
@@ -111,7 +100,7 @@ const CreateShop = () => {
                 <label>Aprašymas</label>
 
                 <textarea
-                  style={{ resize: "vertical", minHeight: "120px" }}
+                  style={{ resize: 'vertical', minHeight: '120px' }}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 />
@@ -121,17 +110,17 @@ const CreateShop = () => {
                 <input
                   type="submit"
                   className="btn-dark"
-                  value={
-                    typeof id === "undefined"
-                      ? "Kurti parduotuvę"
-                      : "Koreguoti parduotuvę"
-                  }
+                  value={!id ? 'Kurti parduotuvę': 'Koreguoti parduotuvę'}
                 />
               </div>
             </form>
           </div>
           <div>
-            <ShopMap id={shopID} createLocations={createLocations} />
+            <ShopMap
+              id={shopID}
+              createLocations={createLocations}
+              setDone={setDone}
+            />
           </div>
         </div>
       </div>

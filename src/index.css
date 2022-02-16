@@ -65,3 +65,24 @@ input[type="button"] {
   cursor: pointer;
   outline: inherit;
 }
+
+.fileUpload {
+  background-color: rgb(151, 151, 151);
+  width: 100px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileUpload.hover {
+  background-color: rgb(92, 92, 92);
+}
+
+.fileUpload label {
+  width: 80%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  text-align: center;
+}
