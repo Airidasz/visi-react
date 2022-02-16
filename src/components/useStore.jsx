@@ -1,12 +1,30 @@
 import { useState } from 'react';
 import { useContext, createContext, createElement, useMemo } from 'react';
+import useApi from './useApi';
 
 const DataStore = () => {
+  const { GetRequest } = useApi();
   const [store, setStore] = useState({
     categories:null
   });
+
+  const loadCategories = async () => {
+    if (store.categories) 
+      return;
+    
+    const response = await GetRequest('categories');
+
+    if(!response)
+      return;
+
+    const data = await response.json();
+
+    store.categories = data;
+    setStore({...store});
+    
+  };
   
-  return {store, setStore};
+  return {store, setStore, loadCategories};
 };
 
 const StoreContext = createContext(null);
@@ -21,7 +39,7 @@ export const useStore = () => {
 };
 
 export const StoreProvider = ({ children }) => {
-  const { store, setStore } = DataStore();
-  const memo = useMemo(() => ({ store, setStore }), [ store, setStore ] );
+  const { store, setStore, loadCategories } = DataStore();
+  const memo = useMemo(() => ({ store, setStore, loadCategories }), [ store, setStore, loadCategories ] );
   return createElement(StoreContext.Provider, { value: memo }, children);
 };

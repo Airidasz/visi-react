@@ -2,51 +2,25 @@ import React from 'react';
 import pencil from '../../assets/pencil.svg';
 import trash from '../../assets/trash.svg';
 import mark from '../../assets/mark.svg';
-import RefreshTokens from '../RefreshTokens';
-import { useAlert } from 'react-alert';
+import useApi from '../useApi';
 
 import { Link } from 'react-router-dom';
 
 const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
-  const alert = useAlert();
-  const refreshToken = RefreshTokens();
+  const { DeleteRequest } = useApi();
 
-  
-  const tryDeleteProduct = () => {
+  const tryDeleteProduct = async () => {
     const shouldDeleteProduct = window.confirm(
       'Ar tikrai norite ištrinti šią prekę?'
     );
 
-    if (shouldDeleteProduct) {
-      const deleteProduct = refreshToken(() => {
-        fetch(
-          process.env.REACT_APP_API_URL +
-            '/shop/' +
-            product.shopID +
-            '/product/' +
-            product.id,
-          {
-            method: 'DELETE',
-            credentials: 'include',
-          }
-        )
-          .then(async (response) => {
-            const data = await response;
+    if (!shouldDeleteProduct) 
+      return;
 
-            if (!response.ok) {
-              const jsonData = await data.json();
-              const error = (data && jsonData.message) || response.statusText;
-              return Promise.reject(error);
-            }
-            setShow(false);
-            setProducts(false);
-          })
-          .catch((error) => {
-            alert.error(error);
-          });
-      });
-
-      deleteProduct();
+    const response = await DeleteRequest(`shop/${product.shopID}/product${product.id}`);
+    if(response) {
+      setShow(false);
+      setProducts(false);
     }
   };
   return (

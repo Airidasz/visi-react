@@ -30,8 +30,9 @@ const options = {
 };
 
 render(
-  <StoreProvider>
-    <AlertProvider template={AlertTemplate} {...options}>
+ 
+  <AlertProvider template={AlertTemplate} {...options}>
+    <StoreProvider>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<App />}>
@@ -52,7 +53,7 @@ render(
           <Route path="*" exact={true} element={<Status404Page />} />
         </Routes>
       </BrowserRouter>
-    </AlertProvider>
-  </StoreProvider>,
+    </StoreProvider>
+  </AlertProvider>,
   document.getElementById('root')
 );

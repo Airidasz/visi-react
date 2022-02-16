@@ -1,17 +1,18 @@
-import "./Header.scss";
-import Login from "./Auth/Login";
-import React, { useState, useEffect } from "react";
-import { useLocation, useNavigate, Link } from "react-router-dom";
-import { useAlert } from "react-alert";
+import './Header.scss';
+import Login from './Auth/Login';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
+import useApi from './useApi';
 
 const Header = () => {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
   const location = useLocation();
-  const alert = useAlert();
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const [showMenu, setShowMenu] = useState(window.innerWidth > 768);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  const {PostRequest} = useApi();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,31 +40,20 @@ const Header = () => {
     setShowMenu(!showMenu);
   };
 
-  const logOut = () => {
+  const logOut = async () => {
     localStorage.clear();
 
-    fetch(process.env.REACT_APP_API_URL + "/logout", {
-      method: "POST",
-      credentials: "include",
-    })
-      .then(async (response) => {
-        const data = await response;
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
+    const response = await PostRequest('logout');
+    if(!response)
+      return;
 
-        setShowLoginMenu(false);
-        navigate("/");
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
+    setShowLoginMenu(false);
+    navigate('/');
   };
 
   return (
     <header
-      className={offset > 10 || location.pathname !== "/" ? "solid" : undefined}
+      className={offset > 10 || location.pathname !== '/' ? 'solid' : undefined}
     >
       <div className="container">
         <div className="logo">
@@ -80,8 +70,8 @@ const Header = () => {
           }}
         ></div>
 
-        {localStorage.getItem("userEmail") == null ? (
-          <div className="menu" style={showMenu ? { display: "block" } : {}}>
+        {localStorage.getItem('userEmail') == null ? (
+          <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
               <Link to="/register/">
                 <li>Registruotis</li>
@@ -94,9 +84,9 @@ const Header = () => {
             {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu} />}
           </div>
         ) : (
-          <div className="menu" style={showMenu ? { display: "block" } : {}}>
+          <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
-              {localStorage.getItem("isAdmin") === "true" && (
+              {localStorage.getItem('isAdmin') === 'true' && (
                 <Link to="/categories">
                   <li>Kategorijos</li>
                 </Link>

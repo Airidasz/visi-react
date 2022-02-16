@@ -3,14 +3,12 @@ import { Outlet, useParams } from 'react-router';
 import { Link, useNavigate } from 'react-router-dom';
 import ShopMap from '../ShopMap';
 import Products from './Products';
-import { useAlert } from 'react-alert';
 import useApi from '../useApi';
 
 const Shop = () => {
   useEffect(() => {
     document.title = 'Parduotuvė';
   }, []);
-  const alert = useAlert();
   let { shopid } = useParams();
   const id = shopid;
   const [shop, setShop] = useState();

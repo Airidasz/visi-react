@@ -1,175 +1,94 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useParams } from 'react-router';
-import RefreshTokens from './RefreshTokens';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import { useAlert } from 'react-alert';
+import { useStore } from './useStore';
+import useApi from './useApi';
 
 const CreateProduct = () => {
   const animatedComponents = makeAnimated();
-  const alert = useAlert();
-  const refreshToken = RefreshTokens();
-
   const navigate = useNavigate();
   const { shopid } = useParams();
   const { productid } = useParams();
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+  const { store, loadCategories } = useStore();
+  const { GetRequest, PutRequest, PostRequest} = useApi();
 
-  const [categoryOptions, setCategoryOptions] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState(false);
+  const [categoryOptions, setCategoryOptions] = useState([]);
 
-  const getSelectedCategories = () => {
-    let selectedCategoriesArr = [];
-    if (typeof productid !== 'undefined' && typeof shopid !== 'undefined') {
-      fetch(process.env.REACT_APP_API_URL + '/shop/' + shopid, {
-        method: 'GET',
-      })
-        .then(async (response) => {
-          const data = await response.json();
-
-          if (!response.ok) {
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-          }
-
-          if (data.userID != localStorage.getItem('userID')) navigate('/');
-        })
-        .catch((error) => {
-          alert.error(error);
-        });
-
-      fetch(
-        process.env.REACT_APP_API_URL +
-          '/shop/' +
-          shopid +
-          '/product/' +
-          productid,
-        { method: 'GET' }
-      )
-        .then(async (response) => {
-          const data = await response;
-
-          if (!response.ok) {
-            const jsonData = await data.json();
-            const error = (data && jsonData.message) || response.statusText;
-            return Promise.reject(error);
-          }
-
-          const jsonData = await data.json();
-          setName(jsonData.name);
-          setDescription(jsonData.description);
-
-          jsonData.categories.forEach((category) => {
-            selectedCategoriesArr.push({
-              value: category.id,
-              label: category.name,
-            });
-          });
-        })
-        .catch((error) => {
-          alert.error(error);
-        });
-    }
-    setSelectedCategories(selectedCategoriesArr);
-    return selectedCategoriesArr;
-  };
-
-  const createProduct = refreshToken(() => {
-    const selectedCategoriesIDs = selectedCategories.map((cc) => {
-      return cc.value;
-    });
-    fetch(process.env.REACT_APP_API_URL + '/shop/' + shopid + '/products', {
-      method: 'POST',
-      credentials: 'include',
-      body: JSON.stringify({
-        name: name,
-        description: description,
-        categories: selectedCategoriesIDs,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response;
-
-        if (!response.ok) {
-          const jsonData = await data.json();
-          const error = (data && jsonData.message) || response.statusText;
-          return Promise.reject(error);
-        }
-
-        navigate(-1);
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
-  });
-
-  const editProduct = refreshToken(() => {
-    const selectedCategoriesIDs = selectedCategories.map((cc) => {
-      return cc.value;
-    });
-    fetch(
-      process.env.REACT_APP_API_URL +
-        '/shop/' +
-        shopid +
-        '/product/' +
-        productid,
-      {
-        method: 'PUT',
-        credentials: 'include',
-        body: JSON.stringify({
-          name: name,
-          description: description,
-          categories: selectedCategoriesIDs,
-        }),
-      }
-    )
-      .then(async (response) => {
-        const data = await response;
-
-        if (!response.ok) {
-          const jsonData = await data.json();
-          const error = (data && jsonData.message) || response.statusText;
-          return Promise.reject(error);
-        }
-
-        navigate(-1);
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
+  const [product, setProduct] = useState({
+    name: '',
+    description: '',
+    categories: []
   });
 
   useEffect(() => {
-    fetch(process.env.REACT_APP_API_URL + '/categories', {
-      method: 'GET',
-    })
-      .then(async (response) => {
-        const data = await response.json();
+    const getProductInfo = async () => {
+      if(!productid || !shopid)
+        return; 
 
-        if (!response.ok) {
-          const error = (data && data.message) || response.statusText;
-          return Promise.reject(error);
-        }
-        let arr = [];
-        data.forEach((category) => {
-          arr.push({ value: category.id, label: category.name });
-        });
+      const getShopResponse = await GetRequest(`shop/${shopid}`);
+      if(!getShopResponse)
+        return;
 
-        setCategoryOptions(arr);
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
+      const shopJson = await getShopResponse.json();
+      if (shopJson.userID != localStorage.getItem('userID'))
+        navigate('/');
+
+      const getProductResponse = await GetRequest(`shop/${shopid}/product/${productid}`);
+      if(!getProductResponse)
+        return;
+
+      const productJson = await getProductResponse.json();
+
+      product.name = productJson.name;
+      product.description = productJson.description;
+      product.categories = productJson.categories.map((category) => ({value: category.id,label: category.name,}));
+
+      setProduct({...product});
+    };
+
+    getProductInfo();
   }, []);
+
+  
+  useEffect(() => {
+    const getCategories = async () => {
+      if(store.categories){
+        const categoryOptions = store.categories.map((category) => ({value: category.id, label: category.name}));
+        setCategoryOptions([...categoryOptions]);
+        return;
+      }
+
+      await loadCategories();
+    };
+
+    getCategories();
+  }, [store.categories]);
+
+  const addEditProduct = async () => {
+    const selectedCategoryIDs = product.categories.map(cc => cc.value);
+
+    const body = JSON.stringify({
+      name: product.name,
+      description: product.description,
+      categories: selectedCategoryIDs,
+    });
+    
+    let response = null;
+    if(!productid)
+      response = await PostRequest(`shop/${shopid}/products`, body);
+    else 
+      response = await PutRequest(`shop/${shopid}/product/${productid}`, body);
+
+    if(response)
+      navigate(-1);
+  };
 
   const handleSubmit = (evt) => {
     evt.preventDefault();
-
-    if (typeof productid === 'undefined') createProduct();
-    else editProduct();
+    addEditProduct();
   };
 
   return (
@@ -182,8 +101,8 @@ const CreateProduct = () => {
                 <label>Pavadinimas</label>
                 <input
                   type="text"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  value={product.name}
+                  onChange={(e) => setProduct({...product, name: e.target.value})}
                 />
               </div>
               <div className="formControl">
@@ -191,34 +110,24 @@ const CreateProduct = () => {
 
                 <textarea
                   style={{ resize: 'vertical', minHeight: '120px' }}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  value={product.description}
+                  onChange={(e) => setProduct({...product, description: e.target.value})}
                 />
               </div>
 
               <div className="formControl">
-                <input
-                  type="submit"
-                  className="btn-dark"
-                  value={
-                    typeof productid === 'undefined'
-                      ? 'Kurti prekę'
-                      : 'Koreguoti prekę'
-                  }
-                />
+                <input type="submit" className="btn-dark" value={!productid ? 'Kurti prekę' : 'Koreguoti prekę'} />
               </div>
             </form>
           </div>
           <div>
             <Select
               components={animatedComponents}
-              defaultValue={getSelectedCategories}
+              value={product.categories}
               isMulti
               options={categoryOptions}
               closeMenuOnSelect={false}
-              onChange={(categories) => {
-                setSelectedCategories(categories);
-              }}
+              onChange={(categories) => setProduct({...product, categories})}
             />
           </div>
         </div>

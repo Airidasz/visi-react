@@ -3,13 +3,11 @@ import React, { useEffect, useState } from 'react';
 import './Categories.scss';
 import Category from './Category';
 import { useNavigate } from 'react-router';
-import useApi from '../useApi';
 import { useStore } from '../useStore';
 
 const Categories = () => {
   const navigate = useNavigate();
-  const { GetRequest } = useApi();
-  const { store, setStore } = useStore();
+  const { store, setStore, loadCategories } = useStore();
   
   useEffect(() => {
     if (localStorage.getItem('isAdmin') !== 'true') navigate('/');
@@ -26,23 +24,17 @@ const Categories = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      if (!store.categories) {
-        const response = await GetRequest('categories');
+      if (!store.categories) 
+        await loadCategories();
 
-        if(!response)
-          return;
-
-        const data = await response.json();
-  
+      else {
         setShowCreate(false);
         setShowEdit({});
-  
-        store.categories = data;
-        setStore({...store});
       }
     };
 
     getCategories();
+
   }, [store.categories]);
 
   if (!store.categories) 

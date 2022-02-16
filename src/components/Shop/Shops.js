@@ -1,51 +1,45 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "./Shops.scss";
-import { useAlert } from "react-alert";
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import './Shops.scss';
+import useApi from '../useApi';
 
 const Shops = () => {
-  const [shopData, setShopData] = useState(false);
-  const alert = useAlert();
+  const {GetRequest}= useApi();
+  const [shops, setShops] = useState();
+
   useEffect(() => {
-    if (typeof shopData !== "object") {
-      fetch(process.env.REACT_APP_API_URL + "/shops", { method: "GET" })
-        .then(async (response) => {
-          const data = await response;
+    const getShops = async () => {
+      if(shops)
+        return;
 
-          if (!response.ok) {
-            const jsonData = await data.json();
-            const error = (data && jsonData.message) || response.statusText;
-            return Promise.reject(error);
-          }
+      const response = await GetRequest('shops');
+      if(!response)
+        return;
 
-          const jsonData = await data.json();
-          setShopData(jsonData);
-        })
-        .catch((error) => {
-          alert.error(error);
-        });
-    }
-  }, [shopData]);
+      const data = await response.json();
+      setShops(data);
+    };
 
-  if (typeof shopData !== "object") return <div></div>;
+    getShops();
+  }, [shops]);
+
+  if (!shops) return <div></div>;
 
   return (
     <div className="shopsPage">
       <div className="title">
         <h2>Parduotuvės</h2>
       </div>
-
       <div className="grid">
-        {shopData.map((data) => {
-          return (
-            <Link to={"/shop/" + data.id} key={data.id}>
-              <div className="card">
-                <h1>{data.name}</h1>
-                <p>{data.description}</p>
-              </div>
-            </Link>
-          );
-        })}
+        {shops.map((shop) =>  (
+          <Link to={'/shop/' + shop.id} key={shop.id}>
+            <div className="card">
+              <h1>{shop.name}</h1>
+              <p>{shop.description}</p>
+            </div>
+          </Link>
+        )
+        )}
       </div>
     </div>
   );

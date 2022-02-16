@@ -7,13 +7,13 @@ const useApi = () => {
   const alert = useAlert();
   const refreshToken = RefreshTokens();
 
-  const GetRequest = async (url, body) => await ApiRequest(url, body, 'GET');
-  const PostRequest = async (url, body) => await ApiRequest(url, body, 'POST');
-  const PutRequest = async (url, body) => await ApiRequest(url, body, 'PUT');
-  const DeleteRequest = async (url, body) => await ApiRequest(url, body, 'DELETE');
+  const GetRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'GET', refresh);
+  const PostRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'POST', refresh);
+  const PutRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'PUT' , refresh);
+  const DeleteRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'DELETE', refresh);
 
-  const ApiRequest = async (url, body, method) => {
-    return await refreshToken(async () => {
+  const ApiRequest = async (url, body, method, refresh = true) => {
+    let func = async () => {
       const request = {
         method: method,
         credentials: 'include',
@@ -32,7 +32,12 @@ const useApi = () => {
       }
 
       return response;
-    });
+    };
+
+    if(refresh)
+      func = refreshToken(func);
+
+    return await func();
   };
 
   return {GetRequest, PostRequest, PutRequest, DeleteRequest};

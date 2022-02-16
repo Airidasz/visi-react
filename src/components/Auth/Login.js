@@ -1,49 +1,39 @@
+/* eslint-disable no-undef */
 import React, { useState } from 'react';
 import './Auth.scss';
 import { useNavigate } from 'react-router-dom';
 import SetUserInfo from '../SetUserInfo';
-import { useAlert } from 'react-alert';
+import useApi from '../useApi';
 
 const Login = ({ setShowLoginMenu }) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const setUserInfo = SetUserInfo();
-  const alert = useAlert();
 
-  const axios = require('axios').default;
+  const {PostRequest} = useApi();
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    fetch(process.env.REACT_APP_API_URL + '/login', {
-      method: 'POST',
-      credentials: 'include',
-      path: '/',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-      }),
-    })
-      .then(async (response) => {
-        const data = await response.json();
+    const body = JSON.stringify({
+      email: email,
+      password: password,
+    });
 
-        if (!response.ok) {
-          return Promise.reject(data.message || response.statusText);
-        }
+    const response = await PostRequest('login', body, false);
+    if(!response)
+      return;
 
-        setEmail('');
-        setPassword('');
+    setEmail('');
+    setPassword('');
 
-        setUserInfo(data.AccessToken);
-        setShowLoginMenu(false);
+    setUserInfo(data.AccessToken);
+    setShowLoginMenu(false);
 
-        navigate('/');
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
+    navigate('/');
   };
+
   return (
     <form className="form loginForm" onSubmit={handleSubmit}>
       <div className="formControl">
