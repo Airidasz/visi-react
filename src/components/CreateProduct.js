@@ -36,7 +36,7 @@ const CreateProduct = () => {
       if (shopJson.userID != localStorage.getItem('userID'))
         navigate('/');
 
-      const getProductResponse = await GetRequest(`shop/${shopid}/product/${productid}`);
+      const getProductResponse = await GetRequest(`product/${productid}`);
       if(!getProductResponse)
         return;
 
@@ -78,9 +78,9 @@ const CreateProduct = () => {
     
     let response = null;
     if(!productid)
-      response = await PostRequest(`shop/${shopid}/products`, body);
+      response = await PostRequest(`products`, body);
     else 
-      response = await PutRequest(`shop/${shopid}/product/${productid}`, body);
+      response = await PutRequest(`product/${productid}`, body);
 
     if(response)
       navigate(-1);

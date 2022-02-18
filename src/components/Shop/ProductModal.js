@@ -17,7 +17,7 @@ const ProductModal = ({ product, setShow, setProducts, isOwner }) => {
     if (!shouldDeleteProduct) 
       return;
 
-    const response = await DeleteRequest(`shop/${product.shopID}/product${product.id}`);
+    const response = await DeleteRequest(`product${product.id}`);
     if(response) {
       setShow(false);
       setProducts(false);

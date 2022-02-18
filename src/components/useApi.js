@@ -12,16 +12,18 @@ const useApi = () => {
   const PutRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'PUT' , refresh);
   const DeleteRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'DELETE', refresh);
 
+
+
   const ApiRequest = async (url, body, method, refresh = true) => {
-    let func = async () => {
+    const request = async () => {
       const request = {
         method: method,
         credentials: 'include',
       };
-
+  
       if(body)
         request.body = body;
-
+  
       const response = await fetch(`${process.env.REACT_APP_API_URL}/${url}`, request);
         
       if (!response.ok) {
@@ -30,14 +32,14 @@ const useApi = () => {
         alert.error(error);
         return false;
       }
-
+  
       return response;
-    };
+    }
 
     if(refresh)
-      func = refreshToken(func);
+      return refreshToken(() => request(url, body, method, refresh = true));
 
-    return await func();
+    return await request(url, body, method, refresh = true);
   };
 
   return {GetRequest, PostRequest, PutRequest, DeleteRequest};

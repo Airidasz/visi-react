@@ -13,7 +13,7 @@ import sellingLocation from '../assets/sellingLocation.png';
 import RemoveItemFromArray from './RemoveFromArray';
 import useApi from './useApi';
 
-const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
+const ShopMap = ({ shop, editable = true, createLocations = false, setDone }) => {
   const [locations, setLocations] = useState([]);
   const removeItem = RemoveItemFromArray();
   const { GetRequest, DeleteRequest, PostRequest} = useApi();
@@ -25,10 +25,10 @@ const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
 
   useEffect(() => {
     const getLocations = async () => {
-      if(!id)
+      if(!shop)
         return;
 
-      const response = await GetRequest(`shop/${id}/locations`);
+      const response = await GetRequest(`shop/${shop.name}/locations`);
       if(!response)
         return;
 
@@ -43,7 +43,7 @@ const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
 
   useEffect(() => {
     const AddLocationsToShop = async () => {
-      const deleteResponse = await DeleteRequest(`shop/${id}/locations`);
+      const deleteResponse = await DeleteRequest(`shop/${shop.name}/locations`);
       if(!deleteResponse)
         return;
   
@@ -54,7 +54,7 @@ const ShopMap = ({ id, editable = true, createLocations = false, setDone }) => {
           lng: location.latlng.lng,
         });
   
-        await PostRequest(`shop/${id}/locations`, body);
+        await PostRequest(`shop/${shop.name}/locations`, body);
       });
   
       setDone(true);

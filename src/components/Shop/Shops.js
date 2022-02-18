@@ -32,7 +32,7 @@ const Shops = () => {
       </div>
       <div className="grid">
         {shops.map((shop) =>  (
-          <Link to={'/shop/' + shop.id} key={shop.id}>
+          <Link to={'/shop/' + shop.name} key={shop.name}>
             <div className="card">
               <h1>{shop.name}</h1>
               <p>{shop.description}</p>

@@ -12,7 +12,7 @@ const Products = ({ shop }) => {
       if(products)
         return;
 
-      const response = await GetRequest(`shop/${shop.id}/products`);
+      const response = await GetRequest(`products`);
       if(!response)
         return;
 
@@ -27,7 +27,7 @@ const Products = ({ shop }) => {
 
   return (
     <div className="products">
-      {products.map((product) => (<Product key={product.id} shop={shop} product={product} setProducts={setProducts} />))}
+      {products.map((product) => (<Product key={product.name} shop={shop} product={product} setProducts={setProducts} />))}
     </div>
   );
 };

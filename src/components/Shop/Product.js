@@ -23,7 +23,7 @@ const Product = ({ product, setProducts, shop }) => {
         <h3 className="product-name">{product.name}</h3>
         <div className="categories">
           {product.categories.map((category) =>(
-            <div key={category.id} className="category">
+            <div key={category.name} className="category">
               {category.name}
             </div>
           ))}

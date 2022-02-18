@@ -9,15 +9,14 @@ const Shop = () => {
   useEffect(() => {
     document.title = 'Parduotuvė';
   }, []);
-  let { shopid } = useParams();
-  const id = shopid;
+  let { name } = useParams();
   const [shop, setShop] = useState();
   const navigate = useNavigate();
 
   const {GetRequest, DeleteRequest} = useApi();
   
   const deleteShop = async () => {
-    const response = await DeleteRequest(`shop/${id}`);
+    const response = await DeleteRequest(`shop/${name}`);
 
     if(response)
       navigate('/');
@@ -29,7 +28,7 @@ const Shop = () => {
       if(shop)
         return;
 
-      const response = await GetRequest(`shop/${id}`);
+      const response = await GetRequest(`shop/${name}`);
       if(!response)
         return;
 
@@ -69,7 +68,7 @@ const Shop = () => {
         <div className="shop">
           <p style={{ marginBottom: '15px' }}>{shop.description}</p>
 
-          <ShopMap id={id} editable={false} />
+          <ShopMap shop={shop} editable={false} />
           <div className="products-title">
             <h2>Ūkio siūlomi produktai</h2>
             {localStorage.getItem('userID') == shop.userID && (

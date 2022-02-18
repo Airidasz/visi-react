@@ -38,8 +38,8 @@ render(
           <Route path="/" element={<App />}>
             <Route path="/" element={<FrontPage />} />
 
-            <Route path="/shop/:shopid" element={<Shop />} />
-            <Route path="/shop/:id/edit" element={<CreateShop />} />
+            <Route path="/shop/:name" element={<Shop />} />
+            <Route path="/shop/:name/edit" element={<CreateShop />} />
             <Route path="/shop/new" element={<CreateShop />} />
             <Route path="/register" element={<Register />} />
             <Route path="/categories" element={<Categories />} />
