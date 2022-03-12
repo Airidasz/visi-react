@@ -4,16 +4,16 @@ import './Shops.scss';
 import useApi from '../useApi';
 
 const Shops = () => {
-  const {GetRequest}= useApi();
+  const { GetRequest } = useApi();
   const [shops, setShops] = useState();
 
   useEffect(() => {
     const getShops = async () => {
-      if(shops)
+      if (shops)
         return;
 
-      const response = await GetRequest('shops');
-      if(!response)
+      const response = await GetRequest('shops', null, false);
+      if (!response)
         return;
 
       const data = await response.json();
@@ -31,8 +31,8 @@ const Shops = () => {
         <h2>Parduotuvės</h2>
       </div>
       <div className="grid">
-        {shops.map((shop) =>  (
-          <Link to={'/shop/' + shop.name} key={shop.name}>
+        {shops.map((shop) => (
+          <Link to={'/shop/' + shop.codename} key={shop.name}>
             <div className="card">
               <h1>{shop.name}</h1>
               <p>{shop.description}</p>

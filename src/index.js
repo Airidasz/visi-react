@@ -10,9 +10,8 @@ import App from './App';
 import FrontPage from './components/FrontPage';
 import Shop from './components/Shop/Shop';
 import Register from './components/Auth/Register';
-import CreateShop from './components/Shop/CreateShop';
 import Categories from './components/Categories/Categories';
-import CreateProduct from './components/CreateProduct';
+import Product from './components/Products/Product';
 
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import { StoreProvider } from './components/useStore';
@@ -38,19 +37,21 @@ render(
           <Route path="/" element={<App />}>
             <Route path="/" element={<FrontPage />} />
 
-            <Route path="/shop/:name" element={<Shop />} />
-            <Route path="/shop/:name/edit" element={<CreateShop />} />
-            <Route path="/shop/new" element={<CreateShop />} />
+            <Route path="/:name" element={<Shop />} />
+            <Route path="/shop/new" element={<Shop isNew={true}/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/categories" element={<Categories />} />
-            <Route path="/shop/:shopid/product/new" element={<CreateProduct />} />
+            <Route path="/product/new" element={<Product isNew={true}/>} />
             <Route
-              path="/shop/:shopid/product/:productid/edit"
-              element={<CreateProduct />}
+              path="/product/:productName"
+              element={<Product />}
             />
+
+            <Route path="/404" element={<Status404Page />} />
+
+            <Route path="*" exact={true} element={<Status404Page />} />
           </Route>
 
-          <Route path="*" exact={true} element={<Status404Page />} />
         </Routes>
       </BrowserRouter>
     </StoreProvider>

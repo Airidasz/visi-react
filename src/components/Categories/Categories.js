@@ -5,16 +5,17 @@ import Category from './Category';
 import { useNavigate } from 'react-router';
 import { useStore } from '../useStore';
 
+
 const Categories = () => {
   const navigate = useNavigate();
   const { store, setStore, loadCategories } = useStore();
-  
+
   useEffect(() => {
-    if (localStorage.getItem('isAdmin') !== 'true') navigate('/');
+    if (!store.permissions.isAdmin) navigate('/');
 
     document.title = 'Kategorijos';
   }, []);
-  
+
   const [showCreate, setShowCreate] = useState(false);
   const [showEdit, setShowEdit] = useState({});
 
@@ -24,7 +25,7 @@ const Categories = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      if (!store.categories) 
+      if (!store.categories)
         await loadCategories();
 
       else {
@@ -37,7 +38,7 @@ const Categories = () => {
 
   }, [store.categories]);
 
-  if (!store.categories) 
+  if (!store.categories)
     return <div className="pageView"></div>;
 
   return (
@@ -55,7 +56,7 @@ const Categories = () => {
         <div className="categoriesGrid">
           {showCreate && (
             <Category
-              reset={() => setStore({...store, categories:null})}
+              reset={() => setStore({ ...store, categories: null })}
               close={() => setShowCreate(false)}
               edit={true}
             />
@@ -63,12 +64,12 @@ const Categories = () => {
           {store.categories.map((category) => (
             <Category key={category.id}
               category={category}
-              reset={() => setStore({...store, categories:null})}
+              reset={() => setStore({ ...store, categories: null })}
               close={() => changeShowEdit(category.id)}
               changeShowEdit={changeShowEdit}
               edit={showEdit[category.id]}
             />
-          ))}    
+          ))}
         </div>
       </div>
     </div>

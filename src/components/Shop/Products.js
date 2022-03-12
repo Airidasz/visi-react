@@ -4,16 +4,16 @@ import Product from './Product';
 import useApi from '../useApi';
 
 const Products = ({ shop }) => {
-  const {GetRequest} = useApi();
+  const { GetRequest } = useApi();
   const [products, setProducts] = useState();
 
   useEffect(() => {
     const getProducts = async () => {
-      if(products)
+      if (products)
         return;
 
-      const response = await GetRequest(`products`);
-      if(!response)
+      const response = await GetRequest('products', null, false);
+      if (!response)
         return;
 
       const data = await response.json();

@@ -3,16 +3,17 @@ import Login from './Auth/Login';
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import useApi from './useApi';
+import { useStore } from './useStore';
 
 const Header = () => {
   const navigate = useNavigate();
   const [offset, setOffset] = useState(0);
   const location = useLocation();
   const [showLoginMenu, setShowLoginMenu] = useState(false);
-  const [showMenu, setShowMenu] = useState(window.innerWidth > 768);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [showMenu, setShowMenu] = useState(true);
 
-  const {PostRequest} = useApi();
+  const { PostRequest } = useApi();
+  const { store, resetStore } = useStore();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -21,16 +22,13 @@ const Header = () => {
   }, [location]);
 
   useEffect(() => {
-    window.onresize = () => {
-      if (!isMobile && window.innerWidth < 769) setShowMenu(false);
+    const handleScroll = () => setOffset(window.pageYOffset);
 
-      setIsMobile(window.innerWidth < 768);
-    };
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
 
-    window.onscroll = () => {
-      setOffset(window.pageYOffset);
-    };
-  }, [isMobile]);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const toggleLoginMenu = () => {
     setShowLoginMenu(!showLoginMenu);
@@ -44,16 +42,18 @@ const Header = () => {
     localStorage.clear();
 
     const response = await PostRequest('logout');
-    if(!response)
+    if (!response)
       return;
 
+    resetStore();
     setShowLoginMenu(false);
     navigate('/');
   };
 
   return (
     <header
-      className={offset > 10 || location.pathname !== '/' ? 'solid' : undefined}
+      // className={offset > 10 || location.pathname !== '/' ? 'solid' : ''}
+      className='solid'
     >
       <div className="container">
         <div className="logo">
@@ -69,8 +69,7 @@ const Header = () => {
             toggleMenu();
           }}
         ></div>
-
-        {localStorage.getItem('userEmail') == null ? (
+        {!store.user.isSet ? (
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
               <Link to="/register/">
@@ -86,14 +85,15 @@ const Header = () => {
         ) : (
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
-              {localStorage.getItem('isAdmin') === 'true' && (
+              {store.permissions.isAdmin && (
                 <Link to="/categories">
                   <li>Kategorijos</li>
                 </Link>
               )}
-              <Link to="/shop/new/">
-                <li>Sukurti naują parduotuvę</li>
-              </Link>
+              {store.permissions.isFarmer && (
+                <Link to={store.user.shop ? `/${store.user.shop}` : '/shop/new'}>
+                  <li>Parduotuvė</li>
+                </Link>)}
               <Link to="/" onClick={logOut}>
                 <li>Atsijungti</li>
               </Link>

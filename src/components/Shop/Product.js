@@ -4,6 +4,8 @@ import ProductModal from './ProductModal';
 const Product = ({ product, setProducts, shop }) => {
   const [showProductPopup, setShowProductPopup] = useState(false);
 
+  console.log(product.categories, 'product.categories');
+
   return (
     <div key={product.id}>
       {showProductPopup && (
@@ -22,7 +24,7 @@ const Product = ({ product, setProducts, shop }) => {
       >
         <h3 className="product-name">{product.name}</h3>
         <div className="categories">
-          {product.categories.map((category) =>(
+          {product.categories.map((category) => (
             <div key={category.name} className="category">
               {category.name}
             </div>

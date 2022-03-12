@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
   const [tokensRefreshed, setTokensRefreshed] = useState(false);
-  
+
   const refreshToken = RefreshTokens();
 
   useEffect(() => {

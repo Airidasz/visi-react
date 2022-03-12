@@ -2,33 +2,36 @@
 import React, { useState } from 'react';
 import './Auth.scss';
 import { useNavigate } from 'react-router-dom';
-import SetUserInfo from '../SetUserInfo';
 import useApi from '../useApi';
+import { useStore } from '../useStore';
 
 const Login = ({ setShowLoginMenu }) => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const setUserInfo = SetUserInfo();
 
-  const {PostRequest} = useApi();
+  const { setAccessToken } = useStore();
+  const { PostRequest } = useApi();
+
+  const loginFields = {
+    name:'',
+    password:''
+  };
+
+  const [loginInfo, setLoginInfo] = useState(loginFields);
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    const body = JSON.stringify({
-      email: email,
-      password: password,
-    });
+    const body = JSON.stringify(loginInfo);
 
     const response = await PostRequest('login', body, false);
-    if(!response)
+    if (!response)
       return;
 
-    setEmail('');
-    setPassword('');
+    setLoginInfo({...loginFields});
 
-    setUserInfo(data.AccessToken);
+    const data = await response.json();
+
+    setAccessToken(data.AccessToken);
     setShowLoginMenu(false);
 
     navigate('/');
@@ -37,20 +40,20 @@ const Login = ({ setShowLoginMenu }) => {
   return (
     <form className="form loginForm" onSubmit={handleSubmit}>
       <div className="formControl">
-        <label>Elektroninis paštas</label>
+        <label>Prisijungimo vardas</label>
         <input
+          autoFocus={true}
           type="text"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          value={loginInfo.name}
+          onChange={(e) => setLoginInfo({...loginInfo, name:e.target.value})}
         />
       </div>
       <div className="formControl">
         <label>Slaptažodis</label>
-
         <input
           type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
+          value={loginInfo.password}
+          onChange={(e) => setLoginInfo({...loginInfo, password:e.target.value})}
         />
       </div>
 

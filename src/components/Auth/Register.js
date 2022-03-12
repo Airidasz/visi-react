@@ -8,9 +8,15 @@ const Register = () => {
   useEffect(() => {
     document.title = 'Registruotis';
   }, []);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
+
+  const [userInfo, setUserInfo] = useState({
+    name:'',
+    email:'',
+    password:'',
+    repeatPassword: '',
+    farmer:false
+  });
+
   const alert = useAlert();
   const navigate = useNavigate();
 
@@ -19,11 +25,7 @@ const Register = () => {
 
     fetch(process.env.REACT_APP_API_URL + '/register', {
       method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password,
-        repeatPassword: repeatPassword,
-      }),
+      body: JSON.stringify(userInfo),
     })
       .then(async (response) => {
         const data = await response;
@@ -48,11 +50,19 @@ const Register = () => {
         style={{ marginTop: '59px' }}
       >
         <div className="formControl">
+          <label>Prisijungimo vardas</label>
+          <input
+            type="text"
+            value={userInfo.name}
+            onChange={(e) => setUserInfo({...userInfo, name:e.target.value})}
+          />
+        </div>
+        <div className="formControl">
           <label>Elektroninio paštas</label>
           <input
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={userInfo.email}
+            onChange={(e) => setUserInfo({...userInfo, email:e.target.value})}
           />
         </div>
         <div className="formControl">
@@ -60,8 +70,9 @@ const Register = () => {
 
           <input
             type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={userInfo.password}
+            onChange={(e) => setUserInfo({...userInfo, password:e.target.value})}
+
           />
         </div>
 
@@ -70,10 +81,24 @@ const Register = () => {
 
           <input
             type="password"
-            value={repeatPassword}
-            onChange={(e) => setRepeatPassword(e.target.value)}
+            value={userInfo.repeatPassword}
+            onChange={(e) => setUserInfo({...userInfo, repeatPassword:e.target.value})}
+
           />
         </div>
+
+        <div className='d-flex'>
+          <input
+            type="checkbox"
+            value={userInfo.farmer}
+            onChange={(e) => setUserInfo({...userInfo, farmer:e.target.checked})}
+
+          />
+          <label className='ms-2'>Registruojuosi kaip ūkininkas</label>
+
+
+        </div>
+   
 
         <div className="formControl">
           <input type="submit" className="btn-dark" value="Registruotis" />

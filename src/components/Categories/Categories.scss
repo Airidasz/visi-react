@@ -7,6 +7,50 @@
     font-size: 35px;
   }
 }
+.category-slider{
+  display:grid;
+  grid-gap:0.8rem;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+
+  .slider-category {
+    border-radius: 0.2rem;
+    background: white;
+    display: grid;
+    grid-template-rows: 1fr 40px 5px;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      height:auto;
+    }
+
+    .category-img {
+      padding: 1rem;
+      padding-bottom: 0;
+    }
+
+    h4 {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .indicator {
+      background: #000000;
+      border-bottom-left-radius: 0.25rem;
+      border-bottom-right-radius: 0.25rem;
+    }
+  }
+
+  .slider-category:hover {
+    .indicator {
+      // background: #237015;
+      background: #3fc728;
+
+    }
+  }
+
+}
 
 .categoriesGrid {
   display: grid;

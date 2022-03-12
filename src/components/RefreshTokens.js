@@ -1,10 +1,11 @@
 /* eslint-disable no-undef */
-import SetUserInfo from './SetUserInfo';
+import { useContext } from 'react';
+import { StoreContext } from './useStore';
 
 const RefreshTokens = () => {
-  const setUserInfo = SetUserInfo();
+  const storeContext = useContext(StoreContext);
 
-  const refreshToken = async (nextHandler = () => {}) => {
+  const refreshToken = async (nextHandler = () => { }) => {
     var response = await fetch(process.env.REACT_APP_API_URL + '/refresh', {
       method: 'POST',
       credentials: 'include',
@@ -12,8 +13,8 @@ const RefreshTokens = () => {
 
     if (response.ok) {
       const jsonData = await response.json();
-      setUserInfo(jsonData.AccessToken);
-      return nextHandler(); 
+      storeContext.setAccessToken(jsonData.AccessToken);
+      return nextHandler();
     }
 
     return response;

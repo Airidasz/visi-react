@@ -6,13 +6,14 @@ import trash from '../../assets/trash.svg';
 import React, { useState } from 'react';
 import FileUpload from '../FileUpload';
 import useApi from '../useApi';
+import { getImage } from '../Extras';
 
 
-const Category = ({ category, close = () => {}, reset = () => {} , edit, changeShowEdit = () => {} }) => {
+const Category = ({ category, close = () => { }, reset = () => { }, edit, changeShowEdit = () => { } }) => {
   const [categoryName, setCategoryName] = useState(category ? category.name : '');
   const [file, setFile] = useState();
 
-  const { PostRequest, PutRequest, DeleteRequest }  = useApi();
+  const { PostRequest, PutRequest, DeleteRequest } = useApi();
 
   const tryAddEditCategory = async () => {
     var data = new FormData();
@@ -21,45 +22,43 @@ const Category = ({ category, close = () => {}, reset = () => {} , edit, changeS
 
     let response = null;
 
-    if(category) // edit
-      response = await PutRequest(`category/${category.id}`, data); 
+    if (category) // edit
+      response = await PutRequest(`category/${category.id}`, data);
     else         // add
-      response = await PostRequest('categories', data); 
+      response = await PostRequest('categories', data);
 
-    if(response) {
+    if (response) {
       reset();
       setCategoryName('');
     }
   };
 
-  const tryDeleteCategory = async (id) => {
+  const tryDeleteCategory = async () => {
     const shouldDeleteCategory = window.confirm(
       'Ar tikrai norite ištrinti šią parduotuvę?'
     );
 
     if (shouldDeleteCategory) {
-      const response = await DeleteRequest(`category/${id}`);
-      if(response) {
+      const response = await DeleteRequest(`category/${category.id}`);
+      if (response) {
         reset();
       }
     }
   };
 
-  const getImage = (category) => category && category.file !== '' ? `${process.env.REACT_APP_API_URL}/${category.file}` : '';
-
   return (
     <div className="card">
       <form action="" className="categoryForm">
         {edit ? (<div>
-          <FileUpload setFile={setFile}/>
+          <FileUpload setFile={setFile} />
           <input
             type="text"
             value={categoryName}
             onChange={(e) => setCategoryName(e.target.value)}
           />
-        </div>):(
+        </div>) : (
           <div className="flex items-center">
-            <img src={getImage(category)} style={{width:'100px', height:'100px', background:'black'}}/>
+            <img src={getImage(category,'file')} style={{ width: '100px', height: '100px', background: 'black' }} />
             <h4>{category.name}</h4>
           </div>)
         }

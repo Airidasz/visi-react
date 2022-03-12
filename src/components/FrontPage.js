@@ -1,19 +1,26 @@
-import Shops from './Shop/Shops';
-import React, { useEffect } from 'react';
+import Products from './Products/Products';
+import React, { useEffect, useState } from 'react';
 import './FrontPage.scss';
+import CategorySlider from './Categories/CategorySlider';
 
 const FrontPage = () => {
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     document.title = 'Pagrindinis';
   }, []);
 
+  const clearFilter = () => {
+    if(categories.length > 0)
+      setCategories([]);
+  };
   return (
     <div className="pageView">
-      <div className="intro">
-        <h1 style={{ fontSize: '10vw' }}>VISI ŪKIAI</h1>
-      </div>
+      {/* <div className="intro"/> */}
       <div className="container">
-        <Shops />
+        <CategorySlider setCategories={setCategories} className={'mt-4'} showFilterClear={true} clearFilter={clearFilter}/>
+
+        <Products categories={categories} className={'mt-4'}/>
       </div>
     </div>
   );
