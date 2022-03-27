@@ -2,33 +2,93 @@ header {
   z-index: 9999999999;
   display: flex;
   justify-content: center;
-  height: 80px;
+  flex-direction: column;
   width: 100vw;
   max-width: 100%;
   position: sticky;
   top: 0;
   color: White;
   transition: all 0.1s ease-out;
+  align-items: center;
+
+  .header-top {
+    width: 100%;
+    background: black;
+    color:white;
+    display: flex;
+    justify-content: center;
+    padding: 0.4rem 0;
+
+    .container{
+      display: flex;
+      justify-content: flex-end;
+      padding:0.2rem 1.2rem;
+      position: relative;
+
+      .menu ul{
+        display: grid;
+        grid-gap:3rem;
+        grid-auto-flow: column;
+
+        li {
+          font-size:1rem;
+        }
+      }
+    }
+
+    .menu {
+      a:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+
+  .header-bottom {
+    height:70px;
+
+    .logo {
+      margin: 1rem;
+    }
+
+    .mobile-menu {
+      display: grid;
+      grid-auto-flow: column;
+      grid-gap:1.7rem;
+      padding-right: 1.2rem;
+    }
+    .menu {
+      ul {
+        display: grid;
+        grid-auto-flow: column;
+      }
+      a {
+        height: 100%;
+        padding: 0 1.8rem;
+      }
+      a:hover, a.active {
+        color: white;
+        background-color: black;
+        border-color: white;
+      }
+    }
+   }
+ 
 
   .container {
-    width: 1000px;
+    max-width: 86rem;
     display: flex;
     padding: 0;
     align-items: center;
     justify-content: space-between;
-  }
-  .hamurger {
-    display: none;
-  }
+    }
 
-  .logo {
-    margin-left: 20px;
-  }
+  background-color: white;
+  color: black;
+
 
   .menu {
-    z-index: 10;
     height: 100%;
-    margin-right: 20px;
     ul {
       list-style: none;
       padding: 0;
@@ -39,18 +99,18 @@ header {
         height: 100%;
         display: inline-flex;
         align-items: center;
-        padding: 0 30px;
-        border-bottom: 2px solid transparent;
-      }
-
-      a:hover {
-        color: rgba(255, 255, 255, 0.836);
-        border-bottom: 2px solid black;
       }
     }
   }
 
+
   @media (max-width: 768px) {
+    .header-top {
+      .container{
+        padding:0;
+      }
+    }
+
     .menu {
       display: none;
       position: absolute;
@@ -59,10 +119,13 @@ header {
       width: 100%;
       height: auto;
       ul {
+        display: flex !important;
+        grid-gap:0 !important;
+        flex-direction: column;
         a {
           color: white;
-          padding: 20px 30px;
           display: block;
+          padding: 1rem;
           border: 1px solid transparent;
           border-left: none !important;
           border-right: none !important;
@@ -82,31 +145,11 @@ header {
       display: inline;
       width: 32px;
       height: 32px;
-      margin-right: 20px;
-      background: url("../assets/hamburger.svg");
       cursor: pointer;
-      filter: invert(100%) sepia(0%) saturate(3403%) hue-rotate(127deg)
-        brightness(115%) contrast(100%);
     }
   }
 }
 
-.solid {
-  background-color: white;
-  color: black;
-  .menu {
-    a:hover {
-      color: white;
-      background-color: black;
-      border-bottom: 2px solid black;
-    }
-  }
-
-  .hamburger {
-    filter: invert(0%) sepia(100%) saturate(23%) hue-rotate(212deg)
-      brightness(94%) contrast(101%);
-  }
-}
 
 footer {
   text-align: center;

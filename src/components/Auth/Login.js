@@ -1,12 +1,11 @@
 /* eslint-disable no-undef */
-import React, { useState } from 'react';
+import React, { useState, useRef,useEffect } from 'react';
 import './Auth.scss';
-import { useNavigate } from 'react-router-dom';
 import useApi from '../useApi';
 import { useStore } from '../useStore';
 
-const Login = ({ setShowLoginMenu }) => {
-  const navigate = useNavigate();
+const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
+  const loginRef = useRef(null);
 
   const { setAccessToken } = useStore();
   const { PostRequest } = useApi();
@@ -17,6 +16,19 @@ const Login = ({ setShowLoginMenu }) => {
   };
 
   const [loginInfo, setLoginInfo] = useState(loginFields);
+
+  useEffect(() => {
+    const handleClickOutside = (event) =>{
+      if (loginRef.current && !loginRef.current.contains(event.target)) {
+        setShowLoginMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [loginRef]);
 
   const handleSubmit = async (evt) => {
     evt.preventDefault();
@@ -34,11 +46,11 @@ const Login = ({ setShowLoginMenu }) => {
     setAccessToken(data.AccessToken);
     setShowLoginMenu(false);
 
-    navigate('/');
+    onSuccess();
   };
 
   return (
-    <form className="form loginForm" onSubmit={handleSubmit}>
+    <form className="form login-form" onSubmit={handleSubmit} ref={loginRef}>
       <div className="formControl">
         <label>Prisijungimo vardas</label>
         <input

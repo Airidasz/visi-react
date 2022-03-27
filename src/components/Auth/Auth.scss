@@ -1,10 +1,11 @@
-.loginForm {
+.login-form {
   position: absolute;
-  top: 75px;
+  top: 2rem;
+  right: 0;
 }
 
 @media (max-width: 768px) {
-  .loginForm {
+  .login-form {
     top: 120px;
     width: 100vw !important;
     max-width: 100%;

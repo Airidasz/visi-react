@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import FileUpload from '../FileUpload';
 import useApi from '../useApi';
 import { getImage } from '../Extras';
+import EditableField from '../Products/components/EditableField';
 
 
 const Category = ({ category, close = () => { }, reset = () => { }, edit, changeShowEdit = () => { } }) => {
@@ -46,36 +47,40 @@ const Category = ({ category, close = () => { }, reset = () => { }, edit, change
     }
   };
 
+  const onInfoChange = (field, value) => {
+    if(field == 'file') {
+      setFile(value);
+    }else{
+      setCategoryName(value);
+    } 
+  };
+
   return (
     <div className="card">
-      <form action="" className="categoryForm">
-        {edit ? (<div>
-          <FileUpload setFile={setFile} />
-          <input
-            type="text"
-            value={categoryName}
-            onChange={(e) => setCategoryName(e.target.value)}
-          />
-        </div>) : (
-          <div className="flex items-center">
-            <img src={getImage(category,'file')} style={{ width: '100px', height: '100px', background: 'black' }} />
-            <h4>{category.name}</h4>
-          </div>)
-        }
-        <div className="actions">
-          <div
-            className={`btn-circle me-1 ${(edit ? 'success' : 'warning')}`}
-            onClick={() => edit ? tryAddEditCategory() : changeShowEdit(category.id)}
-          >
-            <img src={edit ? check : pencil} className="actionButton" />
-          </div>
-          <div className="btn-circle danger"
-            onClick={() => edit ? close() : tryDeleteCategory(category.id)}
-          >
-            <img src={edit ? mark : trash} className="actionButton" />
-          </div>
+      <div className="d-flex justify-content-center">
+        <EditableField field="file" type="file" edit={edit} onChange={onInfoChange} >
+          <img src={getImage(category,'file')} style={{ width: '100px', height: '100px', background: 'black' }} />
+        </EditableField>
+      </div>
+      <div className='my-1 w-100'>
+        <EditableField field="name"edit={edit} onChange={onInfoChange}>
+          <h4>{category.name}</h4>
+        </EditableField>
+      </div>
+         
+      <div className="actions">
+        <div
+          className={`btn-circle me-1 ${(edit ? 'success' : 'warning')}`}
+          onClick={() => edit ? tryAddEditCategory() : changeShowEdit(category.id)}
+        >
+          <img src={edit ? check : pencil} className="actionButton" />
         </div>
-      </form>
+        <div className="btn-circle danger"
+          onClick={() => edit ? close() : tryDeleteCategory(category.id)}
+        >
+          <img src={edit ? mark : trash} className="actionButton" />
+        </div>
+      </div>
     </div>
   );
 };

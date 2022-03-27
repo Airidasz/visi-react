@@ -6,12 +6,11 @@ const EditableField = ({edit, field,value, onChange = () => {}, editClassname = 
   if(edit) {
     switch(type){
     case 'file':
-      return (<FileUpload setFile={(file) => onChange(field, file)} />);
+      return (<FileUpload setFile={(file) => onChange(field, file)} className={editClassname}/>);
     case 'textfield':
       return (
         <textarea
           className={editClassname}
-          style={{ resize: 'vertical', minHeight: '120px' }}
           value={value}
           onChange={(e) => onChange(field, e.target.value)}
         />);

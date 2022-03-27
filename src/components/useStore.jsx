@@ -10,6 +10,7 @@ const DataStore = () => {
 
   const initState = {
     categories: null,
+    shops:null,
     user: {
       shop:null,
       admin: null,
@@ -18,7 +19,8 @@ const DataStore = () => {
       isSet: false,
       exp:0
     },
-    permissions: {}
+    permissions: {},
+    cart:[]
   };
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -31,7 +33,44 @@ const DataStore = () => {
     handleResize();
 
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // Empty array ensures that effect is only run on mount
+  }, []);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      if (store.categories)
+        return;
+
+      const response = await GetRequest('categories', null, false);
+
+      if (!response)
+        return;
+    
+      const data = await response.json();
+    
+      store.categories = data;
+      setStore({ ...store });
+      
+    };
+
+    const getShops = async () => {
+      if (store.shops) 
+        return;
+
+      const response = await GetRequest('shops', null, false);
+
+      if (!response)
+        return;
+    
+      const data = await response.json();
+    
+      store.shops = data;
+      setStore({ ...store });
+    };
+
+    getCategories();
+    getShops();
+
+  }, [store.categories, store.shops]);
 
   useEffect(() => {
     if (accessToken) {
@@ -45,8 +84,6 @@ const DataStore = () => {
 
         store.user = decodedToken;
         store.user.isSet = true;
-
-        console.log('store.user', store.user);
  
         setStore({ ...store });
 
@@ -71,23 +108,7 @@ const DataStore = () => {
     setStore({ ...initState });
   };
 
-  const loadCategories = async () => {
-    if (store.categories)
-      return;
-
-    const response = await GetRequest('categories', null, false);
-
-    if (!response)
-      return;
-
-    const data = await response.json();
-
-    store.categories = data;
-    setStore({ ...store });
-
-  };
-
-  return { store, setStore, isMobile, loadCategories, setAccessToken, resetStore };
+  return { store, setStore, isMobile, setAccessToken, resetStore };
 };
 
 export const StoreContext = createContext(null);
@@ -95,14 +116,14 @@ export const StoreContext = createContext(null);
 export const useStore = () => {
   const store = useContext(StoreContext);
   if (!store) {
-    throw new Error('dataStore must be used within DataStoreProvider');
+    throw new Error('dataStore must be used within StoreProvider');
   }
 
   return store;
 };
 
 export const StoreProvider = ({ children }) => {
-  const { store, setStore, isMobile, loadCategories, setAccessToken, resetStore } = DataStore();
-  const memo = useMemo(() => ({ store, setStore, isMobile, loadCategories, setAccessToken, resetStore }), [store, setStore, isMobile, loadCategories, setAccessToken, resetStore]);
+  const { store, setStore, isMobile, setAccessToken, resetStore } = DataStore();
+  const memo = useMemo(() => ({ store, setStore, isMobile, setAccessToken, resetStore }), [store, setStore, isMobile, setAccessToken, resetStore]);
   return createElement(StoreContext.Provider, { value: memo }, children);
 };

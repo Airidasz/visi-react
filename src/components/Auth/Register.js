@@ -43,63 +43,63 @@ const Register = () => {
       });
   };
   return (
-    <div className="pageView">
+    <div className="page-view">
+      <div className='page-title'>
+        <h5>Registracija</h5>
+      </div>
       <form
         onSubmit={handleSubmit}
-        className="form"
-        style={{ marginTop: '59px' }}
+        className="form mt-5"
       >
         <div className="formControl">
-          <label>Prisijungimo vardas</label>
+          <label htmlFor='name'>Prisijungimo vardas</label>
           <input
+            id="name"
             type="text"
             value={userInfo.name}
             onChange={(e) => setUserInfo({...userInfo, name:e.target.value})}
+            required
           />
         </div>
         <div className="formControl">
-          <label>Elektroninio paštas</label>
+          <label htmlFor='email'>Elektroninio paštas</label>
           <input
+            id="email"
             type="email"
             value={userInfo.email}
             onChange={(e) => setUserInfo({...userInfo, email:e.target.value})}
+            required
           />
         </div>
         <div className="formControl">
-          <label>Slaptažodis</label>
-
+          <label htmlFor='password'>Slaptažodis</label>
           <input
+            id="password"
             type="password"
             value={userInfo.password}
             onChange={(e) => setUserInfo({...userInfo, password:e.target.value})}
-
+            required
           />
         </div>
-
         <div className="formControl">
-          <label>Pakartokite slaptažodį</label>
-
+          <label htmlFor='repeat-pasword'>Pakartokite slaptažodį</label>
           <input
+            id="repeat-pasword"
             type="password"
             value={userInfo.repeatPassword}
             onChange={(e) => setUserInfo({...userInfo, repeatPassword:e.target.value})}
-
+            required
           />
         </div>
-
         <div className='d-flex'>
           <input
+            id="is-farmer"
             type="checkbox"
             value={userInfo.farmer}
             onChange={(e) => setUserInfo({...userInfo, farmer:e.target.checked})}
-
           />
-          <label className='ms-2'>Registruojuosi kaip ūkininkas</label>
-
-
+          <label className='ms-2' htmlFor='is-farmer'>Registruojuosi kaip ūkininkas</label>
         </div>
-   
-
         <div className="formControl">
           <input type="submit" className="btn-dark" value="Registruotis" />
         </div>

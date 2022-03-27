@@ -25,10 +25,7 @@ const Categories = () => {
 
   useEffect(() => {
     const getCategories = async () => {
-      if (!store.categories)
-        await loadCategories();
-
-      else {
+      if (store.categories) {
         setShowCreate(false);
         setShowEdit({});
       }
@@ -39,10 +36,10 @@ const Categories = () => {
   }, [store.categories]);
 
   if (!store.categories)
-    return <div className="pageView"></div>;
+    return <div className="page-view"></div>;
 
   return (
-    <div className="pageView">
+    <div className="page-view">
       <div className="container">
         <div className="title">
           <h2>Kategorijos</h2>

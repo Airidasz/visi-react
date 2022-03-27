@@ -4,21 +4,25 @@ import './App.scss';
 import Footer from './components/Footer';
 import RefreshTokens from './components/RefreshTokens';
 import React, { useEffect, useState } from 'react';
+import { useCart } from './components/useCart';
 
 function App() {
   const [tokensRefreshed, setTokensRefreshed] = useState(false);
+  const {setCart} = useCart();
 
   const refreshToken = RefreshTokens();
 
   useEffect(() => {
     const init = async () => {
-      localStorage.clear();
+      // Refresh tokens
+      localStorage.removeItem('accessToken');
       await refreshToken();
       setTokensRefreshed(true);
     };
 
     init();
   }, []);
+
 
   if (!tokensRefreshed) return <div></div>;
 

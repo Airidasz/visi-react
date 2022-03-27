@@ -1,7 +1,7 @@
 import '../index.css';
 import React, { useState, useRef, useEffect } from 'react';
 
-const FileUpload = ({ style, setFile = () => { } }) => {
+const FileUpload = ({ style, setFile = () => { }, className = '' }) => {
   const [file, setInternalFile] = useState({});
   const [hover, setHover] = useState(false);
   const ref = useRef(null);
@@ -26,7 +26,7 @@ const FileUpload = ({ style, setFile = () => { } }) => {
   };
 
   return (
-    <div className={`fileUpload${hover ? ' hover' : ''}`} 
+    <div className={`file-upload${hover ? ' hover' : ''} ${className}`} 
       style={style && style}
       onClick={clickFileInput} onDrop={uploadDrop}
       onDragOver={(e) => e.preventDefault()}

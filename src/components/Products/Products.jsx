@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '../useApi';
-import { Link } from 'react-router-dom';
-import { getImage } from '../Extras';
+import Product from './Product'; 
 
-const Products = ({ categories, className }) => {
+const Products = ({ categories, shops, className }) => {
   const [products, setProducts] = useState();
 
   const { GetRequest } = useApi();
@@ -13,13 +12,17 @@ const Products = ({ categories, className }) => {
       if (products)
         return;
 
-      const requestedCategories = categories.map(category => `category=${encodeURIComponent(category)}`).join('&');
+      const parameters = [];
 
-      const response = await GetRequest(`products?${requestedCategories}`, null, false);
+      categories.map(category => parameters.push(`category=${encodeURIComponent(category)}`));
+      shops.map(shop => parameters.push(`shop=${encodeURIComponent(shop)}`));
+
+      const response = await GetRequest(`products?${parameters.join('&')}`, null, false);
       if (!response)
         return;
 
       const data = await response.json();
+
       setProducts(data);
     };
 
@@ -29,21 +32,23 @@ const Products = ({ categories, className }) => {
 
   useEffect(() => {
     setProducts(undefined);
-  }, [categories]);
+  }, [categories, shops]);
+  
+  // Show placeholders while loading
+  if(!products) {
+    return (
+      <div id="products" className={className}>
+        {Array.from(Array(10)).map((_, i) => (<Product key={i} loading={true}/>))}
+      </div>
+    );
+  }
 
-  if (!products) return <div></div>;
+  if(products.length == 0) 
+    return (<div className='d-flex justify-content-center'><h2>Prekių nerasta</h2></div>);
 
   return (
     <div id="products" className={className}>
-      {products.map(p => (
-        <div className='product' key={p.name}>
-          <div className='product-image'>
-            <Link to={`/product/${p.codename}`}><img src={getImage(p, 'image')} /></Link>
-          </div>
-          <div className='product-info'>    
-            <Link to={`/product/${p.codename}`}>{p.name}</Link></div>
-        </div>
-      ))}
+      {products.map(p => (<Product product={p} key={p.codename}/>))}
     </div>
   );
 };

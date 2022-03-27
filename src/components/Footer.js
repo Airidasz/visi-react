@@ -9,7 +9,7 @@ const Footer = () => {
           Atliko <b>Airidas Zinkevičius</b>
         </h4>
         <h4 style={{ display: 'inline', fontWeight: '400' }}>
-          Visos autorinės teisės saugomos
+          Visos autorinės teisės (ne)saugomos
         </h4>
       </div>
     </footer>

@@ -43,6 +43,7 @@
     "not op_mini all"
   ],
   "devDependencies": {
+    "@iconify/react": "^3.2.0",
     "react-error-overlay": "^6.0.9",
     "sass": "^1.49.7"
   }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import './ShopStyle.scss';
 import { Outlet, useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import ShopMap from '../ShopMap';
-import Products from './Products';
+import Products from '../Products/Products';
 import useApi from '../useApi';
 import { useStore } from '../useStore';
 
@@ -83,11 +84,11 @@ const Shop = ({isNew}) => {
       setEditing(true);
   };
 
-  if (!shop) return <div className="pageView"></div>;
+  if (!shop) return <div className="page-view"></div>;
 
   return (
-    <div className="pageView">
-      <div className="container">
+    <div className="page-view">
+      <div id="shop-page" className="container">
         <div className="title">
           {inEditMode() ? 
             <input type="text" 
@@ -122,7 +123,7 @@ const Shop = ({isNew}) => {
             onDone={onAddEditFinish}
           />
           <Outlet />
-          {!isNew && <Products shop={shop}  />}
+          {!isNew && <Products shops={[shop.codename]} categories={[]} className="mt-3" />}
         </div>
       </div>
     </div>

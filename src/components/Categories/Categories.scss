@@ -1,12 +1,12 @@
-.title {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
+// .title {
+//   display: flex;
+//   justify-content: space-between;
+//   margin-bottom: 20px;
 
-  h2 {
-    font-size: 35px;
-  }
-}
+//   h2 {
+//     font-size: 35px;
+//   }
+// }
 .category-slider{
   display:grid;
   grid-gap:0.8rem;
@@ -54,14 +54,20 @@
 
 .categoriesGrid {
   display: grid;
-  row-gap: 10px;
+  grid-gap: 10px;
+  grid-template-columns: repeat(auto-fill, 10rem);
 
   .card {
     border: 1px solid gray;
     border-radius: 4px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: grid;
+    grid-template-rows: 100px 50px min-content;
+
+    .file-upload{
+      width:100px;
+      height:100px;
+    }
+
     .actions {
       display: flex;
       .actionButton {
@@ -78,11 +84,5 @@
         }
       }
     }
-  }
-
-  .categoryForm {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
   }
 }

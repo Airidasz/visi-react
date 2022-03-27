@@ -10,21 +10,9 @@ const CategorySlider = ({setCategories = () => {},clearFilter=() => {},showFilte
   //   document.title = 'Parduotuvė';
   // }, []);
 
-  const {store, loadCategories} = useStore();
+  const {store} = useStore();
 
-  useEffect(() => {
-    const getCategories = async () => {
-      if (store.categories) {
-        return;
-      }
-
-      await loadCategories();
-    };
-
-    getCategories();
-  }, [store.categories]);
-
-  if (!store.categories) return <div className="pageView"></div>;
+  if (!store.categories) return <div className="page-view"></div>;
 
   return (
     <React.Fragment>
@@ -32,7 +20,7 @@ const CategorySlider = ({setCategories = () => {},clearFilter=() => {},showFilte
         {store.categories.map(c => (<Category2 key={c.name} category={c} setCategories={setCategories}/>))}
       </div>
       {showFilterClear && 
-     <button onClick={clearFilter} className="mt-2">Clear filter</button>}
+     <button onClick={clearFilter} className="mt-2 btn-dark">Išvalyti</button>}
     </React.Fragment>
 
   );

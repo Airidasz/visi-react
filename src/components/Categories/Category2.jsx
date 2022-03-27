@@ -3,7 +3,7 @@ import { getImage } from '../Extras';
 
 const Category2 = ({ category, setCategories }) => {
   return (
-    <div onClick={() => setCategories([category.name])} className="slider-category">
+    <div onClick={() => setCategories([category.codename])} className="slider-category">
       <div className='category-img'>
         <img src={getImage(category, 'file')} />
       </div>

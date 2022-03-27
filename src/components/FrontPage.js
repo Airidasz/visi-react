@@ -14,13 +14,13 @@ const FrontPage = () => {
     if(categories.length > 0)
       setCategories([]);
   };
+
   return (
-    <div className="pageView">
+    <div className="page-view">
       {/* <div className="intro"/> */}
       <div className="container">
         <CategorySlider setCategories={setCategories} className={'mt-4'} showFilterClear={true} clearFilter={clearFilter}/>
-
-        <Products categories={categories} className={'mt-4'}/>
+        <Products categories={categories} shops={[]} className={'mt-4'}/>
       </div>
     </div>
   );

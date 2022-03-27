@@ -11,12 +11,15 @@ import FrontPage from './components/FrontPage';
 import Shop from './components/Shop/Shop';
 import Register from './components/Auth/Register';
 import Categories from './components/Categories/Categories';
-import Product from './components/Products/Product';
+import ProductPage from './components/Products/ProductPage';
+import ProductsPage from './components/Products/ProductsPage';
 
 import { transitions, positions, Provider as AlertProvider } from 'react-alert';
 import { StoreProvider } from './components/useStore';
+import { CartProvider } from './components/useCart';
 import AlertTemplate from 'react-alert-template-basic';
 import Status404Page from './components/Status404Page';
+import CartPage from './components/Cart/CartPage';
 
 const options = {
   position: positions.TOP_CENTER,
@@ -32,28 +35,33 @@ render(
  
   <AlertProvider template={AlertTemplate} {...options}>
     <StoreProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />}>
-            <Route path="/" element={<FrontPage />} />
+      <CartProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<App />}>
+              <Route path="/" element={<FrontPage />} />
 
-            <Route path="/:name" element={<Shop />} />
-            <Route path="/shop/new" element={<Shop isNew={true}/>} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/categories" element={<Categories />} />
-            <Route path="/product/new" element={<Product isNew={true}/>} />
-            <Route
-              path="/product/:productName"
-              element={<Product />}
-            />
+              <Route path="/:name" element={<Shop />} />
+              <Route path="/nauja/parduotuve" element={<Shop isNew={true}/>} />
+              <Route path="/registruotis" element={<Register />} />
+              <Route path="/kategorijos" element={<Categories />} />
+              <Route path="/prekes" element={<ProductsPage />} />
+              <Route path="/pirkti" element={<CartPage />} />
 
-            <Route path="/404" element={<Status404Page />} />
+              <Route path="/nauja/preke" element={<ProductPage isNew={true}/>} />
+              <Route
+                path="/preke/:productName"
+                element={<ProductPage />}
+              />
 
-            <Route path="*" exact={true} element={<Status404Page />} />
-          </Route>
+              <Route path="/404" element={<Status404Page />} />
 
-        </Routes>
-      </BrowserRouter>
+              <Route path="*" exact={true} element={<Status404Page />} />
+            </Route>
+
+          </Routes>
+        </BrowserRouter>
+      </CartProvider>
     </StoreProvider>
   </AlertProvider>,
   document.getElementById('root')
