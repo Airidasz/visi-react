@@ -4,7 +4,6 @@ import mark from '../../assets/mark.svg';
 import pencil from '../../assets/pencil.svg';
 import trash from '../../assets/trash.svg';
 import React, { useState } from 'react';
-import FileUpload from '../FileUpload';
 import useApi from '../useApi';
 import { getImage } from '../Extras';
 import EditableField from '../Products/components/EditableField';
@@ -18,8 +17,10 @@ const Category = ({ category, close = () => { }, reset = () => { }, edit, change
 
   const tryAddEditCategory = async () => {
     var data = new FormData();
-    data.append('file', file);
     data.append('name', categoryName);
+
+    if(file)
+      data.append('file', file);
 
     let response = null;
 
@@ -57,14 +58,14 @@ const Category = ({ category, close = () => { }, reset = () => { }, edit, change
 
   return (
     <div className="card">
-      <div className="d-flex justify-content-center">
+      <div>
         <EditableField field="file" type="file" edit={edit} onChange={onInfoChange} >
-          <img src={getImage(category,'file')} style={{ width: '100px', height: '100px', background: 'black' }} />
+          <img src={getImage(category,'file')} />
         </EditableField>
       </div>
-      <div className='my-1 w-100'>
-        <EditableField field="name"edit={edit} onChange={onInfoChange}>
-          <h4>{category.name}</h4>
+      <div>
+        <EditableField field="name" edit={edit} onChange={onInfoChange} editClassname="w-100">
+          <h4>{category?.name}</h4>
         </EditableField>
       </div>
          

@@ -1,14 +1,12 @@
-import Header from './components/Header';
+import Header from './components/HeaderFooter/Header';
 import { Outlet } from 'react-router-dom';
 import './App.scss';
-import Footer from './components/Footer';
+import Footer from './components/HeaderFooter/Footer';
 import RefreshTokens from './components/RefreshTokens';
 import React, { useEffect, useState } from 'react';
-import { useCart } from './components/useCart';
 
 function App() {
   const [tokensRefreshed, setTokensRefreshed] = useState(false);
-  const {setCart} = useCart();
 
   const refreshToken = RefreshTokens();
 

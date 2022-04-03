@@ -2,13 +2,21 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Auth.scss';
-import { useAlert } from 'react-alert';
+import useApi from '../useApi';
+import { useQuery } from '../Extras';
+import { useStore } from '../useStore';
 
 const Register = () => {
   useEffect(() => {
     document.title = 'Registruotis';
   }, []);
+  
+  let query = useQuery();
+  const navigate = useNavigate();
 
+  const { PostRequest } = useApi();
+  const { setAccessToken } = useStore();
+  
   const [userInfo, setUserInfo] = useState({
     name:'',
     email:'',
@@ -17,31 +25,23 @@ const Register = () => {
     farmer:false
   });
 
-  const alert = useAlert();
-  const navigate = useNavigate();
-
-  const handleSubmit = (evt) => {
+  const  handleSubmit = async (evt) => {
     evt.preventDefault();
 
-    fetch(process.env.REACT_APP_API_URL + '/register', {
-      method: 'POST',
-      body: JSON.stringify(userInfo),
-    })
-      .then(async (response) => {
-        const data = await response;
+    const body = JSON.stringify(userInfo);
 
-        if (!response.ok) {
-          const jsonData = await data.json();
-          const error = (data && jsonData.message) || response.statusText;
-          return Promise.reject(error);
-        }
+    const response = await PostRequest('register', body, false);
+    if (!response)
+      return;
 
-        navigate(-1);
-      })
-      .catch((error) => {
-        alert.error(error);
-      });
+    const data = await response.json();
+
+    setAccessToken(data.AccessToken);
+
+    const ref = query.get('ref') ?? -1;
+    navigate(ref);
   };
+
   return (
     <div className="page-view">
       <div className='page-title'>
@@ -51,7 +51,7 @@ const Register = () => {
         onSubmit={handleSubmit}
         className="form mt-5"
       >
-        <div className="formControl">
+        <div className="form-control">
           <label htmlFor='name'>Prisijungimo vardas</label>
           <input
             id="name"
@@ -59,10 +59,11 @@ const Register = () => {
             value={userInfo.name}
             onChange={(e) => setUserInfo({...userInfo, name:e.target.value})}
             required
+            autoFocus
           />
         </div>
-        <div className="formControl">
-          <label htmlFor='email'>Elektroninio paštas</label>
+        <div className="form-control">
+          <label htmlFor='email'>Elektroninis paštas</label>
           <input
             id="email"
             type="email"
@@ -71,7 +72,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className="formControl">
+        <div className="form-control">
           <label htmlFor='password'>Slaptažodis</label>
           <input
             id="password"
@@ -81,7 +82,7 @@ const Register = () => {
             required
           />
         </div>
-        <div className="formControl">
+        <div className="form-control">
           <label htmlFor='repeat-pasword'>Pakartokite slaptažodį</label>
           <input
             id="repeat-pasword"
@@ -100,7 +101,7 @@ const Register = () => {
           />
           <label className='ms-2' htmlFor='is-farmer'>Registruojuosi kaip ūkininkas</label>
         </div>
-        <div className="formControl">
+        <div className="form-control">
           <input type="submit" className="btn-dark" value="Registruotis" />
         </div>
       </form>

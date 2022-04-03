@@ -13,3 +13,14 @@ export const useQuery = () => {
   
   return React.useMemo(() => new URLSearchParams(search), [search]);
 };
+
+export const RemoveItemFromArray = (arr, item)=> {
+  var array = [...arr]; // make a separate copy of the array
+  var index = array.indexOf(item);
+  if (index !== -1) {
+    array.splice(index, 1);
+  }
+
+  return array;
+};
+

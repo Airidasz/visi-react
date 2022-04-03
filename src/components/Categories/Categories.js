@@ -39,18 +39,18 @@ const Categories = () => {
     return <div className="page-view"></div>;
 
   return (
-    <div className="page-view">
+    <div id="category-page" className="page-view">
+      <div className="page-title medium">
+        Kategorijos
+      </div>
       <div className="container">
-        <div className="title">
-          <h2>Kategorijos</h2>
-          <input
-            type="button"
-            className="btn-dark"
-            value="Kurti naują"
-            onClick={() => setShowCreate(!showCreate)}
-          />
-        </div>
-        <div className="categoriesGrid">
+        <input
+          type="button"
+          className="btn-dark-reverse my-2 w-100"
+          value="Kurti naują"
+          onClick={() => setShowCreate(!showCreate)}
+        />
+        <div className="categories-grid">
           {showCreate && (
             <Category
               reset={() => setStore({ ...store, categories: null })}

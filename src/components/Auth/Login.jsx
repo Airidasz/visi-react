@@ -51,7 +51,7 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
 
   return (
     <form className="form login-form" onSubmit={handleSubmit} ref={loginRef}>
-      <div className="formControl">
+      <div className="form-control">
         <label>Prisijungimo vardas</label>
         <input
           autoFocus={true}
@@ -60,7 +60,7 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
           onChange={(e) => setLoginInfo({...loginInfo, name:e.target.value})}
         />
       </div>
-      <div className="formControl">
+      <div className="form-control">
         <label>Slaptažodis</label>
         <input
           type="password"
@@ -69,7 +69,7 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
         />
       </div>
 
-      <div className="formControl">
+      <div className="form-control">
         <input type="submit" className="btn-dark" value="Prisijungti" />
       </div>
     </form>

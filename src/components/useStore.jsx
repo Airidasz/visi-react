@@ -6,7 +6,6 @@ import useApi from './useApi';
 
 const DataStore = () => {
   const { GetRequest } = useApi();
-  const [accessToken, setAccessToken] = useState();
 
   const initState = {
     categories: null,
@@ -15,11 +14,14 @@ const DataStore = () => {
       shop:null,
       admin: null,
       email: null,
-      id: null,
+      name: null,
       isSet: false,
-      exp:0
+      temp:false,
+      exp:0,
     },
-    permissions: {},
+    permissions: {
+      isBuyer:true
+    },
     cart:[]
   };
 
@@ -72,7 +74,7 @@ const DataStore = () => {
 
   }, [store.categories, store.shops]);
 
-  useEffect(() => {
+  const setAccessToken = (accessToken) => {
     if (accessToken) {
       try {
         var decodedToken = jwt_decode(accessToken);
@@ -90,7 +92,7 @@ const DataStore = () => {
         localStorage.setItem('accessToken', accessToken);
       } catch (err) { }
     }
-  }, [accessToken]);
+  };
 
   const decodePermissions = (persmissions) => {
     const p = persmissions.toLowerCase();
@@ -100,6 +102,9 @@ const DataStore = () => {
 
     if(p.includes('f'))
       store.permissions.isFarmer = true;
+
+    if(store.permissions.isAdmin || store.permissions.isFarmer)
+      store.permissions.isBuyer = false;
 
     setStore({...store});
   };

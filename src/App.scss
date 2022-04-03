@@ -52,13 +52,13 @@
   border: 2px solid transparent !important;
   cursor: pointer;
 }
-.btn-dark:hover {
+.btn-dark:hover:not(.disabled) {
   background: transparent !important;
   color: black !important;
   border: 2px solid black !important;
 }
 
-.btn-dark:active {
+.btn-dark:active:not(.disabled) {
   background: rgb(19, 148, 15) !important;
   border: 2px solid transparent !important;
   color: white !important;
@@ -75,16 +75,21 @@
   color: black !important;
   border: 2px solid black !important;
 }
-.btn-dark-reverse:hover {
-  background: black !important;
-  color: white !important;
-  border-color:transparent !important;
-}
-
-.btn-dark-reverse:active {
+.btn-dark-reverse:hover:not(.disabled) {
   background: rgb(19, 148, 15) !important;
   border: 2px solid transparent !important;
   color: white !important;
+}
+
+.btn-dark-reverse:active:not(.disabled) {
+  background: black !important;
+  color: white !important;
+  border-color: transparent !important;
+}
+
+.disabled {
+  opacity: 0.3;
+  cursor: auto;
 }
 
 .success {
@@ -100,13 +105,11 @@
 }
 
 .page-view {
-  min-height: calc(100vh - 297px);
-  width: 100vw;
-  max-width: 100%;
   display: flex;
   align-items: center;
   flex-direction: column;
   animation: fadeIn 0.5s;
+  min-height: 40rem;
 }
 
 @keyframes fadeIn {
@@ -123,13 +126,13 @@
   row-gap: 15px;
   padding: 15px 20px;
   width: 250px;
-  background-color: white;
-  border: 1px solid gray;
-  border-radius: 4px;
+  background: white;
+  border: 1px solid #d3d3d3;
+  border-radius: 2px;
   color: black;
   z-index: 2;
 
-  .formControl {
+  .form-control {
     display: flex;
     flex-direction: column;
   }
@@ -157,8 +160,8 @@ textarea:focus {
 }
 
 .card-sticky {
-position: sticky;
-top: 120px;
+  position: sticky;
+  top: 120px;
 }
 
 .card-style-1 {
@@ -195,5 +198,24 @@ top: 120px;
     li:not(:last-child) {
       margin-bottom: 5px;
     }
+  }
+}
+
+.aspect-1 {
+  position: relative;
+
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: (1 / 1) * 100%;
+  }
+
+  > * {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
   }
 }

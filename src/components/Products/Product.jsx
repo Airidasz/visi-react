@@ -17,8 +17,10 @@ const Products = ({ product, loading}) => {
   return (
     <div className="product" onMouseEnter={changeShow} onMouseLeave={changeShow}>
 
-      <div className='product-image'>
-        <Link to={`/preke/${product.codename}`}><img src={getImage(product, 'image')} /></Link>
+      <div className='aspect-1'>
+        <div className='product-image'>
+          <Link to={`/preke/${product.codename}`}><img src={getImage(product, 'image')} /></Link>
+        </div>
       </div>
          
       <div className='product-info'>    

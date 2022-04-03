@@ -1,11 +1,12 @@
 import './Header.scss';
-import Login from './Auth/Login';
+import Login from '../Auth/Login';
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import useApi from './useApi';
-import { useStore } from './useStore';
+import { HashLink } from 'react-router-hash-link';
+import useApi from '../useApi';
+import { useStore } from '../useStore';
 import { Icon } from '@iconify/react';
-import ShoppingCart from './ShoppingCart';
+import ShoppingCart from '../ShoppingCart';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -43,6 +44,7 @@ const Header = () => {
     navigate('/');
   };
 
+
   return (
     <header
       // className={offset > 10 || location.pathname !== '/' ? 'solid' : ''}
@@ -52,7 +54,7 @@ const Header = () => {
         <div className="container">
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
-              {store.user.isSet ? (
+              {store.user.isSet? (
                 <React.Fragment>
                   {store.permissions.isAdmin && (
                     <Link to="/kategorijos">
@@ -60,9 +62,16 @@ const Header = () => {
                     </Link>
                   )}
                   {store.permissions.isFarmer && (
-                    <Link to={store.user.shop ? `/${store.user.shop}` : '/nauja/parduotuve'}>
-                      <li>Parduotuvė</li>
-                    </Link>)}
+                    <React.Fragment>
+                      <Link to={store.user.shop ? `/${store.user.shop}` : '/nauja/parduotuve'}>
+                        <li>Parduotuvė</li>
+                      </Link>
+                      <HashLink smooth={true} to="/profilis#uzsakymai">
+                        <li>Užsakymai</li>
+                      </HashLink>
+                    </React.Fragment>
+                  )}
+            
                   <Link to="/" onClick={logOut}>
                     <li>Atsijungti</li>
                   </Link>
@@ -85,7 +94,7 @@ const Header = () => {
                 </Link>
               )}
             </ul>
-            {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu} onSuccess={() => navigate('/')}/>}
+            {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu}/>}
           </div>
         </div>
       </div>
@@ -97,7 +106,7 @@ const Header = () => {
         </div>
         {isMobile  ? (  
           <div className='mobile-menu'>
-            <ShoppingCart/>
+            {store.permissions.isBuyer && <ShoppingCart/>}
             <Icon className="hamburger" icon="charm:menu-hamburger"  onClick={() => {
               setShowLoginMenu(false);
               toggleMenu();
@@ -108,7 +117,7 @@ const Header = () => {
             <Link to="/prekes">
               <li>Prekės</li>
             </Link>
-            <ShoppingCart/>
+            {store.permissions.isBuyer && <ShoppingCart/>}
           </ul></div>)}
 
       </div>

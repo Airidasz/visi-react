@@ -5,12 +5,17 @@ import { roundDecimal } from './Extras';
 
 const CartStore = () => {
   const initState = [];
-  const [cart, setInternalCart] = useState(initState);
 
-  const setCart = (arr) => {
-    localStorage.setItem('cart', JSON.stringify(arr));
-    setInternalCart(arr);
-  };
+  const [cart, setInternalCart] = useState(initState);
+  const [order, setOrder] = useState({
+    orderedProducts:null,
+    shipping:null,
+    payment:null,
+    user:{
+      temp:null,
+      email:null
+    }
+  });
 
   useEffect(() => {
     var cartFromStorage = localStorage.getItem('cart');
@@ -23,42 +28,74 @@ const CartStore = () => {
     }
   },[]);
 
+  const getStep = () => {
+    let step = 0;
+
+    if(order?.orderedProducts?.length > 0)
+      step += 1;
+
+    if(order?.user?.email)
+      step += 1;
+
+    if(order?.shipping)
+      step += 1;
+
+    if(order?.payment)
+      step +=1;
+
+    return step;
+  };
+
+  const setCart = (arr) => {
+    localStorage.setItem('cart', JSON.stringify(arr));
+    setInternalCart(arr);
+  };
+
+
+
+  const getProductByCodename = (codename) => cart.find(c => c.product.codename == codename);
+
   const addToCart = (product, quantity) => {
-    const productInCart = cart.find(p => p.codename == product.codename);
+    if(product.quantity <= 0)
+      return;
+
+    const productInCart = getProductByCodename(product.codename);
+
     if(!productInCart) {
-      product.selectedQuantity = quantity;
-      setCart([...cart, product]);
+      var cartProduct = {product, quantity};
+
+      setCart([...cart, cartProduct]);
       return;
     }
 
-    productInCart.selectedQuantity += quantity;
+    productInCart.quantity += quantity;
 
-    if(productInCart.selectedQuantity > productInCart.quantity)
-      productInCart.quantity = productInCart.selectedQuantity;
+    if(productInCart.quantity > productInCart.product.quantity)
+      productInCart.quantity = productInCart.product.quantity;
 
     setCart([...cart]);
 
   };
   const removeFromCart = (product, quantity) => {
-    const productInCart = cart.find(p => p.codename == product.codename);
+    const productInCart = getProductByCodename(product.codename);
     if(!productInCart) {
       return;
     }
 
-    productInCart.selectedQuantity -= quantity;
+    productInCart.quantity -= quantity;
     setCart([...cart]);
 
-    if(productInCart.selectedQuantity <= 0) {
-      const filteredCart = cart.filter(p => p.codename != product.codename);
+    if(productInCart.quantity <= 0) {
+      const filteredCart = cart.filter(c => c.product.codename != product.codename);
       setCart([...filteredCart]);
     }
   };
 
   const totalPrice = (useSign = false) => roundDecimal(cart.map(p => productPrice(p)).reduce((p,c) => p+c, 0)) + (useSign && '€');
 
-  const productPrice = (p, useSign = false) => roundDecimal(Number(p.amount) * Number(p.selectedQuantity))  + (useSign && '€');
+  const productPrice = (p, useSign = false) =>  roundDecimal(Number(p.product.amount) * Number(p.quantity))  + (useSign && '€');
 
-  return { cart, setCart, addToCart, removeFromCart, totalPrice, productPrice};
+  return { cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice, getStep};
 };
 
 export const StoreContext = createContext(null);
@@ -73,7 +110,9 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const { cart, setCart, addToCart, removeFromCart, totalPrice, productPrice } = CartStore();
-  const memo = useMemo(() => ({ cart, setCart, addToCart, removeFromCart, totalPrice, productPrice }), [cart, setCart, addToCart, removeFromCart, totalPrice, productPrice]);
+  const { cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep } = CartStore();
+  const memo = useMemo(() => ({ cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep }), 
+    [cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep]);
+    
   return createElement(StoreContext.Provider, { value: memo }, children);
 };

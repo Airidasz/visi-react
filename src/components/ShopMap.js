@@ -10,12 +10,12 @@ import {
 
 import farmLocation from '../assets/farmLocation.png';
 import sellingLocation from '../assets/sellingLocation.png';
-import RemoveItemFromArray from './RemoveFromArray';
+import { RemoveItemFromArray } from './Extras';
 import useApi from './useApi';
 
 const ShopMap = ({ shop, editable, createLocations, shouldLoad = true, onDone = () => {} }) => {
   const [locations, setLocations] = useState([]);
-  const removeItem = RemoveItemFromArray();
+
   const { GetRequest, DeleteRequest, PostRequest} = useApi();
   const farmIcon = icon({ iconUrl: farmLocation, iconSize: (42, 42) });
   const sellingLocationIcon = icon({
@@ -93,7 +93,9 @@ const ShopMap = ({ shop, editable, createLocations, shouldLoad = true, onDone = 
   };
 
   const removeLocation = (location) => {
-    setLocations(removeItem(locations, location));
+    // setLocations(RemoveItemFromArray(locations, location));
+
+    setLocations(locations.filter(l => l != location));
   };
 
   return (

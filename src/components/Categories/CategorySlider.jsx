@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import './Categories.scss';
 import Category2 from './Category2';
 
 import { useStore } from '../useStore';
-import reactDom from 'react-dom';
 
 const CategorySlider = ({setCategories = () => {},clearFilter=() => {},showFilterClear, className = ''}) => {
   // useEffect(() => {
@@ -12,14 +11,14 @@ const CategorySlider = ({setCategories = () => {},clearFilter=() => {},showFilte
 
   const {store} = useStore();
 
-  if (!store.categories) return <div className="page-view"></div>;
+  if (!store.categories) return <React.Fragment></React.Fragment>;
 
   return (
     <React.Fragment>
       <div className={`category-slider ${className}`}>
         {store.categories.map(c => (<Category2 key={c.name} category={c} setCategories={setCategories}/>))}
       </div>
-      {showFilterClear && 
+      {(showFilterClear && store.categories.length > 0) &&
      <button onClick={clearFilter} className="mt-2 btn-dark">Išvalyti</button>}
     </React.Fragment>
 

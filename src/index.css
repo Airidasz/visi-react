@@ -102,3 +102,13 @@ input[type="button"] {
   font-weight: bold;
   font-size: 50px;
 }
+
+.page-title.medium{
+  height: 120px;
+  font-size:42px;
+}
+
+.page-title.small{
+  height: 70px;
+}
+

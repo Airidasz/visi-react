@@ -4,7 +4,7 @@ import { getImage } from '../Extras';
 const Category2 = ({ category, setCategories }) => {
   return (
     <div onClick={() => setCategories([category.codename])} className="slider-category">
-      <div className='category-img'>
+      <div className='category-img aspect-1'>
         <img src={getImage(category, 'file')} />
       </div>
   

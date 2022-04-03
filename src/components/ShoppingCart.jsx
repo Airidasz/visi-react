@@ -38,7 +38,7 @@ const ShoppingCart = () => {
         (<div className='cart-items card-style-1 form' ref={cartRef}>
           {cart.length === 0 ? 
             'Prekių nėra' : (<React.Fragment>
-              {cart.map(p => (<ProductPanel key={p.codename} product={p}/>))}
+              {cart.map(p => (<ProductPanel key={p.product.codename} cartProduct={p}/>))}
               <h4>Suma: {totalPrice(true)}</h4>
               <button className='btn-dark' onClick={() => navigate('/pirkti')}>Pirkti</button>
             </React.Fragment>)
@@ -50,24 +50,24 @@ const ShoppingCart = () => {
 };
 
   
-export const ProductPanel = ({product}) => {
+export const ProductPanel = ({cartProduct, removable = true}) => {
   const {removeFromCart, productPrice} = useCart();
 
-  const removeProductFromCart = (e, product) => {
-    removeFromCart(product, 1);
+  const removeProductFromCart = (e, cartProduct) => {
+    removeFromCart(cartProduct, 1);
     e.stopPropagation();
   };
 
   return (<div className='cart-product'>
-    <img src={getImage(product, 'image')}/>
+    <img src={getImage(cartProduct.product, 'image')}/>
     <div className='info'>
-      <div>{product.name}</div>
+      <div>{cartProduct.product.name}</div>
       <div className='price-info'>
-        <h4>{productPrice(product)}€</h4>
-        <div>Kiekis: {product.selectedQuantity}</div>
+        <h4>{productPrice(cartProduct, true)}</h4>
+        <div>Kiekis: {cartProduct.quantity}</div>
       </div>
     </div>
-    <div className='remove-btn' onClick={(e) => removeProductFromCart(e, product)}><Icon icon="emojione-monotone:heavy-multiplication-x" /></div>
+    {removable && (<div className='remove-btn' onClick={(e) => removeProductFromCart(e, cartProduct)}><Icon icon="emojione-monotone:heavy-multiplication-x" /></div>)}
   </div>);
 };
 

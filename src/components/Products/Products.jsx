@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '../useApi';
 import Product from './Product'; 
+import { useStore } from '../useStore';
 
 const Products = ({ categories, shops, className }) => {
-  const [products, setProducts] = useState();
-
   const { GetRequest } = useApi();
+  const {store} = useStore();
+
+  const [products, setProducts] = useState();
 
   useEffect(() => {
     const getProducts = async () => {
@@ -21,7 +23,9 @@ const Products = ({ categories, shops, className }) => {
       if (!response)
         return;
 
-      const data = await response.json();
+      let data = await response.json();
+      
+      // data = data.filter(p => p.Public  || (store?.user?.shop && store?.user?.shop == p.shop.codename));
 
       setProducts(data);
     };

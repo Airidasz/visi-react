@@ -20,6 +20,13 @@ import { CartProvider } from './components/useCart';
 import AlertTemplate from 'react-alert-template-basic';
 import Status404Page from './components/Status404Page';
 import CartPage from './components/Cart/CartPage';
+import BuyPage from './components/Cart/BuyPage';
+import BuyLoginPage from './components/Cart/BuyLoginPage';
+import ShippingPage from './components/Cart/ShippingPage';
+import PaymentPage from './components/Cart/PaymentPage';
+import PurchaseCompletePage from './components/Cart/PurchaseCompletePage';
+import OverviewPage from './components/Cart/OverviewPage';
+import ProfilePage from './components/Profile/ProfilePage';
 
 const options = {
   position: positions.TOP_CENTER,
@@ -46,8 +53,17 @@ render(
               <Route path="/registruotis" element={<Register />} />
               <Route path="/kategorijos" element={<Categories />} />
               <Route path="/prekes" element={<ProductsPage />} />
-              <Route path="/pirkti" element={<CartPage />} />
-
+              <Route path="/profilis" element={<ProfilePage />} />
+              <Route path="/pirkti" element={<BuyPage />} >
+                
+                <Route path="/pirkti/krepselis" element={<CartPage />} />
+                <Route path="/pirkti/prisijungti" element={<BuyLoginPage />} />
+                <Route path="/pirkti/siuntimas" element={<ShippingPage />} />
+                <Route path="/pirkti/mokejimas" element={<PaymentPage />} />
+                <Route path="/pirkti/perziura" element={<OverviewPage />} />
+             
+              </Route>
+              <Route path="/pirkti/pavyko" element={<PurchaseCompletePage />} />
               <Route path="/nauja/preke" element={<ProductPage isNew={true}/>} />
               <Route
                 path="/preke/:productName"
