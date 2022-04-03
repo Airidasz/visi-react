@@ -1,18 +1,13 @@
 import Products from './Products/Products';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './FrontPage.scss';
 import CategorySlider from './Categories/CategorySlider';
 
 const FrontPage = () => {
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    document.title = 'Pagrindinis';
-  }, []);
-
   const clearFilter = () => {
-    if(categories.length > 0)
-      setCategories([]);
+    setCategories([]);
   };
 
   return (

@@ -1,6 +1,5 @@
 /* eslint-disable no-empty */
 import { useState, useEffect } from 'react';
-import jwt_decode from 'jwt-decode';
 import { useContext, createContext, createElement, useMemo } from 'react';
 import useApi from './useApi';
 
@@ -10,18 +9,6 @@ const DataStore = () => {
   const initState = {
     categories: null,
     shops:null,
-    user: {
-      shop:null,
-      admin: null,
-      email: null,
-      name: null,
-      isSet: false,
-      temp:false,
-      exp:0,
-    },
-    permissions: {
-      isBuyer:true
-    },
     cart:[]
   };
 
@@ -37,7 +24,7 @@ const DataStore = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
+  useEffect(async () => {
     const getCategories = async () => {
       if (store.categories)
         return;
@@ -48,10 +35,7 @@ const DataStore = () => {
         return;
     
       const data = await response.json();
-    
-      store.categories = data;
-      setStore({ ...store });
-      
+      setStore({ ...store, categories:data });
     };
 
     const getShops = async () => {
@@ -64,56 +48,19 @@ const DataStore = () => {
         return;
     
       const data = await response.json();
-    
-      store.shops = data;
-      setStore({ ...store });
+      setStore({ ...store, shops: data });
     };
 
-    getCategories();
-    getShops();
+    await getCategories();
+    await getShops();
 
   }, [store.categories, store.shops]);
-
-  const setAccessToken = (accessToken) => {
-    if (accessToken) {
-      try {
-        var decodedToken = jwt_decode(accessToken);
-        decodePermissions(decodedToken.permissions);
-
-        delete decodedToken.decodedToken;
-        
-        decodedToken.exp *= 1000;
-
-        store.user = decodedToken;
-        store.user.isSet = true;
- 
-        setStore({ ...store });
-
-        localStorage.setItem('accessToken', accessToken);
-      } catch (err) { }
-    }
-  };
-
-  const decodePermissions = (persmissions) => {
-    const p = persmissions.toLowerCase();
-
-    if(p.includes('a'))
-      store.permissions.isAdmin = true;
-
-    if(p.includes('f'))
-      store.permissions.isFarmer = true;
-
-    if(store.permissions.isAdmin || store.permissions.isFarmer)
-      store.permissions.isBuyer = false;
-
-    setStore({...store});
-  };
 
   const resetStore = () => {
     setStore({ ...initState });
   };
 
-  return { store, setStore, isMobile, setAccessToken, resetStore };
+  return { store, setStore, isMobile, resetStore };
 };
 
 export const StoreContext = createContext(null);
@@ -128,7 +75,7 @@ export const useStore = () => {
 };
 
 export const StoreProvider = ({ children }) => {
-  const { store, setStore, isMobile, setAccessToken, resetStore } = DataStore();
-  const memo = useMemo(() => ({ store, setStore, isMobile, setAccessToken, resetStore }), [store, setStore, isMobile, setAccessToken, resetStore]);
+  const { store, setStore, isMobile, resetStore } = DataStore();
+  const memo = useMemo(() => ({ store, setStore, isMobile, resetStore }), [store, setStore, isMobile, resetStore]);
   return createElement(StoreContext.Provider, { value: memo }, children);
 };

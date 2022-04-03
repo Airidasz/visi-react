@@ -1,9 +1,9 @@
 /* eslint-disable no-undef */
 import { useContext } from 'react';
-import { StoreContext } from './useStore';
+import { AuthContext } from './useAuth';
 
 const RefreshTokens = () => {
-  const storeContext = useContext(StoreContext);
+  const authContext = useContext(AuthContext);
 
   const refreshToken = async (nextHandler = () => { }) => {
     var response = await fetch(process.env.REACT_APP_API_URL + '/refresh', {
@@ -13,7 +13,7 @@ const RefreshTokens = () => {
 
     if (response.ok) {
       const jsonData = await response.json();
-      storeContext.setAccessToken(jsonData.AccessToken);
+      authContext.setAccessToken(jsonData.AccessToken);
       return nextHandler();
     }
 

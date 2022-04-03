@@ -1,12 +1,12 @@
 import React from 'react';
 import { useCart } from '../useCart';
-import { useStore } from '../useStore';
+import { useAuth } from '../useAuth';
 
 const AddToCartBtn = ({className = '', product, quantity}) => {
-  const {store} = useStore();
+  const {auth} = useAuth();
   const {addToCart} = useCart();
 
-  if(!store.permissions?.isBuyer)
+  if(!auth.permissions?.isBuyer)
     return <React.Fragment></React.Fragment>;
 
   return <button className={className} onClick={() => addToCart(product, quantity)}>Pridėti į krepšėlį</button>;

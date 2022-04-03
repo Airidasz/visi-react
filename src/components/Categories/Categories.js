@@ -2,19 +2,10 @@
 import React, { useEffect, useState } from 'react';
 import './Categories.scss';
 import Category from './Category';
-import { useNavigate } from 'react-router';
 import { useStore } from '../useStore';
 
-
 const Categories = () => {
-  const navigate = useNavigate();
-  const { store, setStore, loadCategories } = useStore();
-
-  useEffect(() => {
-    if (!store.permissions.isAdmin) navigate('/');
-
-    document.title = 'Kategorijos';
-  }, []);
+  const { store, setStore } = useStore();
 
   const [showCreate, setShowCreate] = useState(false);
   const [showEdit, setShowEdit] = useState({});

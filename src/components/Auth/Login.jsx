@@ -1,13 +1,13 @@
 /* eslint-disable no-undef */
 import React, { useState, useRef,useEffect } from 'react';
 import './Auth.scss';
+import { useAuth } from '../useAuth';
 import useApi from '../useApi';
-import { useStore } from '../useStore';
 
 const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
   const loginRef = useRef(null);
 
-  const { setAccessToken } = useStore();
+  const { setAccessToken } = useAuth();
   const { PostRequest } = useApi();
 
   const loginFields = {

@@ -1,22 +1,41 @@
-import React from 'react';
-import { useStore } from '../useStore';
+import React, { useEffect, useState } from 'react';
+import useApi from '../useApi';
+import { useAuth } from '../useAuth';
 
 const ProfilePage = () =>{ 
-  const {store} = useStore();
+  const{GetRequest} = useApi();
+  const [orders,setOrders] = useState();
+  const {auth} = useAuth();
+
+
+  useEffect(() => {
+    const getPersonOrders = async () => {
+      const response = await GetRequest('orders');
+      if(!response)
+        return;
+    
+      const data = await response.json();
+      setOrders([...data]);
+    };
+
+    if(auth.permissions.isBuyer)
+      getPersonOrders();
+  },[]);
+
+
 
   return (<div className='page-view'>
     <div className='container'>
       <div className='card-style-1 p-3 mt-3'>
         <div className='label'>Profilio informacija</div>
-        <div>{store.user.email}</div>
-        <div>{store.user.name}</div>
-        
-        
+        <div>{auth.user.email}</div>
+        <div>{auth.user.name}</div>
       </div>
 
-      <div className='card-style-1 p-3 mt-3'>
+      {orders && <div className='card-style-1 p-3 mt-3'>
         <div className='label'>Užsakymai</div>
-      </div>
+        {orders.map(x => x.number)}
+      </div>}
     </div>
   </div>);};
 

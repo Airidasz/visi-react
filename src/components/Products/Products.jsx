@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '../useApi';
 import Product from './Product'; 
-import { useStore } from '../useStore';
 
 const Products = ({ categories, shops, className }) => {
   const { GetRequest } = useApi();
-  const {store} = useStore();
 
   const [products, setProducts] = useState();
 

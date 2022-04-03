@@ -2,11 +2,11 @@ import React,{ useState ,useEffect} from 'react';
 import './CartStyles.scss';
 import {  Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../useCart';
-import { useStore } from '../useStore';
+import { useAuth } from '../useAuth';
 
 const ShippingPage = () => {
   const {order,setOrder,getStep} = useCart();
-  const {store} = useStore();
+  const {auth} = useAuth();
 
   const navigate = useNavigate();
 
@@ -16,8 +16,8 @@ const ShippingPage = () => {
     if(getStep() < 1)
       navigate('/pirkti/krepselis',{replace:true});
 
-    if(store.user.isSet){
-      order.user = store.user;
+    if(auth.user.isSet){
+      order.user = auth.user;
       order.user.temporary = false;
   
       setOrder({...order});

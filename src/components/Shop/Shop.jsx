@@ -5,6 +5,7 @@ import ShopMap from '../ShopMap';
 import Products from '../Products/Products';
 import useApi from '../useApi';
 import { useStore } from '../useStore';
+import {useAuth} from '../useAuth';
 
 const Shop = ({ isNew }) => {
   useEffect(() => {
@@ -13,6 +14,7 @@ const Shop = ({ isNew }) => {
   let { name } = useParams();
   const navigate = useNavigate();
   const { store } = useStore();
+  const {auth} = useAuth();
 
   const { GetRequest, PostRequest, PutRequest } = useApi();
 
@@ -68,7 +70,7 @@ const Shop = ({ isNew }) => {
   };
 
   const onAddEditFinish = () => {
-    store.user.shop = shop.codename;
+    auth.user.shop = shop.codename;
     navigate(`/${shop.codename}`, { replace: true });
     setEditing(false);
   };

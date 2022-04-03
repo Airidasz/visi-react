@@ -10,7 +10,6 @@ import {
 
 import farmLocation from '../assets/farmLocation.png';
 import sellingLocation from '../assets/sellingLocation.png';
-import { RemoveItemFromArray } from './Extras';
 import useApi from './useApi';
 
 const ShopMap = ({ shop, editable, createLocations, shouldLoad = true, onDone = () => {} }) => {

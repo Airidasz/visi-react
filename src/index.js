@@ -27,6 +27,7 @@ import PaymentPage from './components/Cart/PaymentPage';
 import PurchaseCompletePage from './components/Cart/PurchaseCompletePage';
 import OverviewPage from './components/Cart/OverviewPage';
 import ProfilePage from './components/Profile/ProfilePage';
+import { AuthProvider } from './components/useAuth';
 
 const options = {
   position: positions.TOP_CENTER,
@@ -41,44 +42,42 @@ const options = {
 render(
  
   <AlertProvider template={AlertTemplate} {...options}>
-    <StoreProvider>
-      <CartProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<App />}>
-              <Route path="/" element={<FrontPage />} />
+    <AuthProvider>
 
-              <Route path="/:name" element={<Shop />} />
-              <Route path="/nauja/parduotuve" element={<Shop isNew={true}/>} />
-              <Route path="/registruotis" element={<Register />} />
-              <Route path="/kategorijos" element={<Categories />} />
-              <Route path="/prekes" element={<ProductsPage />} />
-              <Route path="/profilis" element={<ProfilePage />} />
-              <Route path="/pirkti" element={<BuyPage />} >
-                
-                <Route path="/pirkti/krepselis" element={<CartPage />} />
-                <Route path="/pirkti/prisijungti" element={<BuyLoginPage />} />
-                <Route path="/pirkti/siuntimas" element={<ShippingPage />} />
-                <Route path="/pirkti/mokejimas" element={<PaymentPage />} />
-                <Route path="/pirkti/perziura" element={<OverviewPage />} />
-             
+      <StoreProvider>
+        <CartProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<App />}>
+                <Route path="/" element={<FrontPage />} />
+
+                <Route path="/:name" element={<Shop />} />
+                <Route path="/nauja/parduotuve" element={<Shop isNew={true}/>} />
+                <Route path="/registruotis" element={<Register />} />
+                <Route path="/kategorijos" element={<Categories />} />
+                <Route path="/prekes" element={<ProductsPage />} />
+                <Route path="/profilis" element={<ProfilePage />}/>
+                <Route path="/pirkti" element={<BuyPage />} >
+                  <Route path="/pirkti/krepselis" element={<CartPage />} />
+                  <Route path="/pirkti/prisijungti" element={<BuyLoginPage />} />
+                  <Route path="/pirkti/siuntimas" element={<ShippingPage />} />
+                  <Route path="/pirkti/mokejimas" element={<PaymentPage />} />
+                  <Route path="/pirkti/perziura" element={<OverviewPage />} />
+                </Route>
+                <Route path="/pirkti/pavyko" element={<PurchaseCompletePage />} />
+                <Route path="/nauja/preke" element={<ProductPage isNew={true}/>} />
+                <Route
+                  path="/preke/:productName"
+                  element={<ProductPage />}
+                />
+                <Route path="/404" element={<Status404Page />} />
+                <Route path="*" exact={true} element={<Status404Page />} />
               </Route>
-              <Route path="/pirkti/pavyko" element={<PurchaseCompletePage />} />
-              <Route path="/nauja/preke" element={<ProductPage isNew={true}/>} />
-              <Route
-                path="/preke/:productName"
-                element={<ProductPage />}
-              />
-
-              <Route path="/404" element={<Status404Page />} />
-
-              <Route path="*" exact={true} element={<Status404Page />} />
-            </Route>
-
-          </Routes>
-        </BrowserRouter>
-      </CartProvider>
-    </StoreProvider>
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
+      </StoreProvider>
+    </AuthProvider>
   </AlertProvider>,
   document.getElementById('root')
 );

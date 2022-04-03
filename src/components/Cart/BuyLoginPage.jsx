@@ -1,15 +1,15 @@
 import React, {useEffect} from 'react';
 import './CartStyles.scss';
-import { useStore } from '../useStore';
 import { Link, useNavigate } from 'react-router-dom';
 import Login from '../Auth/Login';
 import { useState } from 'react';
 import { useCart } from '../useCart';
+import { useAuth } from '../useAuth';
 
 const BuyLoginPage = () => {
   const navigate = useNavigate();
 
-  const {store} = useStore();
+  const {auth} = useAuth();
   const {order, setOrder, getStep} = useCart();
   
   const [showEmail, setShowEmail] = useState(false);
@@ -23,10 +23,10 @@ const BuyLoginPage = () => {
   }, []);
 
   useEffect(() =>{
-    if(store.user.isSet){
+    if(auth.user.isSet){
       navigate('/pirkti/siuntimas',{replace:true});
     }
-  },[store.user.isSet]);
+  },[auth.user.isSet]);
 
   const handleSubmit = (evt) => {
     evt.preventDefault();

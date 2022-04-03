@@ -5,6 +5,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { HashLink } from 'react-router-hash-link';
 import useApi from '../useApi';
 import { useStore } from '../useStore';
+import { useAuth } from '../useAuth';
 import { Icon } from '@iconify/react';
 import ShoppingCart from '../ShoppingCart';
 
@@ -16,7 +17,8 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
 
   const { PostRequest } = useApi();
-  const { store, resetStore, isMobile } = useStore();
+  const { store,setStore, isMobile } = useStore();
+  const {auth, resetAuth} = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -39,7 +41,8 @@ const Header = () => {
     if (!response)
       return;
 
-    resetStore();
+    setStore({...store, cart:[]});
+    resetAuth();
     setShowLoginMenu(false);
     navigate('/');
   };
@@ -54,16 +57,16 @@ const Header = () => {
         <div className="container">
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
-              {store.user.isSet? (
+              {auth.user.isSet ? (
                 <React.Fragment>
-                  {store.permissions.isAdmin && (
+                  {auth.permissions.isAdmin && (
                     <Link to="/kategorijos">
                       <li>Kategorijos</li>
                     </Link>
                   )}
-                  {store.permissions.isFarmer && (
+                  {auth.permissions.isFarmer && (
                     <React.Fragment>
-                      <Link to={store.user.shop ? `/${store.user.shop}` : '/nauja/parduotuve'}>
+                      <Link to={auth.user.shop ? `/${auth.user.shop}` : '/nauja/parduotuve'}>
                         <li>Parduotuvė</li>
                       </Link>
                       <HashLink smooth={true} to="/profilis#uzsakymai">
@@ -87,7 +90,6 @@ const Header = () => {
                   </a>
                 </React.Fragment>
               )}
-         
               {isMobile && (
                 <Link to="/prekes">
                   <li>Prekės</li>
@@ -106,7 +108,7 @@ const Header = () => {
         </div>
         {isMobile  ? (  
           <div className='mobile-menu'>
-            {store.permissions.isBuyer && <ShoppingCart/>}
+            {auth.permissions.isBuyer && <ShoppingCart/>}
             <Icon className="hamburger" icon="charm:menu-hamburger"  onClick={() => {
               setShowLoginMenu(false);
               toggleMenu();
@@ -117,7 +119,7 @@ const Header = () => {
             <Link to="/prekes">
               <li>Prekės</li>
             </Link>
-            {store.permissions.isBuyer && <ShoppingCart/>}
+            {auth.permissions.isBuyer && <ShoppingCart/>}
           </ul></div>)}
 
       </div>

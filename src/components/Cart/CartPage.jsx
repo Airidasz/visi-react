@@ -2,20 +2,20 @@ import React from 'react';
 import './CartStyles.scss';
 import { ProductPanel } from '../ShoppingCart';
 import { useCart } from '../useCart';
-import { Link, useNavigate } from 'react-router-dom';
-import { useStore } from '../useStore';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../useAuth';
 
 const CartPage = () => {
   const navigate = useNavigate();
 
-  const { store } = useStore();
+  const { auth } = useAuth();
   const { cart, order, setOrder }= useCart();
 
   const setProducts = () => {
     order.orderedProducts = cart;
     setOrder({...order});
 
-    navigate(`/pirkti/${store.user.isSet ? 'siuntimas' : 'prisijungti'}`);
+    navigate(`/pirkti/${auth.user.isSet ? 'siuntimas' : 'prisijungti'}`);
   };
 
   return (

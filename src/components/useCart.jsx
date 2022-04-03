@@ -98,10 +98,10 @@ const CartStore = () => {
   return { cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice, getStep};
 };
 
-export const StoreContext = createContext(null);
+export const CartContext = createContext(null);
 
 export const useCart = () => {
-  const store = useContext(StoreContext);
+  const store = useContext(CartContext);
   if (!store) {
     throw new Error('cartStore must be used within CartProvider');
   }
@@ -114,5 +114,5 @@ export const CartProvider = ({ children }) => {
   const memo = useMemo(() => ({ cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep }), 
     [cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep]);
     
-  return createElement(StoreContext.Provider, { value: memo }, children);
+  return createElement(CartContext.Provider, { value: memo }, children);
 };

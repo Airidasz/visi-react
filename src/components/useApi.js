@@ -2,12 +2,12 @@
 import {useContext} from 'react';
 import RefreshTokens from './RefreshTokens';
 import { useAlert } from 'react-alert';
-import { StoreContext } from './useStore';
+import { AuthContext } from './useAuth';
 
 const useApi = () => {
   const alert = useAlert();
   const refreshToken = RefreshTokens();
-  const storeContext = useContext(StoreContext);
+  const authContext = useContext(AuthContext);
 
   const GetRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'GET', refresh);
   const PostRequest = async (url, body, refresh = true) => await ApiRequest(url, body, 'POST', refresh);
@@ -40,7 +40,7 @@ const useApi = () => {
       return response;
     };
 
-    if (refresh && Date.now() > storeContext.store.user.exp) {
+    if (refresh && Date.now() > authContext.auth.user.exp) {
       return refreshToken(() => request(url, body, method));
     }
 
