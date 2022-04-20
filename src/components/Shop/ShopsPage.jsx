@@ -3,18 +3,16 @@ import { Link } from 'react-router-dom';
 import './Shops.scss';
 import useApi from '../useApi';
 
-const Shops = () => {
+const ShopsPage = () => {
   const { GetRequest } = useApi();
   const [shops, setShops] = useState();
 
   useEffect(() => {
     const getShops = async () => {
-      if (shops)
-        return;
+      if (shops) return;
 
       const response = await GetRequest('shops', null, false);
-      if (!response)
-        return;
+      if (!response) return;
 
       const data = await response.json();
       setShops(data);
@@ -26,23 +24,20 @@ const Shops = () => {
   if (!shops) return <div></div>;
 
   return (
-    <div className="shopsPage">
-      <div className="title">
-        <h2>Parduotuvės</h2>
-      </div>
-      <div className="grid">
+    <>
+      <div className="page-title medium">Parduotuvės</div>
+      <div className="container mt-2">
         {shops.map((shop) => (
-          <Link to={'/shop/' + shop.codename} key={shop.name}>
-            <div className="card">
-              <h1>{shop.name}</h1>
+          <Link to={'/parduotuve/' + shop.codename} key={shop.name}>
+            <div className="card card-style-1 mb-2 p-4">
+              <h1 className="wrap">{shop.name}</h1>
               <p>{shop.description}</p>
             </div>
           </Link>
-        )
-        )}
+        ))}
       </div>
-    </div>
+    </>
   );
 };
 
-export default Shops;
+export default ShopsPage;

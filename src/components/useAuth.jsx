@@ -1,23 +1,30 @@
 /* eslint-disable no-empty */
-import { useState, useContext, createContext, createElement, useMemo } from 'react';
+import {
+  useState,
+  useContext,
+  createContext,
+  createElement,
+  useMemo,
+} from 'react';
 import jwt_decode from 'jwt-decode';
 
 const AuthStore = () => {
   const initState = {
     user: {
-      shop:null,
+      shop: null,
       admin: null,
       email: null,
       name: null,
       isSet: false,
-      temp:false,
-      exp:0,
+      temp: false,
+      exp: 0,
     },
     permissions: {
-      isFarmer:false,
-      isAdmin:false,
-      isBuyer:true
-    },};
+      isFarmer: false,
+      isAdmin: false,
+      isBuyer: true,
+    },
+  };
 
   const [auth, setAuth] = useState(initState);
 
@@ -28,36 +35,37 @@ const AuthStore = () => {
         decodePermissions(decodedToken.permissions);
 
         delete decodedToken.decodedToken;
-        
+
         decodedToken.exp *= 1000; // JS dates use more numbers
 
-        setAuth({ ...auth, user:decodedToken });
+        setAuth({ ...auth, user: decodedToken });
 
         localStorage.setItem('accessToken', accessToken);
-      } catch (err) { }
+      } catch (err) {}
     }
   };
 
   const decodePermissions = (persmissions) => {
     const p = persmissions.toLowerCase();
 
-    if(p.includes('a'))
-      auth.permissions.isAdmin = true;
+    if (p.includes('a')) auth.permissions.isAdmin = true;
 
-    if(p.includes('f'))
-      auth.permissions.isFarmer = true;
+    if (p.includes('f')) auth.permissions.isFarmer = true;
 
-    if(auth.permissions.isAdmin || auth.permissions.isFarmer)
+    if (auth.permissions.isAdmin || auth.permissions.isFarmer)
       auth.permissions.isBuyer = false;
 
-    setAuth({...auth});
+    setAuth({ ...auth });
   };
 
   const resetAuth = () => {
     setAuth({ ...initState });
   };
- 
-  return { auth, setAccessToken, resetAuth};
+
+  const isShopOwner = (shopCodename) =>
+    auth?.user?.shop && auth?.user?.shop == shopCodename;
+
+  return { auth, setAccessToken, resetAuth, isShopOwner };
 };
 
 export const AuthContext = createContext(null);
@@ -72,9 +80,11 @@ export const useAuth = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const { auth, setAccessToken, resetAuth } = AuthStore();
-  const memo = useMemo(() => ({ auth, setAccessToken, resetAuth }), 
-    [auth, setAccessToken, resetAuth]);
-    
+  const { auth, setAccessToken, resetAuth, isShopOwner } = AuthStore();
+  const memo = useMemo(
+    () => ({ auth, setAccessToken, resetAuth, isShopOwner }),
+    [auth, setAccessToken, resetAuth]
+  );
+
   return createElement(AuthContext.Provider, { value: memo }, children);
 };

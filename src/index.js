@@ -8,7 +8,7 @@ import './index.css';
 
 import App from './App';
 import FrontPage from './components/FrontPage';
-import Shop from './components/Shop/Shop';
+import ShopPage from './components/Shop/ShopPage';
 import Register from './components/Auth/Register';
 import Categories from './components/Categories/Categories';
 import ProductPage from './components/Products/ProductPage';
@@ -28,6 +28,7 @@ import PurchaseCompletePage from './components/Cart/PurchaseCompletePage';
 import OverviewPage from './components/Cart/OverviewPage';
 import ProfilePage from './components/Profile/ProfilePage';
 import { AuthProvider } from './components/useAuth';
+import ShopsPage from './components/Shop/ShopsPage';
 
 const options = {
   position: positions.TOP_CENTER,
@@ -40,10 +41,8 @@ const options = {
 };
 
 render(
- 
   <AlertProvider template={AlertTemplate} {...options}>
     <AuthProvider>
-
       <StoreProvider>
         <CartProvider>
           <BrowserRouter>
@@ -51,25 +50,35 @@ render(
               <Route path="/" element={<App />}>
                 <Route path="/" element={<FrontPage />} />
 
-                <Route path="/:name" element={<Shop />} />
-                <Route path="/nauja/parduotuve" element={<Shop isNew={true}/>} />
+                <Route path="/parduotuve/:name" element={<ShopPage />} />
+                <Route
+                  path="/nauja/parduotuve"
+                  element={<ShopPage isNew={true} />}
+                />
                 <Route path="/registruotis" element={<Register />} />
                 <Route path="/kategorijos" element={<Categories />} />
                 <Route path="/prekes" element={<ProductsPage />} />
-                <Route path="/profilis" element={<ProfilePage />}/>
-                <Route path="/pirkti" element={<BuyPage />} >
+                <Route path="/parduotuves" element={<ShopsPage />} />
+                <Route path="/profilis" element={<ProfilePage />} />
+                <Route path="/pirkti" element={<BuyPage />}>
                   <Route path="/pirkti/krepselis" element={<CartPage />} />
-                  <Route path="/pirkti/prisijungti" element={<BuyLoginPage />} />
+                  <Route
+                    path="/pirkti/prisijungti"
+                    element={<BuyLoginPage />}
+                  />
                   <Route path="/pirkti/siuntimas" element={<ShippingPage />} />
                   <Route path="/pirkti/mokejimas" element={<PaymentPage />} />
                   <Route path="/pirkti/perziura" element={<OverviewPage />} />
                 </Route>
-                <Route path="/pirkti/pavyko" element={<PurchaseCompletePage />} />
-                <Route path="/nauja/preke" element={<ProductPage isNew={true}/>} />
                 <Route
-                  path="/preke/:productName"
-                  element={<ProductPage />}
+                  path="/pirkti/pavyko"
+                  element={<PurchaseCompletePage />}
                 />
+                <Route
+                  path="/nauja/preke"
+                  element={<ProductPage isNew={true} />}
+                />
+                <Route path="/:productName" element={<ProductPage />} />
                 <Route path="/404" element={<Status404Page />} />
                 <Route path="*" exact={true} element={<Status404Page />} />
               </Route>

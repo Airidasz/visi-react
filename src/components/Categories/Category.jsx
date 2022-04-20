@@ -7,10 +7,16 @@ import React, { useState } from 'react';
 import useApi from '../useApi';
 import { getImage } from '../Extras';
 import EditableField from '../Products/components/EditableField';
+import Skeleton from 'react-loading-skeleton';
 
-
-const Category = ({ category, close = () => { }, reset = () => { }, edit, changeShowEdit = () => { } }) => {
-  const [categoryName, setCategoryName] = useState(category ? category.name : '');
+const Category = ({
+  category,
+  close = () => {},
+  reset = () => {},
+  edit,
+  changeShowEdit = () => {},
+}) => {
+  const [categoryName, setCategoryName] = useState(category?.name ?? '');
   const [file, setFile] = useState();
 
   const { PostRequest, PutRequest, DeleteRequest } = useApi();
@@ -19,15 +25,15 @@ const Category = ({ category, close = () => { }, reset = () => { }, edit, change
     var data = new FormData();
     data.append('name', categoryName);
 
-    if(file)
-      data.append('file', file);
+    if (file) data.append('file', file);
 
     let response = null;
 
-    if (category) // edit
+    if (category)
+      // edit
       response = await PutRequest(`category/${category.id}`, data);
-    else         // add
-      response = await PostRequest('categories', data);
+    // add
+    else response = await PostRequest('categories', data);
 
     if (response) {
       reset();
@@ -49,35 +55,50 @@ const Category = ({ category, close = () => { }, reset = () => { }, edit, change
   };
 
   const onInfoChange = (field, value) => {
-    if(field == 'file') {
+    if (field == 'file') {
       setFile(value);
-    }else{
+    } else {
       setCategoryName(value);
-    } 
+    }
   };
 
   return (
-    <div className="card">
-      <div>
-        <EditableField field="file" type="file" edit={edit} onChange={onInfoChange} >
-          <img src={getImage(category,'file')} />
+    <div className="category-card card-style-1">
+      <div className="aspect-1 w-100">
+        <EditableField
+          field="file"
+          type="file"
+          edit={edit}
+          onChange={onInfoChange}
+        >
+          <img src={getImage(category, 'file')} className="category-img" />
         </EditableField>
       </div>
-      <div>
-        <EditableField field="name" edit={edit} onChange={onInfoChange} editClassname="w-100">
-          <h4>{category?.name}</h4>
+
+      <div className="category-name">
+        <EditableField
+          field="name"
+          edit={edit}
+          onChange={onInfoChange}
+          editClassname="w-100"
+          value={categoryName}
+        >
+          <b>{category?.name || <Skeleton />}</b>
         </EditableField>
       </div>
-         
+
       <div className="actions">
         <div
-          className={`btn-circle me-1 ${(edit ? 'success' : 'warning')}`}
-          onClick={() => edit ? tryAddEditCategory() : changeShowEdit(category.id)}
+          className={`btn-circle me-1 ${edit ? 'success' : 'warning'}`}
+          onClick={() =>
+            edit ? tryAddEditCategory() : changeShowEdit(category.id)
+          }
         >
           <img src={edit ? check : pencil} className="actionButton" />
         </div>
-        <div className="btn-circle danger"
-          onClick={() => edit ? close() : tryDeleteCategory(category.id)}
+        <div
+          className="btn-circle danger"
+          onClick={() => (edit ? close() : tryDeleteCategory(category.id))}
         >
           <img src={edit ? mark : trash} className="actionButton" />
         </div>

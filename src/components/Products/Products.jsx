@@ -1,56 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import useApi from '../useApi';
-import Product from './Product'; 
+import Product from './Product';
+import { Link } from 'react-router-dom';
+import { toArray } from '../Extras';
 
-const Products = ({ categories, shops, className }) => {
+const Products = ({ categories, shops, className, limit = false }) => {
   const { GetRequest } = useApi();
 
-  const [products, setProducts] = useState();
+  const defaultArray = Array.from(Array(10));
+
+  const [products, setProducts] = useState(defaultArray);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (categories && shops) {
+      setLoading(true);
+      setProducts(defaultArray);
+    }
+  }, [categories, shops]);
 
   useEffect(() => {
     const getProducts = async () => {
-      if (products)
-        return;
+      if (!loading) return;
 
       const parameters = [];
 
-      categories.map(category => parameters.push(`category=${encodeURIComponent(category)}`));
-      shops.map(shop => parameters.push(`shop=${encodeURIComponent(shop)}`));
+      toArray(categories).forEach((category) =>
+        parameters.push(`category=${encodeURIComponent(category)}`)
+      );
 
-      const response = await GetRequest(`products?${parameters.join('&')}`, null, false);
-      if (!response)
-        return;
+      toArray(shops).forEach((shop) =>
+        parameters.push(`shop=${encodeURIComponent(shop)}`)
+      );
+
+      const response = await GetRequest(
+        `products?${parameters.join('&')}`,
+        null,
+        false
+      );
+      if (!response) return;
 
       let data = await response.json();
-      
-      // data = data.filter(p => p.Public  || (store?.user?.shop && store?.user?.shop == p.shop.codename));
 
       setProducts(data);
+      setLoading(false);
     };
 
     getProducts();
+  }, [loading]);
 
-  }, [products]);
-
-  useEffect(() => {
-    setProducts(undefined);
-  }, [categories, shops]);
-  
-  // Show placeholders while loading
-  if(!products) {
+  if (products.length == 0)
     return (
-      <div id="products" className={className}>
-        {Array.from(Array(10)).map((_, i) => (<Product key={i} loading={true}/>))}
+      <div className="d-flex justify-content-center">
+        <h2>Prekių nerasta</h2>
       </div>
     );
-  }
-
-  if(products.length == 0) 
-    return (<div className='d-flex justify-content-center'><h2>Prekių nerasta</h2></div>);
 
   return (
     <div id="products" className={className}>
-      {products.map(p => (<Product product={p} key={p.codename}/>))}
+      <div className={`product-grid${limit ? ' limit-products' : ''}`}>
+        {products.map((p, i) => (
+          <Product product={p} key={i} />
+        ))}
+      </div>
+      {limit && (
+        <Link to="/prekes" className="btn btn-dark w-100 d-block mt-3">
+          Rodyti visus produktus
+        </Link>
+      )}
     </div>
   );
 };

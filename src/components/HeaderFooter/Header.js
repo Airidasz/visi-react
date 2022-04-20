@@ -58,29 +58,29 @@ const Header = () => {
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
               {auth.user.isSet ? (
-                <React.Fragment>
+                <>
                   {auth.permissions.isAdmin && (
                     <Link to="/kategorijos">
                       <li>Kategorijos</li>
                     </Link>
                   )}
                   {auth.permissions.isFarmer && (
-                    <React.Fragment>
-                      <Link to={auth.user.shop ? `/${auth.user.shop}` : '/nauja/parduotuve'}>
+                    <>
+                      <Link to={auth.user.shop ? `/parduotuve/${auth.user.shop}` : '/nauja/parduotuve'}>
                         <li>Parduotuvė</li>
                       </Link>
-                      <HashLink smooth={true} to="/profilis#uzsakymai">
-                        <li>Užsakymai</li>
-                      </HashLink>
-                    </React.Fragment>
+               
+                    </>
                   )}
-            
+                  <HashLink smooth={true} to="/profilis#uzsakymai">
+                    <li>Užsakymai</li>
+                  </HashLink>
                   <Link to="/" onClick={logOut}>
                     <li>Atsijungti</li>
                   </Link>
-                </React.Fragment>
+                </>
               ) : (
-                <React.Fragment>
+                <>
                   <Link to="/registruotis">
                     <li>Registruotis</li>
                   </Link>
@@ -88,12 +88,17 @@ const Header = () => {
                   <a onClick={toggleLoginMenu}>
                     <li>Prisijungti</li>
                   </a>
-                </React.Fragment>
+                </>
               )}
               {isMobile && (
-                <Link to="/prekes">
-                  <li>Prekės</li>
-                </Link>
+                <>
+                  <Link to="/prekes">
+                    <li>Prekės</li>
+                  </Link>
+                  <Link to="/parduotuves">
+                    <li>Parduotuvės</li>
+                  </Link>
+                </>
               )}
             </ul>
             {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu}/>}
@@ -116,6 +121,9 @@ const Header = () => {
           </div>
         ) : ( <div className="menu">
           <ul>
+            <Link to="/parduotuves">
+              <li>Parduotuvės</li>
+            </Link>
             <Link to="/prekes">
               <li>Prekės</li>
             </Link>

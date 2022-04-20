@@ -1,8 +1,8 @@
-import '../index.css';
 import React, { useState, useRef, useEffect } from 'react';
+import '../index.css';
 
-const FileUpload = ({ style, setFile = () => { }, className = '' }) => {
-  const [file, setInternalFile] = useState({});
+const FileUpload = ({ style, setFile = () => {}, className = '' }) => {
+  const [file, setInternalFile] = useState(null);
   const [hover, setHover] = useState(false);
   const ref = useRef(null);
 
@@ -26,9 +26,11 @@ const FileUpload = ({ style, setFile = () => { }, className = '' }) => {
   };
 
   return (
-    <div className={`file-upload${hover ? ' hover' : ''} ${className}`} 
+    <div
+      className={`file-upload${hover ? ' hover' : ''} ${className}`}
       style={style && style}
-      onClick={clickFileInput} onDrop={uploadDrop}
+      onClick={clickFileInput}
+      onDrop={uploadDrop}
       onDragOver={(e) => e.preventDefault()}
       onMouseEnter={() => setHover(true)}
       onDragEnter={() => setHover(true)}
@@ -36,10 +38,9 @@ const FileUpload = ({ style, setFile = () => { }, className = '' }) => {
       onDragExitCapture={() => setHover(false)}
     >
       <input type="file" ref={ref} hidden onChange={upload} />
-      <label>{file.name || 'Upload...'}</label>
+      <label>{file?.name || 'Upload...'}</label>
     </div>
   );
-
 };
 
 export default FileUpload;

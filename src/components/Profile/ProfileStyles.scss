@@ -1,0 +1,16 @@
+#placed-orders {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0.8rem;
+
+    .order-info {
+        display: grid;
+        grid-template-columns: auto auto 1fr;
+        grid-gap: 2rem;
+        margin-bottom: 1rem;
+    }
+
+    .order {
+        padding: 1rem;
+    }
+}

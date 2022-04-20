@@ -10,7 +10,7 @@
         "ecmaFeatures": {
             "jsx": true
         },
-        "ecmaVersion": 11,
+        "ecmaVersion": 12,
         "sourceType": "module"
     },
     "plugins": [
@@ -37,9 +37,10 @@
                 ]
             }
         ], //should add ".ts" if typescript project
+        "no-unreachable" :[1],
         "indent": [
             "error",
-            2
+            2, { "SwitchCase": 1 }
         ],
         "linebreak-style": [
             "error",

@@ -25,6 +25,7 @@
   width: 100%;
   border-radius: 3px;
 }
+
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -52,12 +53,14 @@
   border: 2px solid transparent !important;
   cursor: pointer;
 }
+.btn-dark:hover:not(:disabled),
 .btn-dark:hover:not(.disabled) {
   background: transparent !important;
   color: black !important;
   border: 2px solid black !important;
 }
 
+.btn-dark:active:not(:disabled),
 .btn-dark:active:not(.disabled) {
   background: rgb(19, 148, 15) !important;
   border: 2px solid transparent !important;
@@ -75,21 +78,43 @@
   color: black !important;
   border: 2px solid black !important;
 }
+.btn-dark-reverse:hover:not(:disabled),
 .btn-dark-reverse:hover:not(.disabled) {
   background: rgb(19, 148, 15) !important;
   border: 2px solid transparent !important;
   color: white !important;
 }
 
+.btn-dark-reverse:active:not(:disabled),
 .btn-dark-reverse:active:not(.disabled) {
   background: black !important;
   color: white !important;
   border-color: transparent !important;
 }
 
+.ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.wrap {
+  overflow-wrap: anywhere;
+}
+
+:disabled,
 .disabled {
   opacity: 0.3;
-  cursor: auto;
+  cursor: default;
+  user-select: none;
+  pointer-events: none;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.select-none {
+  user-select: none;
 }
 
 .success {
@@ -108,8 +133,7 @@
   display: flex;
   align-items: center;
   flex-direction: column;
-  animation: fadeIn 0.5s;
-  min-height: 40rem;
+  min-height: 650px;
 }
 
 @keyframes fadeIn {
@@ -154,9 +178,10 @@ textarea {
 input[type="text"]:focus,
 input[type="password"]:focus,
 input[type="email"]:focus,
+input:not([type="checkbox"]):focus,
+.btn:focus,
 textarea:focus {
-  outline: 1px solid rgb(19, 148, 15);
-  border: 1px solid rgb(19, 148, 15);
+  outline: 2px solid rgb(19, 148, 15);
 }
 
 .card-sticky {
@@ -164,24 +189,32 @@ textarea:focus {
   top: 120px;
 }
 
+.label {
+  font-size: 30px;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+}
+
+.label-2 {
+  font-weight: bold;
+  text-transform: uppercase;
+  user-select: none;
+}
+
+.label-3 {
+  font-size: 0.9rem;
+  user-select: none;
+  color: gray;
+}
+
 .card-style-1 {
   background: white;
   border: 1px solid #d3d3d3;
   border-radius: 1px;
-
-  .label {
-    font-size: 30px;
-    font-weight: bold;
-    text-transform: uppercase;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .label-2 {
-    font-weight: bold;
-    text-transform: uppercase;
-  }
 
   ul {
     > li {
@@ -217,5 +250,49 @@ textarea:focus {
     right: 0;
     bottom: 0;
     left: 0;
+  }
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100%;
+  background-color: rgba(0, 0, 0, 0.164);
+  z-index: 999999999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+
+  .modal-container {
+    width: 38rem;
+    background-color: white;
+    padding: 1rem;
+    position: relative;
+    border-radius: 0.2rem;
+    animation: fadeIn 0.3s;
+
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.4rem;
+    }
+  }
+}
+
+.categories {
+  .category {
+    color: white;
+    background-color: rgb(189, 32, 149);
+    border-radius: 0.2rem;
+    display: inline-block;
+    padding: 0.2rem 0.4rem;
+    margin: 0.1rem;
+    transition: all 0.08s ease;
   }
 }

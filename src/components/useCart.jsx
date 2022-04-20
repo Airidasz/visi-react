@@ -8,40 +8,37 @@ const CartStore = () => {
 
   const [cart, setInternalCart] = useState(initState);
   const [order, setOrder] = useState({
-    orderedProducts:null,
-    shipping:null,
-    payment:null,
-    user:{
-      temp:null,
-      email:null
-    }
+    orderedProducts: null,
+    shippingType: null,
+    address: null,
+    paymentType: null,
+    note: null,
+    user: {
+      temporary: null,
+      email: null,
+    },
   });
 
   useEffect(() => {
     var cartFromStorage = localStorage.getItem('cart');
-    if(cartFromStorage){
+    if (cartFromStorage) {
       try {
         const cart = JSON.parse(cartFromStorage);
         setCart(cart);
-      }
-      catch {}
+      } catch {}
     }
-  },[]);
+  }, []);
 
   const getStep = () => {
     let step = 0;
 
-    if(order?.orderedProducts?.length > 0)
-      step += 1;
+    if (order?.orderedProducts?.length > 0) step += 1;
 
-    if(order?.user?.email)
-      step += 1;
+    if (order?.user?.email) step += 1;
 
-    if(order?.shipping)
-      step += 1;
+    if (order?.shippingType && order?.address) step += 1;
 
-    if(order?.payment)
-      step +=1;
+    if (order?.paymentType) step += 1;
 
     return step;
   };
@@ -51,18 +48,16 @@ const CartStore = () => {
     setInternalCart(arr);
   };
 
-
-
-  const getProductByCodename = (codename) => cart.find(c => c.product.codename == codename);
+  const getProductByCodename = (codename) =>
+    cart.find((c) => c.product.codename == codename);
 
   const addToCart = (product, quantity) => {
-    if(product.quantity <= 0)
-      return;
+    if (product.quantity <= 0) return;
 
     const productInCart = getProductByCodename(product.codename);
 
-    if(!productInCart) {
-      var cartProduct = {product, quantity};
+    if (!productInCart) {
+      var cartProduct = { product, quantity };
 
       setCart([...cart, cartProduct]);
       return;
@@ -70,32 +65,47 @@ const CartStore = () => {
 
     productInCart.quantity += quantity;
 
-    if(productInCart.quantity > productInCart.product.quantity)
+    if (productInCart.quantity > productInCart.product.quantity)
       productInCart.quantity = productInCart.product.quantity;
 
     setCart([...cart]);
-
   };
-  const removeFromCart = (product, quantity) => {
-    const productInCart = getProductByCodename(product.codename);
-    if(!productInCart) {
+  const removeFromCart = (cartProduct, quantity) => {
+    const productInCart = getProductByCodename(cartProduct.product.codename);
+    if (!productInCart) {
       return;
     }
 
     productInCart.quantity -= quantity;
     setCart([...cart]);
 
-    if(productInCart.quantity <= 0) {
-      const filteredCart = cart.filter(c => c.product.codename != product.codename);
+    if (productInCart.quantity <= 0) {
+      const filteredCart = cart.filter(
+        (c) => c.product.codename != cartProduct.product.codename
+      );
       setCart([...filteredCart]);
     }
   };
 
-  const totalPrice = (useSign = false) => roundDecimal(cart.map(p => productPrice(p)).reduce((p,c) => p+c, 0)) + (useSign && '€');
+  const totalPrice = (useSign = false) =>
+    roundDecimal(cart.map((p) => productPrice(p)).reduce((p, c) => p + c, 0)) +
+    (useSign && '€');
 
-  const productPrice = (p, useSign = false) =>  roundDecimal(Number(p.product.amount) * Number(p.quantity))  + (useSign && '€');
+  const productPrice = (p, useSign = false) =>
+    roundDecimal(Number(p.product.price) * Number(p.quantity)) +
+    (useSign && '€');
 
-  return { cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice, getStep};
+  return {
+    cart,
+    setCart,
+    order,
+    setOrder,
+    addToCart,
+    removeFromCart,
+    totalPrice,
+    productPrice,
+    getStep,
+  };
 };
 
 export const CartContext = createContext(null);
@@ -110,9 +120,41 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-  const { cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep } = CartStore();
-  const memo = useMemo(() => ({ cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep }), 
-    [cart, setCart, order, setOrder, addToCart, removeFromCart, totalPrice, productPrice,getStep]);
-    
+  const {
+    cart,
+    setCart,
+    order,
+    setOrder,
+    addToCart,
+    removeFromCart,
+    totalPrice,
+    productPrice,
+    getStep,
+  } = CartStore();
+  const memo = useMemo(
+    () => ({
+      cart,
+      setCart,
+      order,
+      setOrder,
+      addToCart,
+      removeFromCart,
+      totalPrice,
+      productPrice,
+      getStep,
+    }),
+    [
+      cart,
+      setCart,
+      order,
+      setOrder,
+      addToCart,
+      removeFromCart,
+      totalPrice,
+      productPrice,
+      getStep,
+    ]
+  );
+
   return createElement(CartContext.Provider, { value: memo }, children);
 };

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Header from './components/HeaderFooter/Header';
 import { Outlet } from 'react-router-dom';
 import './App.scss';
+import 'react-loading-skeleton/dist/skeleton.css';
+import 'react-multi-carousel/lib/styles.css';
 import Footer from './components/HeaderFooter/Footer';
 import RefreshTokens from './components/RefreshTokens';
 import Status404Page from './components/Status404Page';
@@ -33,32 +35,33 @@ function App() {
     let access = true;
 
     switch(location.pathname){
-    case '/profilis':
-      access = Boolean(auth.user.isSet);
-      break;
+      case '/profilis':
+        access = Boolean(auth.user.isSet);
+        break;
 
-    case '/kategorijos':
-      access = Boolean(auth.permissions.isAdmin);
-      break;
+      case '/kategorijos':
+        access = Boolean(auth.permissions.isAdmin);
+        break;
 
-    default:
-      break;
+      default:
+        break;
     }
 
     setHasAccess(access);
-  }, [location]);
+  }, [location, auth]);
 
 
   if (!initComplete) return <div></div>;
 
-  if(!hasAccess) {
-    return <Status404Page />;
-  }
-
   return (
     <div className="App">
       <Header />
-      <Outlet />
+      <div className='page-view'>
+        {initComplete && <>
+          {hasAccess ? <Outlet /> :  <Status404Page />}
+        </>}
+      </div>
+      
       <Footer />
     </div>
   );

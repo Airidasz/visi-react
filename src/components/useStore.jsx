@@ -8,8 +8,8 @@ const DataStore = () => {
 
   const initState = {
     categories: null,
-    shops:null,
-    cart:[]
+    shops: null,
+    cart: [],
   };
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
@@ -26,34 +26,29 @@ const DataStore = () => {
 
   useEffect(async () => {
     const getCategories = async () => {
-      if (store.categories)
-        return;
+      if (store.categories) return;
 
       const response = await GetRequest('categories', null, false);
 
-      if (!response)
-        return;
-    
+      if (!response) return;
+
       const data = await response.json();
-      setStore({ ...store, categories:data });
+      setStore({ ...store, categories: data });
     };
 
     const getShops = async () => {
-      if (store.shops) 
-        return;
+      if (store.shops) return;
 
       const response = await GetRequest('shops', null, false);
 
-      if (!response)
-        return;
-    
+      if (!response) return;
+
       const data = await response.json();
       setStore({ ...store, shops: data });
     };
 
     await getCategories();
     await getShops();
-
   }, [store.categories, store.shops]);
 
   const resetStore = () => {
@@ -76,6 +71,9 @@ export const useStore = () => {
 
 export const StoreProvider = ({ children }) => {
   const { store, setStore, isMobile, resetStore } = DataStore();
-  const memo = useMemo(() => ({ store, setStore, isMobile, resetStore }), [store, setStore, isMobile, resetStore]);
+  const memo = useMemo(
+    () => ({ store, setStore, isMobile, resetStore }),
+    [store, setStore, isMobile, resetStore]
+  );
   return createElement(StoreContext.Provider, { value: memo }, children);
 };

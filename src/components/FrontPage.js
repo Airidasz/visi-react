@@ -11,13 +11,22 @@ const FrontPage = () => {
   };
 
   return (
-    <div className="page-view">
-      {/* <div className="intro"/> */}
+    <>
       <div className="container">
-        <CategorySlider setCategories={setCategories} className={'mt-4'} showFilterClear={true} clearFilter={clearFilter}/>
-        <Products categories={categories} shops={[]} className={'mt-4'}/>
+        <CategorySlider
+          setCategories={setCategories}
+          className={'mt-4'}
+          showFilterClear={true}
+          clearFilter={clearFilter}
+        />
+        <Products
+          parameters={{ categories }}
+          shops={[]}
+          className={'mt-4'}
+          limit={true}
+        />
       </div>
-    </div>
+    </>
   );
 };
 

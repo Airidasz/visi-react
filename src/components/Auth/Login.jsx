@@ -1,24 +1,25 @@
 /* eslint-disable no-undef */
-import React, { useState, useRef,useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './Auth.scss';
 import { useAuth } from '../useAuth';
 import useApi from '../useApi';
+import Form from '../Extras/Form';
 
-const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
+const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {} }) => {
   const loginRef = useRef(null);
 
   const { setAccessToken } = useAuth();
   const { PostRequest } = useApi();
 
   const loginFields = {
-    name:'',
-    password:''
+    name: '',
+    password: '',
   };
 
   const [loginInfo, setLoginInfo] = useState(loginFields);
 
   useEffect(() => {
-    const handleClickOutside = (event) =>{
+    const handleClickOutside = (event) => {
       if (loginRef.current && !loginRef.current.contains(event.target)) {
         setShowLoginMenu(false);
       }
@@ -36,10 +37,9 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
     const body = JSON.stringify(loginInfo);
 
     const response = await PostRequest('login', body, false);
-    if (!response)
-      return;
+    if (!response) return;
 
-    setLoginInfo({...loginFields});
+    setLoginInfo({ ...loginFields });
 
     const data = await response.json();
 
@@ -50,29 +50,41 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {}}) => {
   };
 
   return (
-    <form className="form login-form" onSubmit={handleSubmit} ref={loginRef}>
+    <Form
+      className="form login-form"
+      onSubmit={handleSubmit}
+      ref={loginRef}
+      autoComplete="on"
+    >
       <div className="form-control">
-        <label>Prisijungimo vardas</label>
+        <label htmlFor="name" className="select-none">
+          Prisijungimo vardas
+        </label>
         <input
           autoFocus={true}
+          id="name"
           type="text"
           value={loginInfo.name}
-          onChange={(e) => setLoginInfo({...loginInfo, name:e.target.value})}
+          onChange={(e) => setLoginInfo({ ...loginInfo, name: e.target.value })}
         />
       </div>
       <div className="form-control">
-        <label>Slaptažodis</label>
+        <label htmlFor="password" className="select-none">
+          Slaptažodis
+        </label>
         <input
+          id="password"
           type="password"
           value={loginInfo.password}
-          onChange={(e) => setLoginInfo({...loginInfo, password:e.target.value})}
+          onChange={(e) =>
+            setLoginInfo({ ...loginInfo, password: e.target.value })
+          }
         />
       </div>
-
       <div className="form-control">
         <input type="submit" className="btn-dark" value="Prisijungti" />
       </div>
-    </form>
+    </Form>
   );
 };
 

@@ -1,42 +1,30 @@
-import React, { useEffect, useState } from 'react';
-import useApi from '../useApi';
+import React from 'react';
 import { useAuth } from '../useAuth';
+import PlacedOrders from './PlacedOrders';
+import ShopOrders from './ShopOrders';
 
-const ProfilePage = () =>{ 
-  const{GetRequest} = useApi();
-  const [orders,setOrders] = useState();
-  const {auth} = useAuth();
+const ProfilePage = () => {
+  const { auth } = useAuth();
 
-
-  useEffect(() => {
-    const getPersonOrders = async () => {
-      const response = await GetRequest('orders');
-      if(!response)
-        return;
-    
-      const data = await response.json();
-      setOrders([...data]);
-    };
-
-    if(auth.permissions.isBuyer)
-      getPersonOrders();
-  },[]);
-
-
-
-  return (<div className='page-view'>
-    <div className='container'>
-      <div className='card-style-1 p-3 mt-3'>
-        <div className='label'>Profilio informacija</div>
+  return (
+    <div className="container">
+      <div className="page-title small mb-2">Profilio informacija</div>
+      <div className="card-style-1 p-3 mb-3">
+        <div className="label-3">Elektroninis paštas</div>
         <div>{auth.user.email}</div>
+        <div className="label-3 mt-2">Vardas</div>
         <div>{auth.user.name}</div>
       </div>
 
-      {orders && <div className='card-style-1 p-3 mt-3'>
-        <div className='label'>Užsakymai</div>
-        {orders.map(x => x.number)}
-      </div>}
+      <div className="page-title small my-2">Užsakymai</div>
+
+      {auth.permissions.isFarmer && <ShopOrders />}
+
+      {(auth.permissions.isBuyer || auth.permissions.isAdmin) && (
+        <PlacedOrders editable={auth.permissions.isAdmin} />
+      )}
     </div>
-  </div>);};
+  );
+};
 
 export default ProfilePage;

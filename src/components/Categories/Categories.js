@@ -27,14 +27,14 @@ const Categories = () => {
   }, [store.categories]);
 
   if (!store.categories)
-    return <div className="page-view"></div>;
+    return <></>;
 
   return (
-    <div id="category-page" className="page-view">
+    <>
       <div className="page-title medium">
         Kategorijos
       </div>
-      <div className="container">
+      <div id="category-page" className="container">
         <input
           type="button"
           className="btn-dark-reverse my-2 w-100"
@@ -60,7 +60,7 @@ const Categories = () => {
           ))}
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
