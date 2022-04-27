@@ -1,21 +1,24 @@
 import React from 'react';
 import { getImage } from '../Extras';
 
-const Category2 = ({ category, setCategories }) => {
+const SliderCategory = ({
+  category,
+  setCategories = () => {},
+  active = false,
+}) => {
   return (
     <div
       onClick={() => setCategories([category.codename])}
-      className="slider-category"
+      className={`slider-category${active ? ' active' : ''}`}
     >
-      <div className="category-img aspect-1">
-        <img src={getImage(category, 'file')} />
+      <div className="category-img aspect-1">{getImage(category, 'file')}</div>
+
+      <div className="title">
+        <h4>{category.name}</h4>
       </div>
-
-      <h4 className="ms-1">{category.name}</h4>
-
       <div className="indicator"></div>
     </div>
   );
 };
 
-export default Category2;
+export default SliderCategory;

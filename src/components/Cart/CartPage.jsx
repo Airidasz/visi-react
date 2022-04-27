@@ -30,7 +30,7 @@ const CartPage = () => {
           </div>
           <div className="cart-items-footer">
             <div></div>
-            <button className="btn btn-dark w-50" onClick={setProducts} >
+            <button className="btn btn-dark w-50" onClick={setProducts}>
               Toliau
             </button>
           </div>

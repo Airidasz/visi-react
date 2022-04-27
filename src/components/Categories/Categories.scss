@@ -15,21 +15,20 @@
     grid-template-rows: 1fr 40px 5px;
     cursor: pointer;
 
-    img {
-      width: 100%;
-      height: auto;
-    }
-
     .category-img {
       img {
         padding: 1rem;
       }
     }
 
-    h4 {
+    .title {
       display: flex;
       align-items: center;
       justify-content: center;
+
+      h4 {
+        width: min-content;
+      }
     }
 
     .indicator {
@@ -42,7 +41,13 @@
   .slider-category:hover {
     .indicator {
       // background: #237015;
-      background: #3fc728;
+      background: #248bc7;
+    }
+  }
+
+  .slider-category.active {
+    .indicator {
+      background: #52d488;
     }
   }
 }
@@ -51,16 +56,13 @@
   .categories-grid {
     display: grid;
     grid-gap: 10px;
-    grid-template-columns: repeat(auto-fill, 10rem);
+    grid-template-columns: repeat(auto-fill, 11rem);
 
     .category-card {
       padding: 0.5rem;
       display: flex;
       align-items: center;
       flex-direction: column;
-      .category-img {
-        width: 100%;
-      }
 
       .category-name {
         min-height: 2rem;

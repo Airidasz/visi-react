@@ -32,7 +32,7 @@ import ShopsPage from './components/Shop/ShopsPage';
 
 const options = {
   position: positions.TOP_CENTER,
-  timeout: 2000,
+  timeout: 4000,
   containerStyle: {
     zIndex: 99999999999999,
     top: '2.8rem',

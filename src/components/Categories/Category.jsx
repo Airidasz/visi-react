@@ -5,7 +5,7 @@ import pencil from '../../assets/pencil.svg';
 import trash from '../../assets/trash.svg';
 import React, { useState } from 'react';
 import useApi from '../useApi';
-import { getImage } from '../Extras';
+import { getImage, getImageURL } from '../Extras';
 import EditableField from '../Products/components/EditableField';
 import Skeleton from 'react-loading-skeleton';
 
@@ -68,10 +68,11 @@ const Category = ({
         <EditableField
           field="file"
           type="file"
+          inputProps={{ preview: getImageURL(category, 'file') }}
           edit={edit}
           onChange={onInfoChange}
         >
-          <img src={getImage(category, 'file')} className="category-img" />
+          {getImage(category, 'file', { className: 'category-img' })}
         </EditableField>
       </div>
 

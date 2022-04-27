@@ -1,11 +1,13 @@
 /* eslint-disable no-undef */
 import React, { useState, useRef, useEffect } from 'react';
+import { useAlert } from 'react-alert';
 import './Auth.scss';
 import { useAuth } from '../useAuth';
 import useApi from '../useApi';
 import Form from '../Extras/Form';
 
 const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {} }) => {
+  const alert = useAlert();
   const loginRef = useRef(null);
 
   const { setAccessToken } = useAuth();
@@ -45,6 +47,7 @@ const Login = ({ setShowLoginMenu = () => {}, onSuccess = () => {} }) => {
 
     setAccessToken(data.AccessToken);
     setShowLoginMenu(false);
+    alert.success('Sėkmingai prisijungta', { timeout: 2000 });
 
     onSuccess();
   };

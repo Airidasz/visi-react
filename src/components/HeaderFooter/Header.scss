@@ -59,16 +59,16 @@ header {
       ul {
         display: grid;
         grid-auto-flow: column;
-      }
-      a {
-        height: 100%;
-        padding: 0 1.8rem;
-      }
-      a:hover,
-      a.active {
-        color: white;
-        background-color: black;
-        border-color: white;
+        > a {
+          height: 100%;
+          padding: 0 1.8rem;
+        }
+        > a:hover,
+        > a.active {
+          color: white;
+          background-color: black;
+          border-color: white;
+        }
       }
     }
   }

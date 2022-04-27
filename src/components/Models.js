@@ -9,4 +9,6 @@ export const productModel = {
   shop: {},
 };
 
+export const addressModel = { city: '', postalCode: '', street: '' };
+
 export const shopModel = { name: '', description: '', locations: [] };

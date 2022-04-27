@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import './ProductStyles.scss';
-import { useNavigate, useParams } from 'react-router-dom';
+import trash from '../../assets/trash.svg';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import Select from 'react-select';
 
 import { useAuth } from '../useAuth';
 import { useStore } from '../useStore';
 import useApi from '../useApi';
-
 import { productModel } from '../Models';
 
-import { AddToBody, getImage, useSkeleton, formatPrice } from '../Extras';
+import {
+  AddToBody,
+  getImage,
+  useSkeleton,
+  formatPrice,
+  getImageURL,
+} from '../Extras';
 import EditableField from './components/EditableField';
 import QuantityPicker from '../Extras/QuantityPicker';
 import AddToCartBtn from '../Cart/AddToCartBtn';
@@ -20,7 +26,7 @@ const Product = ({ isNew }) => {
   const { productName } = useParams();
   const navigate = useNavigate();
 
-  const { GetRequest, PutRequest, PostRequest } = useApi();
+  const { GetRequest, PutRequest, PostRequest, DeleteRequest } = useApi();
   const { auth, isShopOwner } = useAuth();
   const { store } = useStore();
 
@@ -36,11 +42,12 @@ const Product = ({ isNew }) => {
 
   useEffect(() => {
     return () => {
+      setEditing(false);
       setLoad(true);
       setProduct(null);
       setNotFound(false);
     };
-  });
+  }, [productName]);
 
   useEffect(() => {
     const getProductInfo = async () => {
@@ -51,7 +58,10 @@ const Product = ({ isNew }) => {
         null,
         false
       );
-      if (!getProductResponse) return;
+      if (!getProductResponse) {
+        setNotFound(true);
+        return;
+      }
 
       const productJson = await getProductResponse.json();
       productJson.categories = productJson.categories.map((category) => ({
@@ -63,7 +73,7 @@ const Product = ({ isNew }) => {
     };
 
     if (!load) return;
-    if (isNew) setProduct(productModel);
+    if (isNew) setProduct({ ...productModel });
     else getProductInfo();
 
     setLoad(false);
@@ -103,7 +113,19 @@ const Product = ({ isNew }) => {
     if (response) {
       const data = await response.json();
       navigate(`/${data.codename}`, { replace: true });
-      setEditing(false);
+    }
+  };
+
+  const tryDeleteProduct = async () => {
+    const shouldDeleteProduct = window.confirm(
+      'Ar tikrai norite ištrinti šią prekę?'
+    );
+
+    if (shouldDeleteProduct) {
+      const response = await DeleteRequest(`product/${product.codename}`);
+      if (response) {
+        navigate(-1);
+      }
     }
   };
 
@@ -131,20 +153,20 @@ const Product = ({ isNew }) => {
     <div className="container">
       <Form onSubmit={editSaveBtn}>
         <div id="product-layout">
-          <div className="aspect-1">
-            <div className="product-image">
-              <EditableField
-                editClassname="w-100 h-100"
-                field="file"
-                type="file"
-                edit={inEditMode()}
-                onChange={onInfoChange}
-              >
-                <img
-                  src={getImage(product, 'image')}
-                  style={{ width: '100%', height: 'auto' }}
-                />
-              </EditableField>
+          <div>
+            <div className="aspect-1 product-image">
+              <>
+                <EditableField
+                  editClassname="w-100 h-100"
+                  field="file"
+                  type="file"
+                  inputProps={{ preview: getImageURL(product, 'image') }}
+                  edit={inEditMode()}
+                  onChange={onInfoChange}
+                >
+                  {getImage(product, 'image')}
+                </EditableField>
+              </>
             </div>
           </div>
           <div id="product-info">
@@ -159,14 +181,38 @@ const Product = ({ isNew }) => {
               >
                 <h1>{useSkeleton(product?.name)}</h1>
               </EditableField>
+
               {(isShopOwner(product?.shop?.codename) || isNew) && (
-                <input
-                  type="submit"
-                  className="btn-dark"
-                  value={inEditMode() ? 'Išsaugoti' : 'Koreguoti'}
-                />
+                <div className="d-flex">
+                  {!isNew && (
+                    <img
+                      src={trash}
+                      className="me-3 pointer"
+                      onClick={tryDeleteProduct}
+                    />
+                  )}
+                  <input
+                    type="submit"
+                    className="btn-dark"
+                    value={inEditMode() ? 'Išsaugoti' : 'Koreguoti'}
+                  />
+                </div>
               )}
             </div>
+
+            {!inEditMode() ? (
+              <div className="label-3">
+                Pardavėjas:{' '}
+                <Link
+                  to={`/parduotuve/${product?.shop?.codename}`}
+                  className="hover-underline"
+                >
+                  {product?.shop?.name}
+                </Link>
+              </div>
+            ) : (
+              <div></div>
+            )}
             <div className="price mt-2">
               <div className="amount">
                 <div className="label-3">Kaina</div>
@@ -246,7 +292,7 @@ const Product = ({ isNew }) => {
                 </div>
               )}
               <div className="categories">
-                <div className="categories-absolute">
+                <div className="w-100">
                   <div className="label-3 mb-1">
                     Kategorijos
                     <br />

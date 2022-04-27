@@ -4,6 +4,7 @@ import { useStore } from '../useStore';
 import SliderCategory from './SliderCategory';
 
 const CategorySlider = ({
+  categories = [],
   setCategories = () => {},
   clearFilter = () => {},
   showFilterClear,
@@ -18,6 +19,7 @@ const CategorySlider = ({
       <div className={`category-slider ${className}`}>
         {store.categories.map((c) => (
           <SliderCategory
+            active={categories.find((s) => s === c.codename)}
             key={c.name}
             category={c}
             setCategories={setCategories}

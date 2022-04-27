@@ -1,4 +1,3 @@
-
 export const orderOptions = [
   { label: 'Užsakytas', value: '1' },
   { label: 'Patvirtintas', value: '2' },
@@ -7,4 +6,12 @@ export const orderOptions = [
   { label: 'Klaida', value: '5' },
 ];
 
-export const paymentOptions = [{ value: 1, label: 'Pristatymas į namus' }];
+export const paymentOptions = [
+  { value: 1, label: 'Pristatymo metu grynais pinigais' },
+  { value: 2, label: 'Pristatymo metu kortele' },
+  {
+    value: 3,
+    label: 'Banko pavedimu',
+    info: 'Sąskaitos informacija pateikiama atlikus užsakymą',
+  },
+];

@@ -21,7 +21,7 @@ const ShopsPage = () => {
     getShops();
   }, [shops]);
 
-  if (!shops) return <div></div>;
+  if (!shops) return <></>;
 
   return (
     <>

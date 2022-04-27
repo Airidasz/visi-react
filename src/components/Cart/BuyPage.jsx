@@ -4,12 +4,23 @@ import './CartStyles.scss';
 import { useCart } from '../useCart';
 import { paymentOptions } from '../Options';
 import { getOption } from '../Extras';
+import { useAuth } from '../useAuth';
+import { useAlert } from 'react-alert';
 
 const BuyPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { auth } = useAuth();
+  const alert = useAlert();
 
   const { totalPrice, order } = useCart();
+
+  useEffect(() => {
+    if (auth.user.isSet && !auth.permissions.isBuyer) {
+      alert.error('Tik žmonės su pirkėjų paskyromis gali pirkti prekes');
+      navigate('/', { replace: true });
+    }
+  }, [auth.user.isSet]);
 
   useEffect(() => {
     if (location.pathname === '/pirkti')

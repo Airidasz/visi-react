@@ -3,7 +3,8 @@ import './ProfileStyles.scss';
 import { ProductPanel } from '../ShoppingCart';
 import useApi from '../useApi';
 import Select from 'react-select';
-import { orderOptions } from '../Options';
+import { orderOptions, paymentOptions } from '../Options';
+import { formatPrice, getOption } from '../Extras';
 
 export const OrderStatus = ({ status }) => {
   const [info, setInfo] = useState({ text: '', color: '' });
@@ -53,8 +54,6 @@ const Order = ({ order, editable = false, setOrders = () => {} }) => {
 
   const onChange = async (o) => {
     setStatus(o);
-    // // todo: set order status
-    // setEditing(false);
 
     const body = JSON.stringify({
       status: Number(o.value),
@@ -94,7 +93,15 @@ const Order = ({ order, editable = false, setOrders = () => {} }) => {
           )}
         </div>
         <div>
-          <div className="label-3 mb-1">Žinutė vežėjams</div>
+          <div className="label-3 mb-1">Pristatymo adresas</div>
+          {order.address || 'nėra'}
+        </div>
+        <div>
+          <div className="label-3 mb-1">Mokėjimas</div>
+          {getOption(paymentOptions, order.paymentType)?.label || 'nėra'}
+        </div>
+        <div>
+          <div className="label-3 mb-1">Papildoma žinutė</div>
           {order.note || 'nėra'}
         </div>
       </div>
@@ -103,6 +110,9 @@ const Order = ({ order, editable = false, setOrders = () => {} }) => {
         {order.orderedProducts.map((p, j) => (
           <ProductPanel key={j} cartProduct={p} removable={false} />
         ))}
+      </div>
+      <div>
+        <b>Suma: {formatPrice(order.totalPrice, true)}</b>
       </div>
     </div>
   );
@@ -124,17 +134,20 @@ const PlacedOrders = ({ className = '', editable = false }) => {
   }, [orders]);
 
   return (
-    <div id="placed-orders" className={`categories ${className}`}>
-      {orders &&
-        orders.map((order) => (
-          <Order
-            order={order}
-            key={order.codename}
-            editable={editable}
-            setOrders={setOrders}
-          />
-        ))}
-    </div>
+    <>
+      <div className="page-title small my-2">Užsakymai</div>
+      <div id="placed-orders" className={`categories ${className}`}>
+        {orders &&
+          orders.map((order) => (
+            <Order
+              order={order}
+              key={order.codename}
+              editable={editable}
+              setOrders={setOrders}
+            />
+          ))}
+      </div>
+    </>
   );
 };
 

@@ -17,8 +17,8 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
 
   const { PostRequest } = useApi();
-  const { store,setStore, isMobile } = useStore();
-  const {auth, resetAuth} = useAuth();
+  const { store, setStore, isMobile } = useStore();
+  const { auth, resetAuth } = useAuth();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -38,22 +38,20 @@ const Header = () => {
     localStorage.clear();
 
     const response = await PostRequest('logout');
-    if (!response)
-      return;
+    if (!response) return;
 
-    setStore({...store, cart:[]});
+    setStore({ ...store, cart: [] });
     resetAuth();
     setShowLoginMenu(false);
     navigate('/');
   };
 
-
   return (
     <header
       // className={offset > 10 || location.pathname !== '/' ? 'solid' : ''}
-      className='solid'
+      className="solid"
     >
-      <div className='header-top'>
+      <div className="header-top">
         <div className="container">
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
             <ul>
@@ -66,10 +64,15 @@ const Header = () => {
                   )}
                   {auth.permissions.isFarmer && (
                     <>
-                      <Link to={auth.user.shop ? `/parduotuve/${auth.user.shop}` : '/nauja/parduotuve'}>
-                        <li>Parduotuvė</li>
+                      <Link
+                        to={
+                          auth.user.shop
+                            ? `/parduotuve/${auth.user.shop}`
+                            : '/nauja/parduotuve'
+                        }
+                      >
+                        <li>Mano Parduotuvė</li>
                       </Link>
-               
                     </>
                   )}
                   <HashLink smooth={true} to="/profilis#uzsakymai">
@@ -101,35 +104,41 @@ const Header = () => {
                 </>
               )}
             </ul>
-            {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu}/>}
+            {showLoginMenu && <Login setShowLoginMenu={setShowLoginMenu} />}
           </div>
         </div>
       </div>
-      <div className='header-bottom container'>
+      <div className="header-bottom container">
         <div className="logo">
           <h1>
             <Link to="/">VisiŪkiai</Link>
           </h1>
         </div>
-        {isMobile  ? (  
-          <div className='mobile-menu'>
-            {auth.permissions.isBuyer && <ShoppingCart/>}
-            <Icon className="hamburger" icon="charm:menu-hamburger"  onClick={() => {
-              setShowLoginMenu(false);
-              toggleMenu();
-            }}/>
+        {isMobile ? (
+          <div className="mobile-menu">
+            {auth.permissions.isBuyer && <ShoppingCart />}
+            <Icon
+              className="hamburger"
+              icon="charm:menu-hamburger"
+              onClick={() => {
+                setShowLoginMenu(false);
+                toggleMenu();
+              }}
+            />
           </div>
-        ) : ( <div className="menu">
-          <ul>
-            <Link to="/parduotuves">
-              <li>Parduotuvės</li>
-            </Link>
-            <Link to="/prekes">
-              <li>Prekės</li>
-            </Link>
-            {auth.permissions.isBuyer && <ShoppingCart/>}
-          </ul></div>)}
-
+        ) : (
+          <div className="menu">
+            <ul>
+              <Link to="/parduotuves">
+                <li>Parduotuvės</li>
+              </Link>
+              <Link to="/prekes">
+                <li>Prekės</li>
+              </Link>
+              {auth.permissions.isBuyer && <ShoppingCart />}
+            </ul>
+          </div>
+        )}
       </div>
     </header>
   );

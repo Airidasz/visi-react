@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { formatPrice, getImage } from '../Extras';
 import AddToCartBtn from '../Cart/AddToCartBtn';
 import { useSkeleton } from '../Extras';
+import { useStore } from '../useStore';
 
 const Products = ({ product }) => {
   const [showAdd, setShowAdd] = useState(false);
+  const { isMobile } = useStore();
 
   const changeShow = () => {
     setShowAdd(!showAdd);
@@ -19,19 +21,19 @@ const Products = ({ product }) => {
     >
       <div className="aspect-1">
         <div className="product-image">
-          <Link to={`/${product?.codename}`}>
-            <img src={getImage(product, 'image')} />
-          </Link>
+          <Link to={`/${product?.codename}`}>{getImage(product, 'image')}</Link>
         </div>
       </div>
 
       <div className="product-info">
-        <Link to={`/${product?.codename}`}>{useSkeleton(product?.name)}</Link>
+        <Link to={`/${product?.codename}`} className="hover-underline">
+          {useSkeleton(product?.name)}
+        </Link>
         <div className="price">
           Kaina: {useSkeleton(formatPrice(product?.price, true))}
         </div>
       </div>
-      {showAdd && (
+      {(showAdd || isMobile) && (
         <div className="add-to-cart">
           <div className="p-3">
             <AddToCartBtn

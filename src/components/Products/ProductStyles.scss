@@ -6,13 +6,11 @@
 
     .product-image {
         background: white;
-        display: flex;
-        align-items: center;
     }
 
     #product-info {
         display: grid;
-        grid-template-rows: min-content min-content 1fr min-content;
+        grid-template-rows: min-content min-content min-content 1fr min-content;
         background: white;
         height: 100%;
         padding: 1.3rem;
@@ -52,6 +50,7 @@
         .product-info-footer {
             margin-top: 2rem;
             display: flex;
+            align-items: flex-end;
 
             .add-to-cart {
                 display: flex;
@@ -63,13 +62,8 @@
             .categories {
                 width: 100%;
                 position: relative;
-
-                .categories-absolute {
-                    position: absolute;
-                    bottom: 0;
-                    left: 0;
-                    width: 100%;
-                }
+                display: flex;
+                height: min-content;
 
                 .category {
                     color: white;
@@ -151,35 +145,9 @@
                 width: 100%;
             }
 
-            .product-image {
-                display: flex;
-                align-items: center;
-                img {
-                    width: 100%;
-                    height: auto;
-                    padding: 1.3rem;
-                }
+            .product-image img {
+                padding: 1.3rem;
             }
-
-            // .product-image {
-            //     padding-top:1.5rem;
-            //     padding-left:3rem;
-            //     padding-right:3rem;
-            //     padding-bottom: 0;
-            //     position: relative;
-
-            //     img {
-            //         width:100%;
-            //         height:auto;
-            //     }
-            // }
-
-            // .product-image :before {
-            //     content: "";
-            //     display: block;
-            //     padding-bottom: 100%;
-            //     /* initial ratio of 1:1*/
-            //   }
 
             .product-info {
                 display: flex;

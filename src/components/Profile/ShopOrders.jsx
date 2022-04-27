@@ -20,15 +20,18 @@ const ShopOrders = () => {
   }, []);
 
   return (
-    <div>
-      {!orders ? (
-        <Skeleton />
-      ) : (
-        orders.map((p, i) => (
-          <ProductPanel key={i} cartProduct={p} removable={false} />
-        ))
-      )}
-    </div>
+    <>
+      <div className="page-title small my-2">Užsakytos prekės</div>
+      <div className="card-style-1 p-2 px-3">
+        {!orders ? (
+          <Skeleton />
+        ) : (
+          orders.map((p, i) => (
+            <ProductPanel key={i} cartProduct={p} removable={false} />
+          ))
+        )}
+      </div>
+    </>
   );
 };
 

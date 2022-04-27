@@ -2,11 +2,26 @@
 import React from 'react';
 import Skeleton from 'react-loading-skeleton';
 import { useLocation } from 'react-router-dom';
+import { addressModel } from './Models';
 
-export const getImage = (input, field) =>
-  input && input[field] && input[field] !== ''
+export const getImage = (input, field, parameters = {}) => {
+  const src = input?.[field]
     ? `${process.env.REACT_APP_API_URL}/${input[field]}`
     : '';
+
+  if (!src) return <div></div>;
+
+  return <img src={src} {...parameters} />;
+};
+
+export const buildAddress = (address = addressModel) => {
+  if (!address.city || !address.postalCode || !address.street) return;
+
+  return `${address.street}, ${address.postalCode}, ${address.city}`;
+};
+
+export const getImageURL = (input, field) =>
+  input?.[field] ? `${process.env.REACT_APP_API_URL}/${input[field]}` : '';
 
 export const roundDecimal = (num) =>
   Math.round((num + Number.EPSILON) * 100) / 100;
@@ -22,7 +37,7 @@ export const formatPrice = (price, showSign = false) => {
 export const isNil = (value) => value == null;
 
 export const AddToBody = (body = new FormData(), key, value) => {
-  if (value) body.append(key, value);
+  if (!isNil(value)) body.append(key, value);
 
   return body;
 };

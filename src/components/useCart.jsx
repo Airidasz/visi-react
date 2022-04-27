@@ -9,7 +9,6 @@ const CartStore = () => {
   const [cart, setInternalCart] = useState(initState);
   const [order, setOrder] = useState({
     orderedProducts: null,
-    shippingType: null,
     address: null,
     paymentType: null,
     note: null,
@@ -36,7 +35,7 @@ const CartStore = () => {
 
     if (order?.user?.email) step += 1;
 
-    if (order?.shippingType && order?.address) step += 1;
+    if (order?.address) step += 1;
 
     if (order?.paymentType) step += 1;
 

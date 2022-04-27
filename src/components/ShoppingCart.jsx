@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useCart } from './useCart';
-import { getImage } from './Extras';
+import { formatPrice, getImage } from './Extras';
 
 const ShoppingCart = () => {
   const location = useLocation();
@@ -39,21 +39,26 @@ const ShoppingCart = () => {
         <Icon icon="el:shopping-cart" width="25" height="25" />
         <div className="shopping-cart-counter">{cart.length}</div>
         {showCart && (
-          <div className="cart-items card-style-1 form" ref={cartRef}>
+          <div className="cart-info card-style-1" ref={cartRef}>
             {cart.length === 0 ? (
               'Prekių nėra'
             ) : (
               <>
-                {cart.map((p) => (
-                  <ProductPanel key={p.product.codename} cartProduct={p} />
-                ))}
-                <h4>Suma: {totalPrice(true)}</h4>
-                <button type="button"
-                  className="btn-dark"
-                  onClick={() => navigate('/pirkti')}
-                >
-                  Pirkti
-                </button>
+                <div className="cart-items">
+                  {cart.map((p) => (
+                    <ProductPanel key={p.product.codename} cartProduct={p} />
+                  ))}
+                </div>
+                <div className="cart-footer">
+                  <h4 cLinklassName="sum">Suma: {totalPrice(true)}</h4>
+                  <button
+                    type="button"
+                    className="btn-dark w-100"
+                    onClick={() => navigate('/pirkti')}
+                  >
+                    Pirkti
+                  </button>
+                </div>
               </>
             )}
           </div>
@@ -64,29 +69,43 @@ const ShoppingCart = () => {
 };
 
 export const ProductPanel = ({ cartProduct, removable = true }) => {
-  const { removeFromCart, productPrice } = useCart();
-
-  const removeProductFromCart = (e, cartProduct) => {
-    removeFromCart(cartProduct, 1);
-    e.stopPropagation();
-  };
+  const { removeFromCart, addToCart } = useCart();
 
   return (
-    <div className="cart-product">
-      <img src={getImage(cartProduct.product, 'image')} />
+    <div className="cart-product" onClick={(e) => e.stopPropagation()}>
+      <div className="aspect-1" style={{ width: '50px' }}>
+        {getImage(cartProduct.product, 'image')}
+      </div>
       <div className="info">
-        <div>{cartProduct.product.name}</div>
+        <Link
+          to={`/${cartProduct.product.codename}`}
+          className="product-name hover-underline"
+        >
+          {cartProduct.product.name}
+        </Link>
         <div className="price-info">
-          <h4>{productPrice(cartProduct, true)}</h4>
-          <div>Kiekis: {cartProduct.quantity}</div>
+          <h4>
+            {formatPrice(cartProduct.product?.price, true)}
+            <span className="label-3"> /vnt</span> | x{cartProduct.quantity}
+          </h4>
         </div>
       </div>
       {removable && (
-        <div
-          className="remove-btn"
-          onClick={(e) => removeProductFromCart(e, cartProduct)}
-        >
-          <Icon icon="emojione-monotone:heavy-multiplication-x" />
+        <div className="actions">
+          <div>
+            <Icon
+              icon="fa-solid:plus"
+              className="btn"
+              onClick={() => addToCart(cartProduct.product, 1)}
+            />
+          </div>
+          <div>
+            <Icon
+              icon="bxs:trash-alt"
+              className="btn"
+              onClick={() => removeFromCart(cartProduct, 1)}
+            />
+          </div>
         </div>
       )}
     </div>

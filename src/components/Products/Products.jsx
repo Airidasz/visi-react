@@ -60,7 +60,7 @@ const Products = ({ categories, shops, className, limit = false }) => {
     <div id="products" className={className}>
       <div className={`product-grid${limit ? ' limit-products' : ''}`}>
         {products.map((p, i) => (
-          <Product product={p} key={i} />
+          <Product product={p} key={i}/>
         ))}
       </div>
       {limit && (

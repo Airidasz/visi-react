@@ -5,6 +5,7 @@ import CategorySlider from './Categories/CategorySlider';
 
 const FrontPage = () => {
   const [categories, setCategories] = useState([]);
+  const [shops] = useState([]);
 
   const clearFilter = () => {
     setCategories([]);
@@ -14,14 +15,15 @@ const FrontPage = () => {
     <>
       <div className="container">
         <CategorySlider
+          categories={categories}
           setCategories={setCategories}
           className={'mt-4'}
           showFilterClear={true}
           clearFilter={clearFilter}
         />
         <Products
-          parameters={{ categories }}
-          shops={[]}
+          shops={shops}
+          categories={categories}
           className={'mt-4'}
           limit={true}
         />

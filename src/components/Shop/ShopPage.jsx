@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './ShopStyle.scss';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import useApi from '../useApi';
 import { useAuth } from '../useAuth';
 import { useSkeleton } from '../Extras';
@@ -10,11 +10,13 @@ import Status404Page from '../Status404Page';
 import ShopMap from '../ShopMap';
 import Products from '../Products/Products';
 import { shopModel } from '../Models';
+import Skeleton from 'react-loading-skeleton';
 
 const Shop = ({ isNew }) => {
   const { GetRequest, PostRequest, PutRequest } = useApi();
   const { auth, isShopOwner } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   let { name } = useParams();
 
   const [shop, setShop] = useState(null);
@@ -24,13 +26,18 @@ const Shop = ({ isNew }) => {
   const [editing, setEditing] = useState(false);
   const [notFound, setNotFound] = useState(false);
 
+  const reset = () => {
+    setShop(null);
+    setLoad(true);
+    setNotFound(false);
+    setEditing(false);
+  };
+
   useEffect(() => {
     return () => {
-      setShop(null);
-      setNotFound(false);
-      setLoad(true);
+      reset();
     };
-  }, [name]);
+  }, [name, location]);
 
   useEffect(() => {
     const getShop = async () => {
@@ -45,7 +52,7 @@ const Shop = ({ isNew }) => {
     };
 
     if (!load) return;
-    else if (isNew) setShop(shopModel);
+    else if (isNew) setShop({ ...shopModel });
     else getShop();
 
     setLoad(false);
@@ -60,7 +67,6 @@ const Shop = ({ isNew }) => {
 
     if (response) {
       const data = await response.json();
-      setShop({ ...data });
       onAddEditFinish(data.codename);
     }
   };
@@ -68,7 +74,6 @@ const Shop = ({ isNew }) => {
   const onAddEditFinish = (codename) => {
     auth.user.shop = codename;
     navigate(`/parduotuve/${codename}`, { replace: true });
-    setEditing(false);
   };
 
   const inEditMode = () => {
@@ -131,21 +136,27 @@ const Shop = ({ isNew }) => {
                 <div className="label-3 mb-1">Aprašymas</div>
                 <textarea
                   style={{ resize: 'none', height: '220px', width: '100%' }}
-                  value={shop.description}
+                  value={shop?.description}
                   onChange={(e) =>
                     setShop({ ...shop, description: e.target.value })
                   }
                 />
               </>
             ) : (
-              <p>{useSkeleton(shop?.description, { height: '9rem' })}</p>
+              <p>{shop?.description}</p>
             )}
           </div>
-          <ShopMap
-            editable={inEditMode()}
-            locations={shop?.locations}
-            setLocations={(o) => setShop({ ...shop, locations: o })}
-          />
+          <div style={{ width: '100%', height: '500px' }}>
+            {shop?.locations ? (
+              <ShopMap
+                editable={inEditMode()}
+                locations={shop?.locations}
+                setLocations={(o) => setShop({ ...shop, locations: o })}
+              />
+            ) : (
+              <Skeleton className="w-100 h-100" />
+            )}
+          </div>
           {!inEditMode() && (
             <div className="mt-2">
               <Products

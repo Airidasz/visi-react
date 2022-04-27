@@ -22,9 +22,9 @@ const ShopMap = ({ editable, setLocations, locations }) => {
   useEffect(() => {
     if (!locations) return;
 
-    const formattedLocations = locations.map((location) => ({
-      type: locations.type,
-      latlng: { lat: location.lat, lng: location.lng },
+    const formattedLocations = locations.map((l) => ({
+      type: l.type,
+      latlng: { lat: l.lat, lng: l.lng },
     }));
     setInternalLocations([...formattedLocations]);
   }, [locations]);
@@ -49,10 +49,7 @@ const ShopMap = ({ editable, setLocations, locations }) => {
     const AddLocation = (type) => {
       map.closePopup();
 
-      const tempLocations = [
-        ...internalLocations,
-        { type: type, latlng: position },
-      ];
+      const tempLocations = [...internalLocations, { type, latlng: position }];
 
       const formattedLocations = formatLocations(tempLocations);
       setLocations([...formattedLocations]);
@@ -62,13 +59,15 @@ const ShopMap = ({ editable, setLocations, locations }) => {
       position && (
         <Popup position={position} minWidth={180}>
           <div className="d-flex flex-column">
-            <button type="button"
+            <button
+              type="button"
               className="btn-dark mb-1"
               onClick={() => AddLocation('farm')}
             >
               Ūkis
             </button>
-            <button type="button"
+            <button
+              type="button"
               className="btn-dark"
               onClick={() => AddLocation('sellingLocation')}
             >

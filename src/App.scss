@@ -113,6 +113,10 @@
   cursor: pointer;
 }
 
+.hover-underline:hover {
+  text-decoration: underline;
+}
+
 .select-none {
   user-select: none;
 }
@@ -251,6 +255,13 @@ textarea:focus {
     bottom: 0;
     left: 0;
   }
+
+  * {
+    margin: 0 auto;
+    width: 100%;
+    object-fit: contain;
+    height: 100%;
+  }
 }
 
 .modal {
@@ -295,4 +306,8 @@ textarea:focus {
     margin: 0.1rem;
     transition: all 0.08s ease;
   }
+}
+
+.gray {
+  color: gray;
 }

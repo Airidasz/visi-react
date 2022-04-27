@@ -24,7 +24,7 @@ const ProductsPage = () => {
   }, [isMobile]);
 
   if (!store.categories || !store.shops) {
-    return <div></div>;
+    return <></>;
   }
 
   const onCheckboxChange = (type, name, value) => {
@@ -51,7 +51,7 @@ const ProductsPage = () => {
       <div id="products-page" className="container">
         <div className="product-filter">
           <div className="filters card-style-1 card-sticky ">
-            <div className="label" onClick={() => setShow(!show)}>
+            <div className="label" onClick={() => isMobile && setShow(!show)}>
               <span>Filtrai</span>
               <Icon
                 className={`arrow${!show ? ' active' : ''}`}
