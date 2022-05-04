@@ -23,8 +23,8 @@ const PaymentPage = () => {
 
   return (
     <>
-      <div className="label mb-3 mt-2">Mokėjimas</div>
-      <div className="buy-page-content flex">
+      <div className="label">Mokėjimas</div>
+      <div className="buy-page-content">
         {paymentOptions.map((o) => (
           <div key={o.value} className="d-flex aling-items-center">
             <input

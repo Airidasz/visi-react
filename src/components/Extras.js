@@ -14,8 +14,14 @@ export const getImage = (input, field, parameters = {}) => {
   return <img src={src} {...parameters} />;
 };
 
+export const removeEmpty = (data = {}) => {
+  return Object.entries(data)
+    .filter(([, v]) => !isNil(v))
+    .reduce((p, [k, v]) => ({ ...p, [k]: v }), {});
+};
+
 export const buildAddress = (address = addressModel) => {
-  if (!address.city || !address.postalCode || !address.street) return;
+  if (!address.city || !address.postalCode || !address.street) return null;
 
   return `${address.street}, ${address.postalCode}, ${address.city}`;
 };
@@ -33,6 +39,9 @@ export const formatPrice = (price, showSign = false) => {
 
   return formattedPrice + (showSign && ' €');
 };
+
+export const toShortDateString = (date = new Date()) =>
+  new Intl.DateTimeFormat('lt-LT').format(date);
 
 export const isNil = (value) => value == null;
 

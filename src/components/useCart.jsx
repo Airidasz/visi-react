@@ -2,21 +2,13 @@
 import { useState, useEffect } from 'react';
 import { useContext, createContext, createElement, useMemo } from 'react';
 import { roundDecimal } from './Extras';
+import { orderModel } from './Models';
 
 const CartStore = () => {
   const initState = [];
 
   const [cart, setInternalCart] = useState(initState);
-  const [order, setOrder] = useState({
-    orderedProducts: null,
-    address: null,
-    paymentType: null,
-    note: null,
-    user: {
-      temporary: null,
-      email: null,
-    },
-  });
+  const [order, setOrder] = useState(orderModel);
 
   useEffect(() => {
     var cartFromStorage = localStorage.getItem('cart');

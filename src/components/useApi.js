@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { useContext } from 'react';
-import RefreshTokens from './RefreshTokens';
+import RefreshTokens from './Auth/RefreshTokens';
 import { useAlert } from 'react-alert';
 import { AuthContext } from './useAuth';
 

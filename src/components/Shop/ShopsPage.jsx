@@ -30,7 +30,7 @@ const ShopsPage = () => {
         {shops.map((shop) => (
           <Link to={'/parduotuve/' + shop.codename} key={shop.name}>
             <div className="card card-style-1 mb-2 p-4">
-              <h1 className="wrap">{shop.name}</h1>
+              <h1 className="wrap hover-underline">{shop.name}</h1>
               <p>{shop.description}</p>
             </div>
           </Link>

@@ -1,7 +1,8 @@
 import React from 'react';
 import { useAuth } from '../useAuth';
-import PlacedOrders from './PlacedOrders';
-import ShopOrders from './ShopOrders';
+import PlacedOrders from '../Orders/PlacedOrders';
+import ShopOrders from '../Orders/ShopOrders';
+import CourierOrders from '../Orders/CourierOrders';
 
 const ProfilePage = () => {
   const { auth } = useAuth();
@@ -21,6 +22,8 @@ const ProfilePage = () => {
       {(auth.permissions.isBuyer || auth.permissions.isAdmin) && (
         <PlacedOrders editable={auth.permissions.isAdmin} />
       )}
+
+      {auth.permissions.isCourier && <CourierOrders />}
     </div>
   );
 };

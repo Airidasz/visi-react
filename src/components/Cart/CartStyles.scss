@@ -95,13 +95,18 @@
 }
 
 .cart-info {
-  padding: 1rem;
   color: black;
+  border-radius: 4px;
+
+  .cart-items {
+    padding: 1rem;
+    padding-bottom: 0.7rem;
+  }
 
   .cart-footer {
     width: 100%;
-    border-top: 2px solid #d3d3d3;
-    padding-top: 0.6rem;
+    border-top: 1px solid #d3d3d3;
+    padding: 1rem;
 
     .sum {
       margin-bottom: 0.3rem;
@@ -113,7 +118,7 @@
   display: grid;
   grid-gap: 0.7rem;
   grid-template-columns: auto 1fr min-content;
-  margin-bottom: 0.5rem;
+  padding-bottom: 0.4rem;
 
   .info {
     display: grid;
@@ -144,5 +149,38 @@
 
 .cart-product:not(:last-child) {
   border-bottom: 1px solid #d3d3d3;
-  padding-bottom: 0.5rem;
+  margin-bottom: 0.7rem;
+}
+
+.buy-page {
+  .buy-page-content {
+  }
+  .cart-items-footer {
+    padding: 0.8rem;
+  }
+  .label {
+    padding: 1rem;
+    margin-bottom: 0.8rem;
+    background-color: #24f3d7;
+  }
+  .buy-page-content {
+    padding: 0 1rem;
+  }
+}
+
+.bank-info {
+  display: flex;
+  grid-gap: 0.5rem;
+  flex-direction: column;
+  width: 100%;
+  .bank-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    input {
+      min-width: 19rem;
+    }
+  }
 }

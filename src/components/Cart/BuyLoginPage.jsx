@@ -45,7 +45,7 @@ const BuyLoginPage = () => {
 
   return (
     <>
-      <div className="label mb-3 mt-2">Prisijungti</div>
+      <div className="label">Prisijungti</div>
       <div className="user-page">
         <div>
           <div className="label-2">Prisijungti</div>
@@ -60,7 +60,8 @@ const BuyLoginPage = () => {
             >
               Registruotis
             </Link>
-            <button type="button"
+            <button
+              type="button"
               className="btn btn-dark-reverse w-full"
               onClick={() => setShowEmail(!showEmail)}
             >
@@ -92,7 +93,8 @@ const BuyLoginPage = () => {
                     className="btn btn-dark w-full mt-4"
                     value="Pirkti be registracijos"
                   />
-                  <button type="button"
+                  <button
+                    type="button"
                     className="btn btn-dark-reverse w-full mt-1"
                     onClick={() => setShowEmail(false)}
                   >

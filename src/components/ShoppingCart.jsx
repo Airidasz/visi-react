@@ -3,6 +3,7 @@ import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useCart } from './useCart';
 import { formatPrice, getImage } from './Extras';
+import Info from './Info';
 
 const ShoppingCart = () => {
   const location = useLocation();
@@ -41,7 +42,7 @@ const ShoppingCart = () => {
         {showCart && (
           <div className="cart-info card-style-1" ref={cartRef}>
             {cart.length === 0 ? (
-              'Prekių nėra'
+              <div className="p-3">Prekių nėra</div>
             ) : (
               <>
                 <div className="cart-items">
@@ -71,18 +72,33 @@ const ShoppingCart = () => {
 export const ProductPanel = ({ cartProduct, removable = true }) => {
   const { removeFromCart, addToCart } = useCart();
 
+  const canOpenProductPage = () =>
+    cartProduct.product.public && !cartProduct.product.baseProductId;
+
   return (
     <div className="cart-product" onClick={(e) => e.stopPropagation()}>
       <div className="aspect-1" style={{ width: '50px' }}>
         {getImage(cartProduct.product, 'image')}
       </div>
       <div className="info">
-        <Link
-          to={`/${cartProduct.product.codename}`}
-          className="product-name hover-underline"
-        >
-          {cartProduct.product.name}
-        </Link>
+        {!canOpenProductPage() ? (
+          <div className="product-name d-flex">
+            {cartProduct.product.name}
+            <Info
+              title="Šis produktas buvo pakeistas todėl jo peržiūra negalima."
+              placement="top"
+              className="ms-1 gray"
+            />{' '}
+          </div>
+        ) : (
+          <Link
+            to={`/${cartProduct.product.codename}`}
+            className="product-name hover-underline"
+          >
+            {cartProduct.product.name}
+          </Link>
+        )}
+
         <div className="price-info">
           <h4>
             {formatPrice(cartProduct.product?.price, true)}

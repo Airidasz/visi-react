@@ -29,7 +29,7 @@ const BuyPage = () => {
 
   return (
     <div id="cart-page" className="container mt-4">
-      <div className="cart-items pt-2 card-style-1 p-4 pb-3 buy-page">
+      <div className="cart-items card-style-1 buy-page">
         <Outlet />
       </div>
       <div className="order-details">

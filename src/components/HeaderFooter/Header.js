@@ -2,12 +2,12 @@ import './Header.scss';
 import Login from '../Auth/Login';
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { HashLink } from 'react-router-hash-link';
 import useApi from '../useApi';
 import { useStore } from '../useStore';
 import { useAuth } from '../useAuth';
 import { Icon } from '@iconify/react';
 import ShoppingCart from '../ShoppingCart';
+import { useCart } from '../useCart';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -17,8 +17,9 @@ const Header = () => {
   const [showMenu, setShowMenu] = useState(true);
 
   const { PostRequest } = useApi();
-  const { store, setStore, isMobile } = useStore();
+  const { isMobile } = useStore();
   const { auth, resetAuth } = useAuth();
+  const { setCart } = useCart();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -40,17 +41,14 @@ const Header = () => {
     const response = await PostRequest('logout');
     if (!response) return;
 
-    setStore({ ...store, cart: [] });
+    setCart([]);
     resetAuth();
     setShowLoginMenu(false);
     navigate('/');
   };
 
   return (
-    <header
-      // className={offset > 10 || location.pathname !== '/' ? 'solid' : ''}
-      className="solid"
-    >
+    <header className="solid">
       <div className="header-top">
         <div className="container">
           <div className="menu" style={showMenu ? { display: 'block' } : {}}>
@@ -75,9 +73,9 @@ const Header = () => {
                       </Link>
                     </>
                   )}
-                  <HashLink smooth={true} to="/profilis#uzsakymai">
+                  <Link to="/profilis">
                     <li>Užsakymai</li>
-                  </HashLink>
+                  </Link>
                   <Link to="/" onClick={logOut}>
                     <li>Atsijungti</li>
                   </Link>

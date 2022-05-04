@@ -20,7 +20,7 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="label mb-3 mt-2">Prekės</div>
+      <div className="label">Prekės</div>
       {cart.length > 0 ? (
         <>
           <div className="buy-page-content">
@@ -36,7 +36,7 @@ const CartPage = () => {
           </div>
         </>
       ) : (
-        <div>Prekių nėra</div>
+        <div className="ms-3">Prekių nėra</div>
       )}
     </>
   );

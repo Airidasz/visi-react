@@ -83,6 +83,7 @@ const Category = ({
           onChange={onInfoChange}
           editClassname="w-100"
           value={categoryName}
+          inputProps={{ required: true }}
         >
           <b>{category?.name || <Skeleton />}</b>
         </EditableField>

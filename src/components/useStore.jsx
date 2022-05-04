@@ -2,13 +2,16 @@
 import { useState, useEffect } from 'react';
 import { useContext, createContext, createElement, useMemo } from 'react';
 import useApi from './useApi';
+import { useAuth } from './useAuth';
 
 const DataStore = () => {
   const { GetRequest } = useApi();
+  const { auth } = useAuth();
 
   const initState = {
     categories: null,
     shops: null,
+    couriers: null,
     cart: [],
   };
 
@@ -23,6 +26,21 @@ const DataStore = () => {
 
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  useEffect(() => {
+    const getCouriers = async () => {
+      if (store.couriers) return;
+
+      const response = await GetRequest('couriers', null, false);
+
+      if (!response) return;
+
+      const data = await response.json();
+      setStore({ ...store, couriers: data });
+    };
+
+    if (auth?.permissions?.isAdmin) getCouriers();
+  }, [auth]);
 
   useEffect(async () => {
     const getCategories = async () => {

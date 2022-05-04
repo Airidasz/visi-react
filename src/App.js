@@ -5,14 +5,13 @@ import './App.scss';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'react-multi-carousel/lib/styles.css';
 import Footer from './components/HeaderFooter/Footer';
-import RefreshTokens from './components/RefreshTokens';
+import RefreshTokens from './components/Auth/RefreshTokens';
 import Status404Page from './components/Status404Page';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from './components/useAuth';
 
 function App() {
-  
-  const {auth} = useAuth();
+  const { auth } = useAuth();
   const [initComplete, setInitComplete] = useState(false);
   const refreshToken = RefreshTokens();
   const location = useLocation();
@@ -30,11 +29,10 @@ function App() {
     init();
   }, []);
 
-
   useEffect(() => {
     let access = true;
 
-    switch(location.pathname){
+    switch (location.pathname) {
       case '/profilis':
         access = Boolean(auth.user.isSet);
         break;
@@ -50,18 +48,15 @@ function App() {
     setHasAccess(access);
   }, [location, auth]);
 
-
   if (!initComplete) return <div></div>;
 
   return (
     <div className="App">
       <Header />
-      <div className='page-view'>
-        {initComplete && <>
-          {hasAccess ? <Outlet /> :  <Status404Page />}
-        </>}
+      <div className="page-view">
+        {initComplete && <>{hasAccess ? <Outlet /> : <Status404Page />}</>}
       </div>
-      
+
       <Footer />
     </div>
   );

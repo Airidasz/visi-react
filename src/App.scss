@@ -26,6 +26,10 @@
   border-radius: 3px;
 }
 
+.btn {
+  user-select: none;
+}
+
 .btn-circle {
   width: 30px;
   height: 30px;
@@ -43,7 +47,30 @@
   background: transparent !important;
 }
 
+.btn-tab {
+  color: black;
+  padding: 1rem 2.5rem;
+  text-transform: uppercase;
+  border-bottom: 3px solid #c0c0c0;
+  cursor: pointer;
+  width: min-content;
+  font-weight: bold;
+}
+
+.btn-tab:hover:not(:disabled),
+.btn-tab:hover:not(.disabled) {
+  border-color: #f6bd1f;
+}
+
+.btn-tab:active:not(:disabled),
+.btn-tab:active:not(.disabled),
+.btn-tab.active:not(:disabled),
+.btn-tab.active:not(.disabled) {
+  border-color: #ff8929;
+}
+
 .btn-dark {
+  user-select: none;
   text-align: center;
   text-transform: uppercase;
   background: black !important;
@@ -68,6 +95,7 @@
 }
 
 .btn-dark-reverse {
+  user-select: none;
   text-align: center;
   text-transform: uppercase;
   padding: 0.5rem 2rem !important;
@@ -218,7 +246,7 @@ textarea:focus {
 .card-style-1 {
   background: white;
   border: 1px solid #d3d3d3;
-  border-radius: 1px;
+  border-radius: 4px;
 
   ul {
     > li {
@@ -236,6 +264,12 @@ textarea:focus {
       margin-bottom: 5px;
     }
   }
+}
+
+.card-style-2 {
+  background: #f3f3f3;
+  border-radius: 5px;
+  padding: 0.5rem 0.8rem;
 }
 
 .aspect-1 {
@@ -296,16 +330,21 @@ textarea:focus {
   }
 }
 
-.categories {
-  .category {
-    color: white;
-    background-color: rgb(189, 32, 149);
-    border-radius: 0.2rem;
-    display: inline-block;
-    padding: 0.2rem 0.4rem;
-    margin: 0.1rem;
-    transition: all 0.08s ease;
-  }
+.category {
+  color: white;
+  background-color: rgb(189, 32, 149);
+  border-radius: 0.2rem;
+  display: inline-block;
+  padding: 0.2rem 0.4rem;
+  margin: 0.1rem;
+  user-select: none;
+}
+
+.edit-btn {
+  justify-content: flex-end;
+  flex-grow: 1;
+  height: min-content;
+  display: flex;
 }
 
 .gray {

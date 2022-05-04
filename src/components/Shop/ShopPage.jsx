@@ -3,7 +3,7 @@ import './ShopStyle.scss';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import useApi from '../useApi';
 import { useAuth } from '../useAuth';
-import { useSkeleton } from '../Extras';
+import { removeEmpty, useSkeleton } from '../Extras';
 
 import Form from '../Extras/Form';
 import Status404Page from '../Status404Page';
@@ -11,6 +11,7 @@ import ShopMap from '../ShopMap';
 import Products from '../Products/Products';
 import { shopModel } from '../Models';
 import Skeleton from 'react-loading-skeleton';
+import AddressInput from '../Extras/AddressInput';
 
 const Shop = ({ isNew }) => {
   const { GetRequest, PostRequest, PutRequest } = useApi();
@@ -59,7 +60,7 @@ const Shop = ({ isNew }) => {
   }, [load]);
 
   const addEditShop = async () => {
-    const body = JSON.stringify(shop);
+    const body = JSON.stringify(removeEmpty(shop));
 
     let response = null;
     if (isNew) response = await PostRequest('shops', body);
@@ -132,16 +133,28 @@ const Shop = ({ isNew }) => {
         <div className="shop">
           <div className="mb-3">
             {inEditMode() ? (
-              <>
-                <div className="label-3 mb-1">Aprašymas</div>
-                <textarea
-                  style={{ resize: 'none', height: '220px', width: '100%' }}
-                  value={shop?.description}
-                  onChange={(e) =>
-                    setShop({ ...shop, description: e.target.value })
-                  }
-                />
-              </>
+              <div
+                className="d-grid"
+                style={{ gridTemplateColumns: 'auto 1fr', columnGap: '1rem' }}
+              >
+                <div>
+                  <div className="label-3 mb-1">Prekių surinkimo adresas</div>
+                  <AddressInput
+                    onChange={(address) => setShop({ ...shop, address })}
+                    defaultValue={shop?.address}
+                  />
+                </div>
+                <div>
+                  <div className="label-3 mb-1">Aprašymas</div>
+                  <textarea
+                    style={{ resize: 'none', height: '220px', width: '100%' }}
+                    value={shop?.description}
+                    onChange={(e) =>
+                      setShop({ ...shop, description: e.target.value })
+                    }
+                  />
+                </div>
+              </div>
             ) : (
               <p>{shop?.description}</p>
             )}

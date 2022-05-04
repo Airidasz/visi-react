@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import { useContext } from 'react';
-import { AuthContext } from './useAuth';
+import { AuthContext } from '../useAuth';
 
 const RefreshTokens = () => {
   const authContext = useContext(AuthContext);

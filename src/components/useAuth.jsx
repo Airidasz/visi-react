@@ -23,6 +23,7 @@ const AuthStore = () => {
       isFarmer: false,
       isAdmin: false,
       isBuyer: true,
+      isCourier: false,
     },
   };
 
@@ -48,13 +49,27 @@ const AuthStore = () => {
   const decodePermissions = (persmissions) => {
     const p = persmissions.toLowerCase();
 
-    if (p.includes('a')) auth.permissions.isAdmin = true;
+    let isBuyer = true;
+    if (p.includes('a')) {
+      auth.permissions.isAdmin = true;
+      isBuyer = false;
+    }
 
-    if (p.includes('f')) auth.permissions.isFarmer = true;
+    if (p.includes('f')) {
+      auth.permissions.isFarmer = true;
+      isBuyer = false;
+    }
 
-    if (auth.permissions.isAdmin || auth.permissions.isFarmer)
-      auth.permissions.isBuyer = false;
+    if (p.includes('c')) {
+      auth.permissions.isCourier = true;
+      isBuyer = false;
+    }
 
+    if (p.includes('b')) {
+      isBuyer = true;
+    }
+
+    auth.permissions.isBuyer = isBuyer;
     setAuth({ ...auth });
   };
 

@@ -7,6 +7,8 @@ import { ProductPanel } from '../ShoppingCart';
 import { getOption } from '../Extras';
 import { paymentOptions } from '../Options';
 
+import Info from '../Info';
+
 const OverviewPage = () => {
   const navigate = useNavigate();
   const { PostRequest } = useApi();
@@ -19,17 +21,23 @@ const OverviewPage = () => {
 
   const placeOrder = async () => {
     const body = JSON.stringify(order);
-    console.log(body);
+
     const response = await PostRequest('orders', body, false);
     if (!response) return;
 
-    navigate('/pirkti/pavyko', { replace: true });
+    let url = '/pirkti/pavyko';
+    const json = await response.json();
+
+    if (json.paymentType === 3)
+      url = `${url}?uzsakymas=${json.codename}&suma=${json.totalPrice}`;
+
+    navigate(url, { replace: true });
   };
 
   return (
     <>
-      <div className="label mb-3 mt-2">Peržiūra</div>
-      <div clasfsName="buy-page-content">
+      <div className="label">Peržiūra</div>
+      <div className="buy-page-content">
         <div>
           <div className="label-2 mt-2">Užsakovas</div>
           Elektroninis paštas: <b>{order.user.email}</b>
@@ -52,6 +60,29 @@ const OverviewPage = () => {
         <div>
           <div className="label-2 mt-4">Mokėjimas</div>
           {getOption(paymentOptions, order.paymentType)?.label}
+        </div>
+        <div>
+          <div className="label-2 mt-4">
+            <input
+              id="cancel-missing"
+              className="me-2"
+              type="checkbox"
+              onChange={(e) =>
+                setOrder({
+                  ...order,
+                  cancelIfMissing: e.target.checked,
+                })
+              }
+            ></input>
+            <label htmlFor="cancel-missing">
+              Atšaukti negavus prekių iš pardavėjo
+            </label>
+            <Info
+              title="Pažymėjus šį langelį jūsų užsakymas bus atšauktas jei bent vienas iš pardavėjų nepristatys savo prekių."
+              placement="top"
+              className="ms-1 gray"
+            />
+          </div>
         </div>
         <div>
           <div className="label-2 mt-4">Papildoma žinutė</div>

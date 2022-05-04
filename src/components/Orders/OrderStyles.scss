@@ -1,0 +1,36 @@
+#placed-orders {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 0.8rem;
+
+    .order-info {
+        display: flex;
+        column-gap: 2rem;
+        row-gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+    }
+
+    .order {
+        padding: 1rem;
+    }
+}
+
+.shop-order {
+    margin: 0.7rem 0;
+    display: flex;
+    flex-direction: column;
+    grid-gap: 0.8rem;
+
+    .shop-order-title {
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 0.4rem;
+    }
+}
+
+.shop-order-info {
+    display: flex;
+    margin-top: 0.3rem;
+    margin-bottom: 1rem;
+}
