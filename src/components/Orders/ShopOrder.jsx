@@ -45,7 +45,7 @@ const ShopOrder = ({
     auth.permissions.isAdmin;
 
   const canSeeEdit = () =>
-    canSeeAddress() || (auth.permissions.isFarmer && order.status < 3);
+    canSeeAddress() || (auth.permissions.isFarmer && order.status < 2);
 
   return (
     <div className={className}>

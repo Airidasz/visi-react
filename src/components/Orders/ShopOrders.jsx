@@ -69,16 +69,30 @@ const ShopOrders = () => {
           Užbaigti
         </div>
       </div>
-      <div className="shop-order">
+      <div
+        className="shop-order"
+        style={{
+          rowGap: '0.5rem',
+          display: 'grid',
+          gridTemplateColumns: '1fr',
+        }}
+      >
         {Object.entries(orders[tab]).map(([k, or]) => (
-          <div key={k}>
+          <div
+            key={k}
+            style={{
+              rowGap: '0.5rem',
+              display: 'grid',
+              gridTemplateColumns: '1fr',
+            }}
+          >
             {tab === 0 && (
               <>
                 <div className="label-3">Paėmimo data</div>
                 <div className="shop-order-title">{k}</div>
               </>
             )}
-
+            {console.log(or?.length, or)}
             {or?.length > 0 ? (
               or.map((o) => (
                 <div className="card-style-1 p-2 px-3" key={o.id}>

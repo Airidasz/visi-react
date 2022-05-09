@@ -8,10 +8,12 @@ import { useAuth } from '../useAuth';
 import { Icon } from '@iconify/react';
 import ShoppingCart from '../ShoppingCart';
 import { useCart } from '../useCart';
+import { useAlert } from 'react-alert';
 
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const alert = useAlert();
 
   const [showLoginMenu, setShowLoginMenu] = useState(false);
   const [showMenu, setShowMenu] = useState(true);
@@ -45,6 +47,7 @@ const Header = () => {
     resetAuth();
     setShowLoginMenu(false);
     navigate('/');
+    alert.success('Sėkmingai atsijungėte', { timeout: 2000 });
   };
 
   return (

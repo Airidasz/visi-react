@@ -6,8 +6,6 @@ import { orderCancelOptions, orderOptions, paymentOptions } from '../Options';
 import {
   formatPrice,
   getOption,
-  isNil,
-  objectToBody,
   removeEmpty,
   toShortDateString,
 } from '../Extras';

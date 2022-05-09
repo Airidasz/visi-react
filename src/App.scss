@@ -185,6 +185,7 @@
   background: white;
   border: 1px solid #d3d3d3;
   border-radius: 2px;
+  overflow: hidden;
   color: black;
   z-index: 2;
 
@@ -247,6 +248,7 @@ textarea:focus {
   background: white;
   border: 1px solid #d3d3d3;
   border-radius: 4px;
+  overflow: hidden;
 
   ul {
     > li {
@@ -269,6 +271,7 @@ textarea:focus {
 .card-style-2 {
   background: #f3f3f3;
   border-radius: 5px;
+  overflow: hidden;
   padding: 0.5rem 0.8rem;
 }
 
