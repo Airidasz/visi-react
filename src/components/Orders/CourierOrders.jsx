@@ -58,6 +58,11 @@ const CourierOrders = () => {
     if (!deliveries) getDeliveries();
   }, [deliveries]);
 
+  const resetDeliveries = () => {
+    setDeliveries(null);
+    setPickups(null);
+  };
+
   return (
     <>
       <div className="page-title small mt-2">Užsakymai</div>
@@ -91,7 +96,7 @@ const CourierOrders = () => {
                   {or?.length > 0 ? (
                     or.map((o) => (
                       <div className="card-style-1 p-2 px-3" key={o.id}>
-                        <ShopOrder order={o} reset={() => setPickups(null)} />
+                        <ShopOrder order={o} reset={resetDeliveries} />
                       </div>
                     ))
                   ) : (
@@ -112,7 +117,7 @@ const CourierOrders = () => {
                 order={order}
                 key={order.codename}
                 editable={true}
-                reset={() => setDeliveries(true)}
+                reset={resetDeliveries}
               />
             ))}
         </div>

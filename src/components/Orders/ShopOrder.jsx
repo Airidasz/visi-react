@@ -171,39 +171,47 @@ const EditModal = ({
             />
           </div>
         )}
-        {canSeeStatus() && (
-          <div style={{ minWidth: '15rem' }}>
-            <div className="label-2 mb-1">Statusas</div>
-            {permissions.isFarmer && (
-              <div>
-                <input
-                  type="checkbox"
-                  id="confirm-order"
-                  defaultChecked={order.status > 0}
-                  onChange={(e) => onChange('status', e.target.checked ? 1 : 0)}
-                  disabled={order.status}
-                />
-                <label className="ms-2 select-none" htmlFor="confirm-order">
-                  Patvirtinti
-                </label>
-              </div>
-            )}
-            {permissions.isCourier && (
-              <div>
-                <input
-                  type="checkbox"
-                  id="confirm-pickup"
-                  defaultChecked={order.status > 1}
-                  onChange={(e) => onChange('status', e.target.checked ? 2 : 1)}
-                  disabled={order.status < 1}
-                />
-                <label className="ms-2 select-none" htmlFor="confirm-pickup">
-                  Patvirtinti paėmimą
-                </label>
-              </div>
-            )}
-          </div>
-        )}
+        <div style={{ minWidth: '15rem' }}>
+          <div className="label-2 mb-1">Statusas</div>
+          {permissions.isAdmin && (
+            <Select
+              className="w-100"
+              options={shopOrderOptions}
+              defaultValue={shopOrderOptions.filter(
+                (x) => x.value == order.status
+              )}
+              onChange={(e) => onChange('status', e.value)}
+            />
+          )}
+          {permissions.isFarmer && (
+            <div>
+              <input
+                type="checkbox"
+                id="confirm-order"
+                defaultChecked={order.status > 0}
+                onChange={(e) => onChange('status', e.target.checked ? 1 : 0)}
+                disabled={order.status}
+              />
+              <label className="ms-2 select-none" htmlFor="confirm-order">
+                Patvirtinti
+              </label>
+            </div>
+          )}
+          {permissions.isCourier && (
+            <div>
+              <input
+                type="checkbox"
+                id="confirm-pickup"
+                defaultChecked={order.status > 1}
+                onChange={(e) => onChange('status', e.target.checked ? 2 : 1)}
+                disabled={order.status < 1}
+              />
+              <label className="ms-2 select-none" htmlFor="confirm-pickup">
+                Patvirtinti paėmimą
+              </label>
+            </div>
+          )}
+        </div>
         <div className="edit-btn mt-2">
           <button
             className="btn btn-dark-reverse me-2"
